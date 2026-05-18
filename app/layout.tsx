@@ -1,8 +1,5 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, DM_Sans } from "next/font/google";
-import { AnnouncementBar } from "@/components/AnnouncementBar";
-import { Header } from "@/components/Header";
-import { Footer } from "@/components/Footer";
 import { site } from "@/lib/content";
 import "./globals.css";
 
@@ -48,12 +45,9 @@ export default function RootLayout({
         >
           Skip to content
         </a>
-        <AnnouncementBar />
-        <Header />
         <main id="main-content" className="flex-1">
           {children}
         </main>
-        <Footer />
       </body>
     </html>
   );
