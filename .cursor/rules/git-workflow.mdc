@@ -1,0 +1,27 @@
+---
+description: User prefers the agent to handle git proactively (commits, branches, remotes, push prep)
+alwaysApply: true
+---
+
+# Git workflow preference
+
+The user prefers that **you handle git work** — do not wait for them to ask for obvious git steps.
+
+## Do proactively
+
+- After meaningful work (features, fixes, MVP milestones): **stage, commit, and summarize** what was committed.
+- When deploy or Vercel is discussed: check `git status`, create **initial commit** if missing, confirm `.gitignore`, and guide or run **remote + push** when a repo URL exists.
+- Create branches when splitting work or opening PRs; use `gh` for GitHub PRs when relevant.
+- Run `git status`, `git diff`, and `git log` yourself to understand state before acting.
+
+## Still follow safety rules
+
+- Never update git config, force-push `main`/`master`, skip hooks, or commit secrets (`.env`, credentials).
+- Never amend unless the standard amend conditions in project/user rules are met.
+- Do not push to remote unless the user has asked for a push **or** the current task clearly requires it (e.g. “get this on Vercel”, “open a PR”). When pushing, use `-u origin` on first push of a branch.
+
+## Default behavior
+
+- Prefer **small, clear commit messages** focused on why.
+- If git is uninitialized or has no commits, set that up without asking “should I commit?” — just do it and report what you did.
+- If a remote is missing, say what’s needed (e.g. GitHub repo URL) and offer to run `gh repo create` / add remote / push once they confirm or provide access.
