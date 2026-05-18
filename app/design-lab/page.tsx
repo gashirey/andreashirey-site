@@ -18,7 +18,9 @@ export default function DesignLabPage() {
         <p className="mt-4 max-w-2xl text-stone leading-relaxed">
           Compare three visual directions on the specimen overview below, or open a{" "}
           <strong className="font-medium text-bark">full-page preview</strong> for each.
-          Replace all marked placeholders with real farm photography.
+          Uses <strong className="font-medium text-bark">hero.jpg</strong> and{" "}
+          <strong className="font-medium text-bark">bb.jpg</strong> where wired; remaining
+          slots show placeholders until more photos are added.
         </p>
         <p className="mt-6 max-w-2xl text-sm text-stone">
           Target feeling:{" "}

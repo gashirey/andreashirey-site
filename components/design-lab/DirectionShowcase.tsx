@@ -2,6 +2,7 @@
 
 import type { DesignDirection } from "@/lib/design-lab/directions";
 import { labCopy } from "@/lib/design-lab/directions";
+import { labPhotos } from "@/lib/design-lab/photos";
 import { PhotoPlaceholder } from "./PhotoPlaceholder";
 
 type DirectionShowcaseProps = {
@@ -168,8 +169,19 @@ export function DirectionShowcase({
       {/* Gallery */}
       <LabBlock title={isFull ? undefined : "Gallery / image treatment"}>
         <div className="grid gap-[var(--lab-gutter)] sm:grid-cols-3">
-          <PhotoPlaceholder label="field morning light" aspect="aspect-[3/4]" />
-          <PhotoPlaceholder label="bouquet detail, hands" aspect="aspect-square" className="sm:mt-8" />
+          <PhotoPlaceholder
+            src={labPhotos.hero.src}
+            alt={labPhotos.hero.alt}
+            label="field morning light"
+            aspect="aspect-[3/4]"
+          />
+          <PhotoPlaceholder
+            src={labPhotos.bouquet.src}
+            alt={labPhotos.bouquet.alt}
+            label="bouquet detail"
+            aspect="aspect-square"
+            className="sm:mt-8"
+          />
           <PhotoPlaceholder label="cutting garden row" aspect="aspect-[4/5]" />
         </div>
       </LabBlock>
@@ -177,7 +189,12 @@ export function DirectionShowcase({
       {/* Product card */}
       <LabBlock title={isFull ? undefined : "Product / inventory card"}>
         <article className="max-w-md border border-[var(--lab-border)] bg-[var(--lab-surface)]">
-          <PhotoPlaceholder label="mixed seasonal bouquet — product" aspect="aspect-[4/3]" />
+          <PhotoPlaceholder
+            src={labPhotos.bouquet.src}
+            alt={labPhotos.bouquet.alt}
+            label="mixed seasonal bouquet — product"
+            aspect="aspect-[4/3]"
+          />
           <div className="border-t border-[var(--lab-border)] p-5">
             <span
               className="inline-block px-2 py-0.5 font-[family-name:var(--lab-sans)] text-xs tracking-wide"
@@ -286,7 +303,13 @@ function HeroSplit({ full = false }: { full?: boolean }) {
           </a>
         </div>
       </div>
-      <PhotoPlaceholder label="hero — wide field or barn facade" aspect="aspect-auto min-h-[40vh] md:min-h-full" priority />
+      <PhotoPlaceholder
+        src={labPhotos.hero.src}
+        alt={labPhotos.hero.alt}
+        label="hero — wide field or barn facade"
+        aspect="aspect-auto min-h-[40vh] md:min-h-full"
+        priority
+      />
     </div>
   );
 }
@@ -295,7 +318,13 @@ function HeroImmersive({ full = false }: { full?: boolean }) {
   const minH = full ? "min-h-screen" : "min-h-[58vh]";
   return (
     <div className={`relative ${minH}`}>
-      <PhotoPlaceholder label="hero — immersive floral close-up or garden path" aspect={`aspect-auto absolute inset-0 ${minH}`} priority />
+      <PhotoPlaceholder
+        src={labPhotos.hero.src}
+        alt={labPhotos.hero.alt}
+        label="hero — immersive floral close-up or garden path"
+        aspect={`aspect-auto absolute inset-0 ${minH}`}
+        priority
+      />
       <div className="absolute inset-0" style={{ background: "var(--lab-scrim)" }} aria-hidden />
       <div className={`relative flex ${minH} flex-col justify-end px-8 pb-12 pt-24 md:px-12 md:pb-16`}>
         <p className="font-[family-name:var(--lab-sans)] text-xs uppercase tracking-[0.2em] text-white/80">
@@ -317,7 +346,13 @@ function HeroGrounded({ full = false }: { full?: boolean }) {
   return (
     <div className={`${full ? "" : "border border-[var(--lab-border)]"} bg-[var(--lab-surface)]`}>
       <div className={`relative ${minH}`}>
-        <PhotoPlaceholder label="hero — tactile farm detail, buckets or greenhouse" aspect={`aspect-auto absolute inset-0 ${minH}`} priority />
+        <PhotoPlaceholder
+          src={labPhotos.hero.src}
+          alt={labPhotos.hero.alt}
+          label="hero — tactile farm detail, buckets or greenhouse"
+          aspect={`aspect-auto absolute inset-0 ${minH}`}
+          priority
+        />
         <div className="absolute inset-0" style={{ background: "var(--lab-scrim)" }} aria-hidden />
         <div className={`relative flex ${minH} items-end p-8 md:p-10`}>
           <div>
