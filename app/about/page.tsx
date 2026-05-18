@@ -5,11 +5,13 @@ import { Section } from "@/components/Section";
 import { CTA } from "@/components/CTA";
 import { site } from "@/lib/content";
 import { getRootedFarmersHref } from "@/lib/links";
+import { pageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "About",
   description: `Learn about ${site.name} — our story, values, and approach to seasonal flower farming.`,
-};
+  path: "/about",
+});
 
 export default function AboutPage() {
   return (

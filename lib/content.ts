@@ -1,5 +1,11 @@
 /**
  * Site copy — edit here to update pages without touching components.
+ *
+ * PHOTO FOLDERS (drop real images here, then update paths below):
+ *   public/images/hero.jpg          — home hero
+ *   public/images/about.jpg         — about preview
+ *   public/images/flowers/{id}.jpg  — availability cards (match item id)
+ *   public/images/gallery/01.jpg    — gallery grid
  */
 
 export const site = {
@@ -10,6 +16,41 @@ export const site = {
     "Grey Gables Farm grows thoughtful, seasonal flowers for everyday bouquets, weddings, and special gatherings in the Hudson Valley.",
   email: "hello@greygablesfarm.com",
   location: "Hudson Valley, New York",
+} as const;
+
+/** Set when you refresh listings — shown on Flowers page */
+export const availabilityUpdated = "2026-05-19";
+
+export const announcement = {
+  enabled: true,
+  message:
+    "We're refreshing photos and availability listings this week — check back soon or inquire for what's in bloom.",
+} as const;
+
+export const social = {
+  /** Add Instagram URL when ready, e.g. "https://instagram.com/greygablesfarm" */
+  instagram: "" as string,
+} as const;
+
+export const ordering = {
+  intro:
+    "We list seasonal stems and bouquets as they're ready from the field. Availability changes weekly.",
+  steps: [
+    {
+      title: "See what's available",
+      text: "Browse this week's offerings on our Flowers page or Rooted Farmers shop when live.",
+    },
+    {
+      title: "Place your order",
+      text: "Order online when Rooted Farmers is connected, or email us for pickup and custom requests.",
+    },
+    {
+      title: "Pick up fresh",
+      text: "We'll confirm timing and any pickup details by email. Flowers are harvested close to hand-off.",
+    },
+  ],
+  pickupNote:
+    "Pickup details shared upon order confirmation. Delivery and event florals available by inquiry.",
 } as const;
 
 export const nav = [
@@ -26,7 +67,7 @@ export type AvailabilityItem = {
   name: string;
   description: string;
   status: "available" | "limited" | "seasonal";
-  /** Replace with real farm photo path, e.g. /images/flowers/peonies.jpg */
+  /** Replace with real farm photo path, e.g. /images/flowers/mixed-bouquets.jpg */
   image: string;
   imageAlt: string;
 };
@@ -36,7 +77,7 @@ export const currentAvailability: AvailabilityItem[] = [
     id: "mixed-bouquets",
     name: "Mixed Seasonal Bouquets",
     description:
-      "Hand-tied bouquets featuring the best of what’s in bloom this week — perfect for your table or a thoughtful gift.",
+      "Hand-tied bouquets featuring the best of what's in bloom this week — perfect for your table or a thoughtful gift.",
     status: "available",
     image: "/images/placeholders/bouquet.svg",
     imageAlt: "Placeholder — replace with mixed bouquet photo",

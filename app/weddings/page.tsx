@@ -5,11 +5,13 @@ import { Section } from "@/components/Section";
 import { CTA } from "@/components/CTA";
 import { Button } from "@/components/Button";
 import { site } from "@/lib/content";
+import { pageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Weddings & Events",
   description: `Wedding and event florals by ${site.name} — intimate, seasonal designs in the Hudson Valley.`,
-};
+  path: "/weddings",
+});
 
 const services = [
   {

@@ -4,11 +4,13 @@ import { Section } from "@/components/Section";
 import { GalleryGrid } from "@/components/GalleryGrid";
 import { CTA } from "@/components/CTA";
 import { galleryImages, site } from "@/lib/content";
+import { pageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Gallery",
   description: `Photos from ${site.name} — the fields, bouquets, and celebrations we help bring to life.`,
-};
+  path: "/gallery",
+});
 
 export default function GalleryPage() {
   return (

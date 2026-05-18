@@ -3,13 +3,17 @@ import { Hero } from "@/components/Hero";
 import { Section } from "@/components/Section";
 import { CTA } from "@/components/CTA";
 import { AvailabilityCard } from "@/components/AvailabilityCard";
+import { AvailabilityNote } from "@/components/AvailabilityNote";
+import { OrderingSteps } from "@/components/OrderingSteps";
 import { currentAvailability, site } from "@/lib/content";
 import { getRootedFarmersHref, links } from "@/lib/links";
+import { pageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Flowers & Availability",
   description: `See what's in bloom at ${site.name} — seasonal bouquets, stems, and specialty blooms.`,
-};
+  path: "/flowers",
+});
 
 export default function FlowersPage() {
   const rootedHref = getRootedFarmersHref();
@@ -35,8 +39,12 @@ export default function FlowersPage() {
 
       <Section
         title="What's available now"
-        description="Our offerings change with the seasons. Below is a sample of what we're growing and listing this week."
+        description="Our offerings change with the seasons. Below is what we're growing and listing this week."
       >
+        <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <AvailabilityNote />
+        </div>
+
         <div className="mb-8 rounded-lg border border-sage/20 bg-sage/5 px-6 py-4 text-sm text-bark">
           {hasRootedLink ? (
             <p>
@@ -53,10 +61,11 @@ export default function FlowersPage() {
             </p>
           ) : (
             <p>
-              {/* LINK: Set links.rootedFarmers in lib/links.ts when your shop is live */}
-              Online ordering via Rooted Farmers is coming soon. For now,
-              please{" "}
-              <a href="/contact?subject=flowers" className="font-medium text-sage-dark underline underline-offset-2">
+              Online ordering via Rooted Farmers is coming soon. For now, please{" "}
+              <a
+                href="/contact?subject=flowers"
+                className="font-medium text-sage-dark underline underline-offset-2"
+              >
                 inquire about availability
               </a>
               .
@@ -69,6 +78,10 @@ export default function FlowersPage() {
             <AvailabilityCard key={item.id} item={item} />
           ))}
         </div>
+      </Section>
+
+      <Section variant="white" title="How ordering works" eyebrow="Simple steps">
+        <OrderingSteps />
       </Section>
 
       <Section variant="parchment">

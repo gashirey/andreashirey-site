@@ -5,11 +5,14 @@ import { Section } from "@/components/Section";
 import { CTA } from "@/components/CTA";
 import { Button } from "@/components/Button";
 import { AvailabilityCard } from "@/components/AvailabilityCard";
-import { currentAvailability, site } from "@/lib/content";
+import { AvailabilityNote } from "@/components/AvailabilityNote";
+import { OrderingSteps } from "@/components/OrderingSteps";
+import { currentAvailability, galleryImages, site } from "@/lib/content";
 import { getRootedFarmersHref } from "@/lib/links";
 
 export default function HomePage() {
   const featured = currentAvailability.slice(0, 2);
+  const galleryPreview = galleryImages.slice(0, 3);
 
   return (
     <>
@@ -64,9 +67,12 @@ export default function HomePage() {
       <Section
         variant="white"
         eyebrow="This week"
-        title="What&apos;s in bloom"
+        title="What's in bloom"
         description="A glimpse of what we're offering right now. For the full list and to order, visit our availability page."
       >
+        <div className="mb-8">
+          <AvailabilityNote />
+        </div>
         <div className="grid gap-8 md:grid-cols-2">
           {featured.map((item) => (
             <AvailabilityCard key={item.id} item={item} />
@@ -82,7 +88,11 @@ export default function HomePage() {
         </div>
       </Section>
 
-      <Section variant="parchment">
+      <Section variant="parchment" eyebrow="Ordering" title="How to order">
+        <OrderingSteps />
+      </Section>
+
+      <Section variant="white">
         <CTA
           title="Planning a wedding or special event?"
           description="We'd love to hear about your vision. From intimate elopements to full celebration florals, we create designs that feel personal and seasonally inspired."
@@ -98,18 +108,22 @@ export default function HomePage() {
       </Section>
 
       <Section
-        variant="white"
         eyebrow="Gallery"
         title="Life at the farm"
         description="Moments from the field, the studio, and celebrations we've been honored to be part of."
       >
-        {/* PHOTO: Gallery previews — swap placeholders in lib/content.ts */}
         <div className="grid grid-cols-3 gap-3 md:gap-4">
-          {["/images/placeholders/gallery-1.svg", "/images/placeholders/gallery-2.svg", "/images/placeholders/gallery-3.svg"].map((src, i) => (
-            <div key={src} className={`relative overflow-hidden rounded-lg bg-parchment ${i === 1 ? "col-span-1 row-span-1 aspect-[3/4]" : "aspect-square"}`}>
+          {galleryPreview.map((image, i) => (
+            <div
+              key={image.id}
+              className={`relative overflow-hidden rounded-lg bg-parchment ${
+                i === 1 ? "aspect-[3/4]" : "aspect-square"
+              }`}
+            >
+              {/* PHOTO: swap in lib/content.ts → galleryImages */}
               <Image
-                src={src}
-                alt={`Placeholder gallery preview ${i + 1}`}
+                src={image.src}
+                alt={image.alt}
                 fill
                 className="object-cover"
                 sizes="33vw"

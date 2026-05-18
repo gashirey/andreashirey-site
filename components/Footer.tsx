@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { nav, site } from "@/lib/content";
+import { nav, site, social } from "@/lib/content";
+import { getRootedFarmersHref } from "@/lib/links";
 
 export function Footer() {
   const year = new Date().getFullYear();
@@ -29,6 +30,14 @@ export function Footer() {
                   </Link>
                 </li>
               ))}
+              <li>
+                <Link
+                  href={getRootedFarmersHref()}
+                  className="text-sm text-bark/80 hover:text-sage-dark transition-colors"
+                >
+                  Current availability
+                </Link>
+              </li>
             </ul>
           </div>
           <div>
@@ -42,6 +51,16 @@ export function Footer() {
             >
               {site.email}
             </a>
+            {social.instagram ? (
+              <a
+                href={social.instagram}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-2 block text-sm text-sage-dark hover:text-sage transition-colors"
+              >
+                Instagram
+              </a>
+            ) : null}
           </div>
         </div>
         <p className="mt-10 border-t border-parchment pt-6 text-center text-xs text-stone">
