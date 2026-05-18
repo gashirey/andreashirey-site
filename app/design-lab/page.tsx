@@ -18,7 +18,7 @@ export default function DesignLabPage() {
         <p className="mt-4 max-w-2xl text-stone leading-relaxed">
           Compare three visual directions on the specimen overview below, or open a{" "}
           <strong className="font-medium text-bark">full-page preview</strong> for each.
-          Replace all marked placeholders with Andrea&apos;s photography.
+          Replace all marked placeholders with real farm photography.
         </p>
         <p className="mt-6 max-w-2xl text-sm text-stone">
           Target feeling:{" "}
