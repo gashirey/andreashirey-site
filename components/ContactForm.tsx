@@ -32,10 +32,7 @@ export function ContactForm() {
   }
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="rounded-xl border border-parchment bg-white p-8 shadow-sm"
-    >
+    <form onSubmit={handleSubmit} className="card p-6 md:p-8">
       <p className="mb-6 text-sm text-stone">
         Submitting opens your email app with your message pre-filled. We
         typically reply within 2–3 business days.
@@ -52,7 +49,7 @@ export function ContactForm() {
             type="text"
             required
             autoComplete="name"
-            className="mt-1 w-full rounded-lg border border-parchment bg-cream px-4 py-2.5 text-bark outline-none focus:border-sage focus:ring-1 focus:ring-sage"
+            className="input mt-1"
           />
         </div>
         <div>
@@ -65,19 +62,14 @@ export function ContactForm() {
             type="email"
             required
             autoComplete="email"
-            className="mt-1 w-full rounded-lg border border-parchment bg-cream px-4 py-2.5 text-bark outline-none focus:border-sage focus:ring-1 focus:ring-sage"
+            className="input mt-1"
           />
         </div>
         <div>
           <label htmlFor="subject" className="block text-sm font-medium text-bark">
             Subject
           </label>
-          <select
-            id="subject"
-            name="subject"
-            defaultValue={subjectKey}
-            className="mt-1 w-full rounded-lg border border-parchment bg-cream px-4 py-2.5 text-bark outline-none focus:border-sage focus:ring-1 focus:ring-sage"
-          >
+          <select id="subject" name="subject" defaultValue={subjectKey} className="input mt-1">
             <option value="flowers">Flower inquiry</option>
             <option value="wedding">Wedding or event</option>
             <option value="general">General question</option>
@@ -93,13 +85,10 @@ export function ContactForm() {
             rows={5}
             required
             placeholder={`Tell us about your ${defaultSubject.toLowerCase()}...`}
-            className="mt-1 w-full resize-y rounded-lg border border-parchment bg-cream px-4 py-2.5 text-bark outline-none focus:border-sage focus:ring-1 focus:ring-sage"
+            className="input mt-1 resize-y"
           />
         </div>
-        <button
-          type="submit"
-          className="w-full rounded-full bg-sage-dark px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-sage"
-        >
+        <button type="submit" className="btn w-full border-sage-dark bg-sage-dark text-white hover:bg-sage">
           Send message
         </button>
       </div>

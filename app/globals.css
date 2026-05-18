@@ -22,6 +22,34 @@
   --color-white: var(--color-white);
   --font-serif: var(--font-cormorant);
   --font-sans: var(--font-dm-sans);
+  --radius-sm: 2px;
+}
+
+/* Shared UI primitives — keep styling consistent with .cursor/rules/design.mdc */
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center rounded-sm border px-5 py-2.5 text-sm font-medium tracking-wide transition-colors;
+  }
+
+  .card {
+    @apply border border-parchment bg-white;
+  }
+
+  .input {
+    @apply w-full rounded-sm border border-parchment bg-cream px-4 py-2.5 text-bark outline-none focus:border-sage focus:ring-1 focus:ring-sage;
+  }
+
+  .chip {
+    @apply inline-block rounded-sm px-2 py-0.5 text-xs font-medium tracking-wide;
+  }
+
+  .image-frame {
+    @apply overflow-hidden bg-parchment;
+  }
+
+  .hero-scrim {
+    @apply absolute inset-0 bg-bark/40;
+  }
 }
 
 html {

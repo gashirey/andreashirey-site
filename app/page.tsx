@@ -37,7 +37,7 @@ export default function HomePage() {
         description="At Grey Gables Farm, we cultivate thoughtful blooms for everyday joy, intimate gatherings, and milestone celebrations. Every bouquet is gathered fresh from our Hudson Valley fields."
       >
         <div className="grid items-center gap-12 lg:grid-cols-2">
-          <div className="relative aspect-[4/5] overflow-hidden rounded-xl bg-parchment">
+          <div className="image-frame relative aspect-[4/5]">
             {/* PHOTO: Replace with farm portrait, greenhouse, or founder photo */}
             <Image
               src="/images/placeholders/about-preview.svg"
@@ -116,7 +116,7 @@ export default function HomePage() {
           {galleryPreview.map((image, i) => (
             <div
               key={image.id}
-              className={`relative overflow-hidden rounded-lg bg-parchment ${
+              className={`image-frame relative ${
                 i === 1 ? "aspect-[3/4]" : "aspect-square"
               }`}
             >

@@ -45,7 +45,7 @@ export default function FlowersPage() {
           <AvailabilityNote />
         </div>
 
-        <div className="mb-8 rounded-lg border border-sage/20 bg-sage/5 px-6 py-4 text-sm text-bark">
+        <div className="mb-8 border border-parchment bg-cream px-5 py-4 text-sm text-bark">
           {hasRootedLink ? (
             <p>
               Order online through our{" "}

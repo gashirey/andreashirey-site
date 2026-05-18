@@ -58,7 +58,7 @@ export default function WeddingsPage() {
               </li>
             ))}
           </ul>
-          <div className="relative aspect-square overflow-hidden rounded-xl bg-parchment">
+          <div className="image-frame relative aspect-square">
             {/* PHOTO: Replace with wedding tablescape or ceremony photo */}
             <Image
               src="/images/placeholders/wedding-detail.svg"

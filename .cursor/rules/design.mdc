@@ -1,0 +1,46 @@
+---
+description: Visual design standards for Grey Gables Farm — editorial, calm, farm-forward
+alwaysApply: true
+---
+
+# Grey Gables Farm — design rules
+
+## Aim for
+
+- **Editorial / magazine** layout: typography and whitespace carry the design
+- **Photography-forward**: real farm images are the hero; UI stays quiet
+- **Restrained palette**: cream, parchment, sage, bark, stone — no accent rainbows
+- **Flat surfaces**: hairline borders (`border-parchment`), no drop shadows unless essential
+- **Tight radii**: `rounded-sm` (2px) at most; square image crops are fine
+- **Calm motion**: color/underline on hover only — no scale, parallax, or entrance animations
+- **Farm-forward, not themed**: no burlap, distressed wood, wheat icons, or “farm chic” clip art
+
+## Avoid
+
+- Generic Tailwind SaaS aesthetics (purple gradients, Inter-only, card grids everywhere)
+- Oversized rounded cards (`rounded-xl`, `rounded-2xl`, `rounded-3xl`)
+- Loud or multi-stop gradients (hero scrims should be a single flat overlay if needed)
+- Glassmorphism (`backdrop-blur`, frosted `bg-white/60` headers)
+- Startup UI patterns (pill buttons, floating action cards, “feature grids” with icons)
+- Dashboard feel (dense stats, sidebars, widget cards)
+- Trendy animation overload (`animate-pulse`, hover scale, staggered reveals)
+- Rustic cliché textures (linen backgrounds, SVG grain, rope borders)
+- Fake luxury gold accents or metallic gradients
+
+## Component conventions
+
+| Element | Use |
+|--------|-----|
+| Buttons | `rounded-sm`, sentence case, border or solid fill — not `rounded-full` pills |
+| Cards / CTAs | Border + padding, no `shadow-sm` / `shadow-lg` |
+| Images | Sharp or `rounded-sm` crop; captions below the image, not gradient overlays |
+| Hero | Full-bleed photo + **flat** `bg-bark/40` overlay if text sits on image; prefer split layouts when possible |
+| Header | Solid `bg-cream` or `bg-white`, no blur |
+| Status chips | Small rectangular labels (`rounded-sm`), not pills |
+| Spacing | Generous section padding; max width `max-w-6xl` |
+
+## Tokens
+
+Use shared classes from `app/globals.css`: `.btn`, `.card`, `.input`, `.chip`, `.image-frame`.
+
+When adding UI, check existing components (`Button`, `Section`, `Hero`) before inventing new patterns.

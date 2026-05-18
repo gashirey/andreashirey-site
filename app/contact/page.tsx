@@ -67,7 +67,7 @@ export default function ContactPage() {
 
           <Suspense
             fallback={
-              <div className="h-96 animate-pulse rounded-xl bg-parchment" aria-hidden />
+              <div className="card h-96 bg-parchment" aria-hidden />
             }
           >
             <ContactForm />

@@ -28,10 +28,10 @@ export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-parchment/80 bg-white/90 backdrop-blur-md">
+    <header className="sticky top-0 z-50 border-b border-parchment bg-cream">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4 lg:px-8">
         <Link href="/" className="group flex flex-col">
-          <span className="font-serif text-2xl font-medium tracking-tight text-bark group-hover:text-sage-dark transition-colors">
+          <span className="font-serif text-2xl font-medium tracking-tight text-bark transition-colors group-hover:text-sage-dark">
             {site.name}
           </span>
           <span className="text-[0.65rem] uppercase tracking-[0.2em] text-stone">
@@ -47,26 +47,25 @@ export function Header() {
 
         <button
           type="button"
-          className="md:hidden flex flex-col gap-1.5 p-2"
+          className="flex flex-col gap-1.5 p-2 md:hidden"
           aria-expanded={menuOpen}
           aria-label={menuOpen ? "Close menu" : "Open menu"}
           onClick={() => setMenuOpen(!menuOpen)}
         >
           <span
-            className={`block h-0.5 w-6 bg-bark transition-transform ${menuOpen ? "translate-y-2 rotate-45" : ""}`}
+            className={`block h-px w-6 bg-bark transition-transform ${menuOpen ? "translate-y-[5px] rotate-45" : ""}`}
           />
           <span
-            className={`block h-0.5 w-6 bg-bark transition-opacity ${menuOpen ? "opacity-0" : ""}`}
+            className={`block h-px w-6 bg-bark transition-opacity ${menuOpen ? "opacity-0" : ""}`}
           />
           <span
-            className={`block h-0.5 w-6 bg-bark transition-transform ${menuOpen ? "-translate-y-2 -rotate-45" : ""}`}
+            className={`block h-px w-6 bg-bark transition-transform ${menuOpen ? "-translate-y-[5px] -rotate-45" : ""}`}
           />
         </button>
       </div>
-
       {menuOpen && (
         <nav
-          className="border-t border-parchment bg-white px-6 py-6 md:hidden"
+          className="border-t border-parchment bg-cream px-6 py-6 md:hidden"
           aria-label="Mobile"
         >
           <ul className="flex flex-col gap-4">

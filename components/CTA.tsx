@@ -9,7 +9,7 @@ type CTAProps = {
 
 export function CTA({ title, description, primary, secondary }: CTAProps) {
   return (
-    <div className="rounded-2xl border border-parchment bg-white px-8 py-12 text-center shadow-sm md:px-16 md:py-14">
+    <div className="card border-y px-6 py-12 text-center md:px-12 md:py-14">
       <h2 className="font-serif text-2xl font-medium text-bark md:text-3xl">
         {title}
       </h2>
@@ -19,7 +19,7 @@ export function CTA({ title, description, primary, secondary }: CTAProps) {
         </p>
       )}
       {(primary || secondary) && (
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
           {primary && (
             <Button href={primary.href} variant="primary">
               {primary.label}

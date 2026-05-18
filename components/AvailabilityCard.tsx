@@ -9,8 +9,8 @@ const statusLabels: Record<AvailabilityItem["status"], string> = {
 
 const statusStyles: Record<AvailabilityItem["status"], string> = {
   available: "bg-sage/15 text-sage-dark",
-  limited: "bg-blush/20 text-bark",
-  seasonal: "bg-parchment text-stone",
+  limited: "bg-parchment text-bark",
+  seasonal: "bg-cream text-stone border border-parchment",
 };
 
 type AvailabilityCardProps = {
@@ -19,8 +19,8 @@ type AvailabilityCardProps = {
 
 export function AvailabilityCard({ item }: AvailabilityCardProps) {
   return (
-    <article className="overflow-hidden rounded-xl border border-parchment bg-white shadow-sm">
-      <div className="relative aspect-[4/3] bg-parchment">
+    <article className="card">
+      <div className="image-frame relative aspect-[4/3]">
         {/* PHOTO: Replace with real product/listing photo for {item.name} */}
         <Image
           src={item.image}
@@ -30,10 +30,8 @@ export function AvailabilityCard({ item }: AvailabilityCardProps) {
           sizes="(max-width: 768px) 100vw, 50vw"
         />
       </div>
-      <div className="p-6">
-        <span
-          className={`inline-block rounded-full px-3 py-1 text-xs font-medium ${statusStyles[item.status]}`}
-        >
+      <div className="border-t border-parchment p-5">
+        <span className={`chip ${statusStyles[item.status]}`}>
           {statusLabels[item.status]}
         </span>
         <h3 className="mt-3 font-serif text-xl text-bark">{item.name}</h3>

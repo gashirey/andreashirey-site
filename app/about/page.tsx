@@ -62,7 +62,7 @@ export default function AboutPage() {
           ].map((value) => (
             <li
               key={value.title}
-              className="rounded-xl border border-parchment bg-cream p-6"
+              className="border border-parchment bg-cream p-6"
             >
               <h3 className="font-serif text-xl text-bark">{value.title}</h3>
               <p className="mt-3 text-sm leading-relaxed text-stone">
@@ -75,7 +75,7 @@ export default function AboutPage() {
 
       <Section>
         <div className="grid gap-12 lg:grid-cols-2">
-          <div className="relative aspect-[3/4] overflow-hidden rounded-xl bg-parchment">
+          <div className="image-frame relative aspect-[3/4]">
             {/* PHOTO: Replace with portrait of farmers or hands-in-soil image */}
             <Image
               src="/images/placeholders/farmers.svg"
