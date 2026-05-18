@@ -19,8 +19,8 @@ export default function HomePage() {
       <Hero
         title={site.name}
         subtitle={site.tagline}
-        imageSrc="/images/placeholders/hero.svg"
-        imageAlt="Placeholder — replace with signature farm or field photo"
+        imageSrc={site.heroImage}
+        imageAlt={site.heroImageAlt}
         primaryCta={{
           label: "View Current Availability",
           href: getRootedFarmersHref(),

@@ -2,7 +2,7 @@
  * Site copy — edit here to update pages without touching components.
  *
  * PHOTO FOLDERS (drop real images here, then update paths below):
- *   public/images/hero.jpg          — home hero
+ *   public/images/hero.jpg          — home hero (live)
  *   public/images/about.jpg         — about preview
  *   public/images/flowers/{id}.jpg  — availability cards (match item id)
  *   public/images/gallery/01.jpg    — gallery grid
@@ -17,6 +17,9 @@ export const site = {
   email: "hello@greygablesfarm.com",
   location: "Louisa, Virginia",
   locationRegion: "Central Virginia",
+  /** Home page hero — update path when you replace the image */
+  heroImage: "/images/hero.jpg",
+  heroImageAlt: "Grey Gables Farm — seasonal flowers in Louisa, Virginia",
 } as const;
 
 /** Set when you refresh listings — shown on Flowers page */

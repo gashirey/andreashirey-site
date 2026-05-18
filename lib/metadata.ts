@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { site } from "./content";
 
-const ogImage = "/images/placeholders/hero.svg";
+const ogImage = "/images/hero.jpg";
 
 export function pageMetadata({
   title,

@@ -25,7 +25,7 @@ export function Hero({
     <section
       className={`relative overflow-hidden bg-parchment ${compact ? "min-h-[36vh]" : "min-h-[62vh] md:min-h-[68vh]"}`}
     >
-      {/* PHOTO: Replace imageSrc with your signature farm or field image */}
+      {/* Home uses site.heroImage from lib/content.ts */}
       <Image
         src={imageSrc}
         alt={imageAlt}
