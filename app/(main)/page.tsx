@@ -38,10 +38,9 @@ export default function HomePage() {
       >
         <div className="grid items-center gap-12 lg:grid-cols-2">
           <div className="image-frame relative aspect-[4/5]">
-            {/* PHOTO: Replace with farm portrait, greenhouse, or founder photo */}
             <Image
-              src="/images/placeholders/about-preview.svg"
-              alt="Placeholder — replace with farm or team photo"
+              src="/images/bb.jpg"
+              alt="Mixed seasonal bouquet from Grey Gables Farm"
               fill
               className="object-cover"
               sizes="(max-width: 1024px) 100vw, 50vw"

@@ -2,8 +2,9 @@
  * Site copy — edit here to update pages without touching components.
  *
  * PHOTO FOLDERS (drop real images here, then update paths below):
- *   public/images/hero.jpg          — home hero (live)
- *   public/images/about.jpg         — about preview
+ *   public/images/hero.jpg          — home hero
+ *   public/images/bb.jpg            — bouquet (welcome, availability, gallery)
+ *   public/images/about.jpg         — about page (optional)
  *   public/images/flowers/{id}.jpg  — availability cards (match item id)
  *   public/images/gallery/01.jpg    — gallery grid
  */
@@ -83,8 +84,8 @@ export const currentAvailability: AvailabilityItem[] = [
     description:
       "Hand-tied bouquets featuring the best of what's in bloom this week — perfect for your table or a thoughtful gift.",
     status: "available",
-    image: "/images/placeholders/bouquet.svg",
-    imageAlt: "Placeholder — replace with mixed bouquet photo",
+    image: "/images/bb.jpg",
+    imageAlt: "Mixed seasonal bouquet from Grey Gables Farm",
   },
   {
     id: "garden-roses",
@@ -131,8 +132,8 @@ export const galleryImages: GalleryImage[] = [
   },
   {
     id: "g2",
-    src: "/images/placeholders/gallery-2.svg",
-    alt: "Placeholder — replace with bouquet detail photo",
+    src: "/images/bb.jpg",
+    alt: "Mixed seasonal bouquet from Grey Gables Farm",
     caption: "Seasonal bouquet",
   },
   {
