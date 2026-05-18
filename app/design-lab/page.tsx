@@ -1,13 +1,14 @@
+import Link from "next/link";
 import { DesignLabNav } from "@/components/design-lab/DesignLabNav";
 import { DirectionShowcase } from "@/components/design-lab/DirectionShowcase";
 import { designDirections } from "@/lib/design-lab/directions";
 
 export default function DesignLabPage() {
   return (
-    <div className="min-h-screen bg-[#f0eeea]">
+    <div className="min-h-screen bg-[#f0ebe8]">
       <DesignLabNav />
 
-      <header className="border-b border-bark/10 bg-cream px-6 py-16 md:px-12 md:py-20">
+      <header className="border-b border-parchment bg-cream px-6 py-16 md:px-12 md:py-20">
         <p className="text-xs font-medium uppercase tracking-[0.2em] text-stone">
           Internal · Not for production
         </p>
@@ -15,31 +16,47 @@ export default function DesignLabPage() {
           Grey Gables Farm — Design Lab
         </h1>
         <p className="mt-4 max-w-2xl text-stone leading-relaxed">
-          Explore three visual directions before committing to the production
-          site. Each section tests typography, palette, spacing, and edival
-          tone. Replace all marked placeholders with Andrea&apos;s photography.
+          Compare three visual directions on the specimen overview below, or open a{" "}
+          <strong className="font-medium text-bark">full-page preview</strong> for each.
+          Replace all marked placeholders with Andrea&apos;s photography.
         </p>
         <p className="mt-6 max-w-2xl text-sm text-stone">
           Target feeling:{" "}
           <em className="text-bark">
-            quiet editorial countryside elegance with edival warmth and
-            authentic farm grounding.
+            quiet editorial countryside elegance with emotional warmth and authentic
+            farm grounding
           </em>
+          — anchored in a light salmon / blush palette for Louisa, Central Virginia.
         </p>
+        <ul className="mt-8 flex flex-wrap gap-3">
+          {designDirections.map((d) => (
+            <li key={d.id}>
+              <Link
+                href={`/design-lab/${d.id}`}
+                className="btn border-salmon-dark bg-salmon-dark text-white hover:bg-salmon"
+              >
+                Full page — {d.name}
+              </Link>
+            </li>
+          ))}
+        </ul>
       </header>
 
       {designDirections.map((direction) => (
-        <DirectionShowcase key={direction.id} direction={direction} />
+        <DirectionShowcase key={direction.id} direction={direction} mode="specimen" />
       ))}
 
-      <footer className="border-t border-bark/10 bg-cream px-6 py-12 text-center text-sm text-stone md:px-12">
+      <footer className="border-t border-parchment bg-cream px-6 py-12 text-center text-sm text-stone md:px-12">
         <p>
-          End of design lab. Share feedback on Direction A, B, or C before
-          applying to the live site.
+          End of design lab. Share feedback on Direction A, B, or C before applying to
+          the live site.
         </p>
-        <a href="/" className="mt-4 inline-block text-sage-dark underline underline-offset-2">
+        <Link
+          href="/"
+          className="mt-4 inline-block text-salmon-dark underline underline-offset-2"
+        >
           Return to site preview
-        </a>
+        </Link>
       </footer>
     </div>
   );

@@ -15,7 +15,7 @@ function NavLink({ href, label }: { href: string; label: string }) {
       href={href}
       className={`text-sm tracking-wide transition-colors ${
         isActive
-          ? "text-sage-dark font-medium"
+          ? "text-salmon-dark font-medium"
           : "text-stone hover:text-bark"
       }`}
     >
@@ -31,7 +31,7 @@ export function Header() {
     <header className="sticky top-0 z-50 border-b border-parchment bg-cream">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4 lg:px-8">
         <Link href="/" className="group flex flex-col">
-          <span className="font-serif text-2xl font-medium tracking-tight text-bark transition-colors group-hover:text-sage-dark">
+          <span className="font-serif text-2xl font-medium tracking-tight text-bark transition-colors group-hover:text-salmon-dark">
             {site.name}
           </span>
           <span className="text-[0.65rem] uppercase tracking-[0.2em] text-stone">

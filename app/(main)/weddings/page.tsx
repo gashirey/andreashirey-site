@@ -9,7 +9,7 @@ import { pageMetadata } from "@/lib/metadata";
 
 export const metadata: Metadata = pageMetadata({
   title: "Weddings & Events",
-  description: `Wedding and event florals by ${site.name} — intimate, seasonal designs in the Hudson Valley.`,
+  description: `Wedding and event florals by ${site.name} — intimate, seasonal designs in Louisa and Central Virginia.`,
   path: "/weddings",
 });
 
@@ -91,7 +91,7 @@ export default function WeddingsPage() {
             },
           ].map((item) => (
             <li key={item.step} className="border-t border-parchment pt-6">
-              <span className="text-xs font-medium tracking-[0.2em] text-sage">
+              <span className="text-xs font-medium tracking-[0.2em] text-salmon">
                 {item.step}
               </span>
               <h3 className="mt-2 font-serif text-xl text-bark">{item.title}</h3>

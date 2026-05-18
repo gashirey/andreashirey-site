@@ -32,7 +32,7 @@ export default function AboutPage() {
             inside and linger over.
           </p>
           <p>
-            Nestled in the Hudson Valley, our fields and cutting gardens
+            Nestled in Louisa, in Virginia&apos;s Central Piedmont, our fields and cutting gardens
             supply seasonal blooms for local bouquets, farmers markets, and
             celebrations throughout the year.
           </p>

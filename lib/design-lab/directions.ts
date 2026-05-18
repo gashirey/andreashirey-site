@@ -1,3 +1,5 @@
+import { brand } from "@/lib/brand";
+
 export type DesignDirectionId = "a" | "b" | "c";
 
 export type DesignDirection = {
@@ -26,25 +28,26 @@ export type DesignDirection = {
   hero: "split" | "immersive" | "grounded";
 };
 
+/** Salmon-forward palettes — three expressions of the same brand warmth */
 export const designDirections: DesignDirection[] = [
   {
     id: "a",
     name: "Quiet Editorial",
     essence:
-      "Airy, restrained, magazine-inspired — typography and whitespace lead.",
+      "Airy and restrained — pale shell and blush, typography and whitespace lead.",
     serifVar: "var(--font-lab-cormorant)",
     sansVar: "var(--font-lab-dm)",
     colors: {
-      bg: "#faf9f6",
-      surface: "#ffffff",
-      text: "#2a2826",
-      muted: "#6f6a63",
-      accent: "#5a6b52",
-      accentHover: "#455240",
-      border: "#e8e4dc",
-      scrim: "rgba(42, 40, 38, 0.36)",
-      chip: "#eef1eb",
-      chipText: "#455240",
+      bg: "#faf6f4",
+      surface: "#fffcfb",
+      text: "#3f3834",
+      muted: "#7a716c",
+      accent: "#d4a094",
+      accentHover: "#c08272",
+      border: "#efe6e2",
+      scrim: "rgba(63, 56, 52, 0.34)",
+      chip: "#f5ebe7",
+      chipText: "#a06b5c",
     },
     spacing: { sectionY: "7rem", blockY: "2rem", gutter: "1.5rem" },
     hero: "split",
@@ -53,20 +56,20 @@ export const designDirections: DesignDirection[] = [
     id: "b",
     name: "Romantic Botanical",
     essence:
-      "Softer, warmer, immersive — artistic florals with emotional lushness.",
+      "Softer salmon wash — immersive florals, emotionally lush without sweetness overload.",
     serifVar: "var(--font-lab-fraunces)",
     sansVar: "var(--font-lab-karla)",
     colors: {
-      bg: "#f7f3ef",
-      surface: "#fffcfa",
-      text: "#3d3430",
-      muted: "#7a6f6a",
-      accent: "#8b6e62",
-      accentHover: "#735a50",
-      border: "#ebe3dc",
-      scrim: "rgba(61, 52, 48, 0.4)",
-      chip: "#f3ebe6",
-      chipText: "#5c4a42",
+      bg: "#f9f0ed",
+      surface: "#fff9f7",
+      text: "#423936",
+      muted: "#8a7872",
+      accent: "#d9a89a",
+      accentHover: "#c4897a",
+      border: "#eddcd6",
+      scrim: "rgba(66, 57, 54, 0.38)",
+      chip: "#f3e0d9",
+      chipText: "#9a6356",
     },
     spacing: { sectionY: "6rem", blockY: "1.75rem", gutter: "1.25rem" },
     hero: "immersive",
@@ -75,20 +78,20 @@ export const designDirections: DesignDirection[] = [
     id: "c",
     name: "Refined Countryside",
     essence:
-      "Grounded, tactile, understated luxury — authentic without rustic cliché.",
+      "Dusty rose and linen — grounded Central Virginia elegance, tactile and authentic.",
     serifVar: "var(--font-lab-libre)",
     sansVar: "var(--font-lab-work)",
     colors: {
-      bg: "#f4f1eb",
-      surface: "#f9f7f2",
-      text: "#353129",
-      muted: "#6b6358",
-      accent: "#4f5d48",
-      accentHover: "#3e4a38",
-      border: "#ddd6ca",
-      scrim: "rgba(53, 49, 41, 0.44)",
-      chip: "#e8e6df",
-      chipText: "#3e4a38",
+      bg: "#f6f1ee",
+      surface: "#faf7f5",
+      text: "#3a3430",
+      muted: "#736a64",
+      accent: "#c99588",
+      accentHover: "#b07d6f",
+      border: "#e5d8d2",
+      scrim: "rgba(58, 52, 48, 0.42)",
+      chip: "#ede4df",
+      chipText: "#8f5f52",
     },
     spacing: { sectionY: "6.5rem", blockY: "2rem", gutter: "1.5rem" },
     hero: "grounded",
@@ -97,7 +100,8 @@ export const designDirections: DesignDirection[] = [
 
 export const labCopy = {
   farmName: "Grey Gables Farm",
-  location: "Hudson Valley, New York",
+  location: "Louisa, Virginia",
+  locationShort: "Central Virginia",
   tagline: "Seasonal flowers, grown with care",
   product: {
     name: "Mixed Seasonal Bouquet",
@@ -107,6 +111,14 @@ export const labCopy = {
   },
   quote: {
     text: "The bouquets felt like they had just been carried in from the garden — unhurried, fragrant, and completely ours.",
-    attribution: "Sarah M., Hudson Valley",
+    attribution: "Sarah M., Louisa County",
   },
 };
+
+export function isValidDirectionId(id: string): id is DesignDirectionId {
+  return id === "a" || id === "b" || id === "c";
+}
+
+export function getDirection(id: string): DesignDirection | undefined {
+  return designDirections.find((d) => d.id === id);
+}

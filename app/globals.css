@@ -1,21 +1,25 @@
 @import "tailwindcss";
 
 :root {
-  --color-cream: #f7f5f0;
-  --color-parchment: #ede9e1;
-  --color-sage: #5a6b52;
-  --color-sage-dark: #455240;
-  --color-bark: #3d3832;
-  --color-stone: #6b6560;
-  --color-blush: #b89585;
-  --color-white: #fffcf8;
+  --color-cream: #faf6f4;
+  --color-parchment: #efe6e2;
+  --color-salmon: #d4a094;
+  --color-salmon-dark: #c08272;
+  --color-salmon-light: #f5ebe7;
+  --color-salmon-muted: #e8d4cd;
+  --color-bark: #3f3834;
+  --color-stone: #7a716c;
+  --color-blush: #d4a094;
+  --color-white: #fffcfb;
 }
 
 @theme inline {
   --color-cream: var(--color-cream);
   --color-parchment: var(--color-parchment);
-  --color-sage: var(--color-sage);
-  --color-sage-dark: var(--color-sage-dark);
+  --color-salmon: var(--color-salmon);
+  --color-salmon-dark: var(--color-salmon-dark);
+  --color-salmon-light: var(--color-salmon-light);
+  --color-salmon-muted: var(--color-salmon-muted);
   --color-bark: var(--color-bark);
   --color-stone: var(--color-stone);
   --color-blush: var(--color-blush);
@@ -25,7 +29,6 @@
   --radius-sm: 2px;
 }
 
-/* Shared UI primitives — keep styling consistent with .cursor/rules/design.mdc */
 @layer components {
   .btn {
     @apply inline-flex items-center justify-center rounded-sm border px-5 py-2.5 text-sm font-medium tracking-wide transition-colors;
@@ -36,7 +39,7 @@
   }
 
   .input {
-    @apply w-full rounded-sm border border-parchment bg-cream px-4 py-2.5 text-bark outline-none focus:border-sage focus:ring-1 focus:ring-sage;
+    @apply w-full rounded-sm border border-parchment bg-cream px-4 py-2.5 text-bark outline-none focus:border-salmon focus:ring-1 focus:ring-salmon;
   }
 
   .chip {
@@ -63,7 +66,7 @@ body {
 }
 
 ::selection {
-  background: color-mix(in srgb, var(--color-sage) 25%, transparent);
+  background: color-mix(in srgb, var(--color-salmon) 30%, transparent);
 }
 
 a:focus-visible,
@@ -71,7 +74,7 @@ button:focus-visible,
 input:focus-visible,
 select:focus-visible,
 textarea:focus-visible {
-  outline: 2px solid var(--color-sage);
+  outline: 2px solid var(--color-salmon);
   outline-offset: 2px;
 }
 

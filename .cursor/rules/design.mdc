@@ -9,7 +9,7 @@ alwaysApply: true
 
 - **Editorial / magazine** layout: typography and whitespace carry the design
 - **Photography-forward**: real farm images are the hero; UI stays quiet
-- **Restrained palette**: cream, parchment, sage, bark, stone — no accent rainbows
+- **Restrained palette**: cream, parchment, light salmon/blush accents, bark, stone — no accent rainbows
 - **Flat surfaces**: hairline borders (`border-parchment`), no drop shadows unless essential
 - **Tight radii**: `rounded-sm` (2px) at most; square image crops are fine
 - **Calm motion**: color/underline on hover only — no scale, parallax, or entrance animations

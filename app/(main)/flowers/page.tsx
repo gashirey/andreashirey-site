@@ -51,7 +51,7 @@ export default function FlowersPage() {
               Order online through our{" "}
               <a
                 href={links.rootedFarmers}
-                className="font-medium text-sage-dark underline underline-offset-2"
+                className="font-medium text-salmon-dark underline underline-offset-2"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -64,7 +64,7 @@ export default function FlowersPage() {
               Online ordering via Rooted Farmers is coming soon. For now, please{" "}
               <a
                 href="/contact?subject=flowers"
-                className="font-medium text-sage-dark underline underline-offset-2"
+                className="font-medium text-salmon-dark underline underline-offset-2"
               >
                 inquire about availability
               </a>

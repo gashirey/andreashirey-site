@@ -24,7 +24,7 @@ export function Footer() {
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    className="text-sm text-bark/80 hover:text-sage-dark transition-colors"
+                    className="text-sm text-bark/80 hover:text-salmon-dark transition-colors"
                   >
                     {item.label}
                   </Link>
@@ -33,7 +33,7 @@ export function Footer() {
               <li>
                 <Link
                   href={getRootedFarmersHref()}
-                  className="text-sm text-bark/80 hover:text-sage-dark transition-colors"
+                  className="text-sm text-bark/80 hover:text-salmon-dark transition-colors"
                 >
                   Current availability
                 </Link>
@@ -47,7 +47,7 @@ export function Footer() {
             <p className="mt-4 text-sm text-bark/80">{site.location}</p>
             <a
               href={`mailto:${site.email}`}
-              className="mt-2 inline-block text-sm text-sage-dark hover:text-sage transition-colors"
+              className="mt-2 inline-block text-sm text-salmon-dark hover:text-salmon transition-colors"
             >
               {site.email}
             </a>
@@ -56,7 +56,7 @@ export function Footer() {
                 href={social.instagram}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-2 block text-sm text-sage-dark hover:text-sage transition-colors"
+                className="mt-2 block text-sm text-salmon-dark hover:text-salmon transition-colors"
               >
                 Instagram
               </a>

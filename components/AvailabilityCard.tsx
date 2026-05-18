@@ -8,7 +8,7 @@ const statusLabels: Record<AvailabilityItem["status"], string> = {
 };
 
 const statusStyles: Record<AvailabilityItem["status"], string> = {
-  available: "bg-sage/15 text-sage-dark",
+  available: "bg-salmon-light text-salmon-dark",
   limited: "bg-parchment text-bark",
   seasonal: "bg-cream text-stone border border-parchment",
 };

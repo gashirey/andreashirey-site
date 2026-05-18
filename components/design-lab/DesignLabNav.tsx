@@ -1,36 +1,63 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { designDirections } from "@/lib/design-lab/directions";
 
 export function DesignLabNav() {
+  const pathname = usePathname();
+  const onOverview = pathname === "/design-lab";
+
   return (
     <nav
-      className="sticky top-0 z-40 border-b border-bark/10 bg-cream/95"
+      className="sticky top-0 z-40 border-b border-parchment bg-cream"
       aria-label="Design lab"
     >
-      <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-6 py-3">
-        <div>
-          <p className="font-serif text-lg text-bark">Design Lab</p>
-          <p className="text-xs text-stone">Grey Gables Farm — internal</p>
-        </div>
-        <ul className="flex flex-wrap gap-x-5 gap-y-2 text-sm text-stone">
-          {designDirections.map((d) => (
-            <li key={d.id}>
-              <a
-                href={`#direction-${d.id}`}
-                className="transition-colors hover:text-sage-dark"
-              >
-                {d.id.toUpperCase()}: {d.name}
-              </a>
-            </li>
-          ))}
-          <li>
-            <Link href="/" className="transition-colors hover:text-sage-dark">
-              ← Site
+      <div className="mx-auto max-w-6xl px-6 py-3">
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <Link href="/design-lab" className="font-serif text-lg text-bark hover:text-salmon-dark">
+              Design Lab
             </Link>
-          </li>
-        </ul>
+            <p className="text-xs text-stone">Grey Gables Farm · Louisa, VA</p>
+          </div>
+          <ul className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-stone">
+            <li>
+              <Link
+                href="/design-lab"
+                className={onOverview ? "font-medium text-salmon-dark" : "hover:text-bark"}
+              >
+                Overview
+              </Link>
+            </li>
+            {designDirections.map((d) => {
+              const fullHref = `/design-lab/${d.id}`;
+              const onFull = pathname === fullHref;
+              return (
+                <li key={d.id} className="flex items-center gap-2">
+                  <Link
+                    href={`/design-lab#direction-${d.id}`}
+                    className="text-xs hover:text-bark"
+                  >
+                    {d.id.toUpperCase()} specs
+                  </Link>
+                  <span className="text-parchment">|</span>
+                  <Link
+                    href={fullHref}
+                    className={onFull ? "font-medium text-salmon-dark" : "hover:text-bark"}
+                  >
+                    {d.id.toUpperCase()} full
+                  </Link>
+                </li>
+              );
+            })}
+            <li>
+              <Link href="/" className="hover:text-bark">
+                ← Site
+              </Link>
+            </li>
+          </ul>
+        </div>
       </div>
     </nav>
   );

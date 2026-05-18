@@ -6,10 +6,16 @@ import { PhotoPlaceholder } from "./PhotoPlaceholder";
 
 type DirectionShowcaseProps = {
   direction: DesignDirection;
+  /** specimen = labeled sections on overview; full = immersive single-direction page */
+  mode?: "specimen" | "full";
 };
 
-export function DirectionShowcase({ direction }: DirectionShowcaseProps) {
+export function DirectionShowcase({
+  direction,
+  mode = "specimen",
+}: DirectionShowcaseProps) {
   const d = direction;
+  const isFull = mode === "full";
   const style = {
     "--lab-bg": d.colors.bg,
     "--lab-surface": d.colors.surface,
@@ -33,12 +39,12 @@ export function DirectionShowcase({ direction }: DirectionShowcaseProps) {
 
   return (
     <section
-      id={`direction-${d.id}`}
-      className="lab-direction scroll-mt-24 border-b border-[var(--lab-border)]"
+      id={isFull ? undefined : `direction-${d.id}`}
+      className={`lab-direction ${isFull ? "min-h-screen" : "scroll-mt-24 border-b border-[var(--lab-border)]"}`}
       style={style}
-      aria-labelledby={`direction-${d.id}-title`}
+      aria-labelledby={isFull ? undefined : `direction-${d.id}-title`}
     >
-      {/* Direction header */}
+      {!isFull && (
       <div
         className="border-b border-[var(--lab-border)] px-6 py-10 md:px-12"
         style={{ paddingTop: "var(--lab-section-y)", paddingBottom: "2.5rem" }}
@@ -58,16 +64,15 @@ export function DirectionShowcase({ direction }: DirectionShowcaseProps) {
           {d.essence}
         </p>
       </div>
+      )}
 
-      {/* Hero */}
-      <LabBlock title="Hero" directionId={d.id}>
-        {d.hero === "split" && <HeroSplit />}
-        {d.hero === "immersive" && <HeroImmersive />}
-        {d.hero === "grounded" && <HeroGrounded />}
+      <LabBlock title={isFull ? undefined : "Hero"} flush={isFull}>
+        {d.hero === "split" && <HeroSplit full={isFull} />}
+        {d.hero === "immersive" && <HeroImmersive full={isFull} />}
+        {d.hero === "grounded" && <HeroGrounded full={isFull} />}
       </LabBlock>
 
-      {/* Typography */}
-      <LabBlock title="Typography">
+      <LabBlock title={isFull ? undefined : "Typography"}>
         <div className="grid gap-10 md:grid-cols-2">
           <div>
             <p className="lab-label">Display — Serif</p>
@@ -86,14 +91,14 @@ export function DirectionShowcase({ direction }: DirectionShowcaseProps) {
             </p>
             <p className="lab-label mt-8">Caption / Label</p>
             <p className="mt-2 font-[family-name:var(--lab-sans)] text-xs uppercase tracking-[0.18em] text-[var(--lab-muted)]">
-              Hudson Valley · Seasonal availability
+              {labCopy.locationShort} · Seasonal availability
             </p>
           </div>
         </div>
       </LabBlock>
 
       {/* Palette */}
-      <LabBlock title="Color palette">
+      <LabBlock title={isFull ? undefined : "Color palette"}>
         <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-6">
           {[
             { name: "Background", hex: d.colors.bg },
@@ -120,7 +125,7 @@ export function DirectionShowcase({ direction }: DirectionShowcaseProps) {
       </LabBlock>
 
       {/* Nav */}
-      <LabBlock title="Navigation sample">
+      <LabBlock title={isFull ? undefined : "Navigation sample"}>
         <header className="flex flex-col gap-4 border border-[var(--lab-border)] bg-[var(--lab-surface)] px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <span className="block font-[family-name:var(--lab-serif)] text-xl">
@@ -146,7 +151,7 @@ export function DirectionShowcase({ direction }: DirectionShowcaseProps) {
       </LabBlock>
 
       {/* Buttons */}
-      <LabBlock title="CTA buttons">
+      <LabBlock title={isFull ? undefined : "CTA buttons"}>
         <div className="flex flex-wrap gap-3">
           <a href="#" className="lab-btn-primary" onClick={(e) => e.preventDefault()}>
             View current availability
@@ -161,7 +166,7 @@ export function DirectionShowcase({ direction }: DirectionShowcaseProps) {
       </LabBlock>
 
       {/* Gallery */}
-      <LabBlock title="Gallery / image treatment">
+      <LabBlock title={isFull ? undefined : "Gallery / image treatment"}>
         <div className="grid gap-[var(--lab-gutter)] sm:grid-cols-3">
           <PhotoPlaceholder label="field morning light" aspect="aspect-[3/4]" />
           <PhotoPlaceholder label="bouquet detail, hands" aspect="aspect-square" className="sm:mt-8" />
@@ -170,7 +175,7 @@ export function DirectionShowcase({ direction }: DirectionShowcaseProps) {
       </LabBlock>
 
       {/* Product card */}
-      <LabBlock title="Product / inventory card">
+      <LabBlock title={isFull ? undefined : "Product / inventory card"}>
         <article className="max-w-md border border-[var(--lab-border)] bg-[var(--lab-surface)]">
           <PhotoPlaceholder label="mixed seasonal bouquet — product" aspect="aspect-[4/3]" />
           <div className="border-t border-[var(--lab-border)] p-5">
@@ -194,7 +199,7 @@ export function DirectionShowcase({ direction }: DirectionShowcaseProps) {
       </LabBlock>
 
       {/* Quote */}
-      <LabBlock title="Quote / testimonial">
+      <LabBlock title={isFull ? undefined : "Quote / testimonial"}>
         <blockquote className="max-w-2xl border-l-2 border-[var(--lab-accent)] pl-6">
           <p className="font-[family-name:var(--lab-serif)] text-2xl leading-snug md:text-3xl">
             &ldquo;{labCopy.quote.text}&rdquo;
@@ -206,6 +211,7 @@ export function DirectionShowcase({ direction }: DirectionShowcaseProps) {
       </LabBlock>
 
       {/* Spacing */}
+      {!isFull && (
       <LabBlock title="Section spacing" className="!pb-[var(--lab-section-y)]">
         <div className="space-y-4 font-[family-name:var(--lab-sans)] text-sm text-[var(--lab-muted)]">
           <div className="flex items-center gap-4">
@@ -230,6 +236,7 @@ export function DirectionShowcase({ direction }: DirectionShowcaseProps) {
           gallery becomes vertical scroll. Tap targets remain full-width buttons.
         </p>
       </LabBlock>
+      )}
     </section>
   );
 }
@@ -238,30 +245,33 @@ function LabBlock({
   title,
   children,
   className = "",
-  directionId,
+  flush = false,
 }: {
-  title: string;
+  title?: string;
   children: React.ReactNode;
   className?: string;
-  directionId?: string;
+  flush?: boolean;
 }) {
   return (
     <div
-      className={`border-b border-[var(--lab-border)] px-6 md:px-12 ${className}`}
+      className={`border-b border-[var(--lab-border)] ${flush ? "" : "px-6 md:px-12"} ${className}`}
       style={{
-        paddingTop: "var(--lab-block-y)",
+        paddingTop: flush ? 0 : "var(--lab-block-y)",
         paddingBottom: "var(--lab-section-y)",
       }}
     >
-      <h3 className="lab-label mb-8">{title}</h3>
+      {title ? (
+        <h3 className="lab-label mb-8 px-6 pt-[var(--lab-block-y)] md:px-12">{title}</h3>
+      ) : null}
       {children}
     </div>
   );
 }
 
-function HeroSplit() {
+function HeroSplit({ full = false }: { full?: boolean }) {
+  const minH = full ? "min-h-screen" : "min-h-[52vh]";
   return (
-    <div className="grid min-h-[52vh] md:grid-cols-2">
+    <div className={`grid ${minH} md:grid-cols-2`}>
       <div className="flex flex-col justify-end bg-[var(--lab-surface)] p-8 md:p-12">
         <p className="font-[family-name:var(--lab-sans)] text-xs uppercase tracking-[0.2em] text-[var(--lab-muted)]">
           {labCopy.location}
@@ -281,12 +291,13 @@ function HeroSplit() {
   );
 }
 
-function HeroImmersive() {
+function HeroImmersive({ full = false }: { full?: boolean }) {
+  const minH = full ? "min-h-screen" : "min-h-[58vh]";
   return (
-    <div className="relative min-h-[58vh]">
-      <PhotoPlaceholder label="hero — immersive floral close-up or garden path" aspect="aspect-auto absolute inset-0 min-h-[58vh]" priority />
+    <div className={`relative ${minH}`}>
+      <PhotoPlaceholder label="hero — immersive floral close-up or garden path" aspect={`aspect-auto absolute inset-0 ${minH}`} priority />
       <div className="absolute inset-0" style={{ background: "var(--lab-scrim)" }} aria-hidden />
-      <div className="relative flex min-h-[58vh] flex-col justify-end px-8 pb-12 pt-24 md:px-12 md:pb-16">
+      <div className={`relative flex ${minH} flex-col justify-end px-8 pb-12 pt-24 md:px-12 md:pb-16`}>
         <p className="font-[family-name:var(--lab-sans)] text-xs uppercase tracking-[0.2em] text-white/80">
           {labCopy.location}
         </p>
@@ -301,13 +312,14 @@ function HeroImmersive() {
   );
 }
 
-function HeroGrounded() {
+function HeroGrounded({ full = false }: { full?: boolean }) {
+  const minH = full ? "min-h-[70vh]" : "min-h-[48vh]";
   return (
-    <div className="border border-[var(--lab-border)] bg-[var(--lab-surface)]">
-      <div className="relative min-h-[48vh]">
-        <PhotoPlaceholder label="hero — tactile farm detail, buckets or greenhouse" aspect="aspect-auto absolute inset-0 min-h-[48vh]" priority />
+    <div className={`${full ? "" : "border border-[var(--lab-border)]"} bg-[var(--lab-surface)]`}>
+      <div className={`relative ${minH}`}>
+        <PhotoPlaceholder label="hero — tactile farm detail, buckets or greenhouse" aspect={`aspect-auto absolute inset-0 ${minH}`} priority />
         <div className="absolute inset-0" style={{ background: "var(--lab-scrim)" }} aria-hidden />
-        <div className="relative flex min-h-[48vh] items-end p-8 md:p-10">
+        <div className={`relative flex ${minH} items-end p-8 md:p-10`}>
           <div>
             <h3 className="font-[family-name:var(--lab-serif)] text-3xl text-white md:text-4xl">
               {labCopy.farmName}

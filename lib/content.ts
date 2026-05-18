@@ -13,9 +13,10 @@ export const site = {
   domain: "greygablesfarm.com",
   tagline: "Seasonal flowers, grown with care",
   description:
-    "Grey Gables Farm grows thoughtful, seasonal flowers for everyday bouquets, weddings, and special gatherings in the Hudson Valley.",
+    "Grey Gables Farm grows thoughtful, seasonal flowers for everyday bouquets, weddings, and special gatherings in Louisa, Central Virginia.",
   email: "hello@greygablesfarm.com",
-  location: "Hudson Valley, New York",
+  location: "Louisa, Virginia",
+  locationRegion: "Central Virginia",
 } as const;
 
 /** Set when you refresh listings — shown on Flowers page */

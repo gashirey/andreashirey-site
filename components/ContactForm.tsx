@@ -88,7 +88,7 @@ export function ContactForm() {
             className="input mt-1 resize-y"
           />
         </div>
-        <button type="submit" className="btn w-full border-sage-dark bg-sage-dark text-white hover:bg-sage">
+        <button type="submit" className="btn w-full border-salmon-dark bg-salmon-dark text-white hover:bg-salmon">
           Send message
         </button>
       </div>

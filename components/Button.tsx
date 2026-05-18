@@ -3,10 +3,10 @@ import Link from "next/link";
 type Variant = "primary" | "secondary" | "outline";
 
 const variants: Record<Variant, string> = {
-  primary: "bg-sage-dark text-white hover:bg-sage border-sage-dark",
+  primary: "bg-salmon-dark text-white hover:bg-salmon border-salmon-dark",
   secondary: "bg-parchment text-bark hover:bg-parchment/90 border-parchment",
   outline:
-    "bg-transparent text-bark border-bark/25 hover:border-sage-dark hover:text-sage-dark",
+    "bg-transparent text-bark border-bark/25 hover:border-salmon-dark hover:text-salmon-dark",
 };
 
 type ButtonProps = {

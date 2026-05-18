@@ -34,7 +34,7 @@ export default function HomePage() {
       <Section
         eyebrow="Welcome"
         title="Flowers grown slowly, shared seasonally"
-        description="At Grey Gables Farm, we cultivate thoughtful blooms for everyday joy, intimate gatherings, and milestone celebrations. Every bouquet is gathered fresh from our Hudson Valley fields."
+        description="At Grey Gables Farm, we cultivate thoughtful blooms for everyday joy, intimate gatherings, and milestone celebrations. Every bouquet is gathered fresh from our Louisa fields."
       >
         <div className="grid items-center gap-12 lg:grid-cols-2">
           <div className="image-frame relative aspect-[4/5]">
@@ -133,7 +133,7 @@ export default function HomePage() {
         </div>
         <Link
           href="/gallery"
-          className="mt-8 inline-block font-medium text-sage-dark hover:text-sage transition-colors"
+          className="mt-8 inline-block font-medium text-salmon-dark hover:text-salmon transition-colors"
         >
           View the gallery →
         </Link>
