@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { Hero } from "@/components/Hero";
 import { Section } from "@/components/Section";
 import { CTA } from "@/components/CTA";
-import { AvailabilityCard } from "@/components/AvailabilityCard";
 import { AvailabilityNote } from "@/components/AvailabilityNote";
 import { OrderingSteps } from "@/components/OrderingSteps";
-import { currentAvailability, site } from "@/lib/content";
+import { AvailableNowSection } from "@/components/inventory/AvailableNowSection";
+import { site } from "@/lib/content";
 import { getRootedFarmersHref, links } from "@/lib/links";
+import { isInventoryConfigured } from "@/lib/inventory/queries";
 import { pageMetadata } from "@/lib/metadata";
 
 export const metadata: Metadata = pageMetadata({
@@ -18,6 +20,7 @@ export const metadata: Metadata = pageMetadata({
 export default function FlowersPage() {
   const rootedHref = getRootedFarmersHref();
   const hasRootedLink = Boolean(links.rootedFarmers);
+  const liveInventory = isInventoryConfigured();
 
   return (
     <>
@@ -28,8 +31,8 @@ export default function FlowersPage() {
         imageSrc="/images/placeholders/flowers-hero.svg"
         imageAlt="Placeholder — replace with field rows or bucket of fresh flowers"
         primaryCta={{
-          label: "View Current Availability",
-          href: rootedHref,
+          label: liveInventory ? "Available now" : "View Current Availability",
+          href: liveInventory ? "/available-now" : rootedHref,
         }}
         secondaryCta={{
           label: "Inquire About Flowers",
@@ -39,7 +42,7 @@ export default function FlowersPage() {
 
       <Section
         title="What's available now"
-        description="Our offerings change with the seasons. Below is what we're growing and listing this week."
+        description="Our offerings change with the seasons. Below is what we're listing today."
       >
         <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <AvailabilityNote />
@@ -73,11 +76,17 @@ export default function FlowersPage() {
           )}
         </div>
 
-        <div className="grid gap-8 sm:grid-cols-2">
-          {currentAvailability.map((item) => (
-            <AvailabilityCard key={item.id} item={item} />
-          ))}
-        </div>
+        <Suspense
+          fallback={
+            <div className="grid gap-8 sm:grid-cols-2">
+              {[1, 2].map((n) => (
+                <div key={n} className="card h-80 bg-parchment" aria-hidden />
+              ))}
+            </div>
+          }
+        >
+          <AvailableNowSection showHeading={false} />
+        </Suspense>
       </Section>
 
       <Section variant="white" title="How ordering works" eyebrow="Simple steps">
@@ -89,8 +98,8 @@ export default function FlowersPage() {
           title="See the full shop listing"
           description="When Rooted Farmers is connected, this button will take visitors directly to your live inventory."
           primary={{
-            label: "View Current Availability",
-            href: rootedHref,
+            label: liveInventory ? "Available now" : "View Current Availability",
+            href: liveInventory ? "/available-now" : rootedHref,
           }}
           secondary={{
             label: "Inquire About Flowers",

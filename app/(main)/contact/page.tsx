@@ -8,7 +8,7 @@ import { pageMetadata } from "@/lib/metadata";
 
 export const metadata: Metadata = pageMetadata({
   title: "Contact",
-  description: `Get in touch with ${site.name} — flower inquiries, weddings, and general questions.`,
+  description: `Get in touch with ${site.name} — flower inquiries, events, and general questions.`,
   path: "/contact",
 });
 
@@ -28,7 +28,7 @@ export default function ContactPage() {
           <div>
             <h2 className="font-serif text-2xl text-bark">Reach out</h2>
             <p className="mt-4 text-stone leading-relaxed">
-              For flower orders, wedding consultations, or general questions,
+              For flower orders, event florals, or general questions,
               send us a note. We typically respond within 2–3 business days.
             </p>
             <dl className="mt-8 space-y-4 text-sm">

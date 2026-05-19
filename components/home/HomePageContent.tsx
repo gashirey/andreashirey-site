@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 import { HeroSlider } from "@/components/HeroSlider";
 import { Section } from "@/components/Section";
 import { CTA } from "@/components/CTA";
@@ -7,7 +6,7 @@ import { Button } from "@/components/Button";
 import { AvailabilityCard } from "@/components/AvailabilityCard";
 import { AvailabilityNote } from "@/components/AvailabilityNote";
 import { OrderingSteps } from "@/components/OrderingSteps";
-import { currentAvailability, galleryImages, heroSlides, site } from "@/lib/content";
+import { currentAvailability, heroSlides, site } from "@/lib/content";
 import { getRootedFarmersHref } from "@/lib/links";
 import type { HeroFrame } from "@/lib/content";
 import type { HeroLayout } from "@/lib/snapshots/types";
@@ -22,7 +21,6 @@ export function HomePageContent({
   heroLayout = "immersive",
 }: HomePageContentProps) {
   const featured = currentAvailability.slice(0, 2);
-  const galleryPreview = galleryImages.slice(0, 3);
 
   return (
     <>
@@ -61,7 +59,7 @@ export function HomePageContent({
             <p className="text-stone leading-relaxed">
               We believe in the quiet beauty of seasonal flowers — the kind
               that feel at home on a kitchen table, along a garden path, or
-              beside you on your wedding day.
+              at a gathering you&apos;ve been planning for months.
             </p>
             <p className="text-stone leading-relaxed">
               Our work is rooted in care for the land, our community, and the
@@ -104,10 +102,10 @@ export function HomePageContent({
 
       <Section variant="surface">
         <CTA
-          title="Planning a wedding or special event?"
-          description="We'd love to hear about your vision. From intimate elopements to full celebration florals, we create designs that feel personal and seasonally inspired."
+          title="Planning a special event?"
+          description="We'd love to hear about your vision. From intimate gatherings to full celebration florals, we create designs that feel personal and seasonally inspired."
           primary={{
-            label: "Weddings & Events",
+            label: "Events",
             href: "/weddings",
           }}
           secondary={{
@@ -115,37 +113,6 @@ export function HomePageContent({
             href: "/contact?subject=flowers",
           }}
         />
-      </Section>
-
-      <Section
-        eyebrow="Gallery"
-        title="Life at the farm"
-        description="Moments from the field, the studio, and celebrations we've been honored to be part of."
-      >
-        <div className="grid grid-cols-3 gap-3 md:gap-4">
-          {galleryPreview.map((image, i) => (
-            <div
-              key={image.id}
-              className={`image-frame relative ${
-                i === 1 ? "aspect-[3/4]" : "aspect-square"
-              }`}
-            >
-              <Image
-                src={image.src}
-                alt={image.alt}
-                fill
-                className="object-cover"
-                sizes="33vw"
-              />
-            </div>
-          ))}
-        </div>
-        <Link
-          href="/gallery"
-          className="mt-8 inline-block font-medium text-salmon-dark hover:text-salmon transition-colors"
-        >
-          View the gallery →
-        </Link>
       </Section>
     </>
   );

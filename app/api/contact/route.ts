@@ -4,7 +4,8 @@ import { isSupabaseConfigured } from "@/lib/supabase/config";
 
 const SUBJECT_TAGS: Record<string, string[]> = {
   flowers: ["flowers"],
-  wedding: ["wedding_inquiry", "farm_event"],
+  event: ["farm_event"],
+  wedding: ["farm_event"],
   general: [],
 };
 
@@ -54,7 +55,12 @@ export async function POST(request: Request) {
     emailOptIn: false,
     smsOptIn: false,
     source: "website_contact_form",
-    customerType: subject === "wedding" ? "wedding" : subject === "flowers" ? "flowers" : "general",
+    customerType:
+      subject === "event" || subject === "wedding"
+        ? "event"
+        : subject === "flowers"
+          ? "flowers"
+          : "general",
     notes: message.trim(),
     tags: subjectTags,
     activityType: "inquiry_received",

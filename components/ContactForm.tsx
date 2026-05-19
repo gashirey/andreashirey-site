@@ -8,7 +8,8 @@ const supabaseReady = Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL);
 
 const subjectLabels: Record<string, string> = {
   flowers: "Flower inquiry",
-  wedding: "Wedding or event inquiry",
+  event: "Event inquiry",
+  wedding: "Event inquiry",
   general: "General question",
 };
 
@@ -16,7 +17,8 @@ type FormStatus = "idle" | "loading" | "success" | "error";
 
 export function ContactForm() {
   const searchParams = useSearchParams();
-  const subjectKey = searchParams.get("subject") ?? "general";
+  const rawSubject = searchParams.get("subject") ?? "general";
+  const subjectKey = rawSubject === "wedding" ? "event" : rawSubject;
   const defaultSubject = subjectLabels[subjectKey] ?? subjectLabels.general;
 
   const [status, setStatus] = useState<FormStatus>("idle");
@@ -145,7 +147,7 @@ export function ContactForm() {
             className="input mt-1"
           >
             <option value="flowers">Flower inquiry</option>
-            <option value="wedding">Wedding or event</option>
+            <option value="event">Event</option>
             <option value="general">General question</option>
           </select>
         </div>

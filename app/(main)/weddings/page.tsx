@@ -8,14 +8,14 @@ import { site } from "@/lib/content";
 import { pageMetadata } from "@/lib/metadata";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Weddings & Events",
-  description: `Wedding and event florals by ${site.name} — intimate, seasonal designs in Louisa and Central Virginia.`,
+  title: "Events",
+  description: `Event florals by ${site.name} — intimate, seasonal designs in Louisa and Central Virginia.`,
   path: "/weddings",
 });
 
 const services = [
   {
-    title: "Bridal & personal flowers",
+    title: "Personal flowers",
     text: "Bouquets, boutonnieres, and corsages designed to complement your palette and season.",
   },
   {
@@ -28,24 +28,24 @@ const services = [
   },
 ];
 
-export default function WeddingsPage() {
+export default function EventsPage() {
   return (
     <>
       <Hero
         compact
-        title="Weddings & events"
-        subtitle="Romantic, seasonal florals for the moments that matter most"
+        title="Events"
+        subtitle="Seasonal florals for gatherings that matter"
         imageSrc="/images/placeholders/weddings-hero.svg"
-        imageAlt="Placeholder — replace with wedding bouquet or ceremony florals photo"
+        imageAlt="Placeholder — replace with event florals photo"
         primaryCta={{
           label: "Request a consultation",
-          href: "/contact?subject=wedding",
+          href: "/contact?subject=event",
         }}
       />
 
       <Section
         title="Florals with feeling"
-        description="We partner with couples and hosts to create designs that feel effortless, personal, and deeply connected to the season."
+        description="We partner with hosts and planners to create designs that feel effortless, personal, and deeply connected to the season."
       >
         <div className="grid gap-12 lg:grid-cols-2">
           <ul className="space-y-8">
@@ -59,10 +59,9 @@ export default function WeddingsPage() {
             ))}
           </ul>
           <div className="image-frame relative aspect-square">
-            {/* PHOTO: Replace with wedding tablescape or ceremony photo */}
             <Image
               src="/images/placeholders/wedding-detail.svg"
-              alt="Placeholder — replace with wedding floral detail photo"
+              alt="Placeholder — replace with event floral detail photo"
               fill
               className="object-cover"
               sizes="50vw"
@@ -100,7 +99,7 @@ export default function WeddingsPage() {
           ))}
         </ol>
         <div className="mt-12">
-          <Button href="/contact?subject=wedding" variant="primary">
+          <Button href="/contact?subject=event" variant="primary">
             Inquire about your event
           </Button>
         </div>
@@ -112,7 +111,7 @@ export default function WeddingsPage() {
           description="Share your date, venue, and inspiration — we'll respond within a few business days."
           primary={{
             label: "Send an inquiry",
-            href: "/contact?subject=wedding",
+            href: "/contact?subject=event",
           }}
           secondary={{
             label: "Inquire About Flowers",

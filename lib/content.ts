@@ -110,9 +110,9 @@ export const ordering = {
 export const nav = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
+  { label: "Available Now", href: "/available-now" },
   { label: "Flowers", href: "/flowers" },
-  { label: "Gallery", href: "/gallery" },
-  { label: "Weddings & Events", href: "/weddings" },
+  { label: "Events", href: "/weddings" },
   { label: "Contact", href: "/contact" },
 ] as const;
 
