@@ -6,7 +6,9 @@
     "dev": "next dev --hostname 127.0.0.1",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "seed:inventory": "node scripts/seed-mvp-availability.mjs",
+    "upload:shoot": "node scripts/bulk-upload-media.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.106.0",

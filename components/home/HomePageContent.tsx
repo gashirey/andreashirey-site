@@ -7,21 +7,43 @@ import { AvailableNowSection } from "@/components/inventory/AvailableNowSection"
 import { FarmCtaStrip } from "@/components/home/FarmCtaStrip";
 import { heroHome, heroHomeSlide, homeAbout, homeSections } from "@/lib/content";
 import type { HeroFrame } from "@/lib/content";
+import type { SiteMediaSlotKey } from "@/lib/site-media/slots";
 import type { HeroLayout } from "@/lib/snapshots/types";
+
+type SiteMediaMap = Record<SiteMediaSlotKey, { imageUrl: string; alt: string }>;
+
+const STATIC_SITE_MEDIA: SiteMediaMap = {
+  hero: { imageUrl: heroHomeSlide.src, alt: heroHomeSlide.alt },
+  home_feature: {
+    imageUrl: "/images/bb.jpg",
+    alt: "Seasonal cut flowers from Grey Gables Farm",
+  },
+  about: {
+    imageUrl: "/images/garden_row.jpg",
+    alt: "Cutting garden at Grey Gables Farm",
+  },
+};
 
 type HomePageContentProps = {
   heroFrame?: HeroFrame;
   heroLayout?: HeroLayout;
+  siteMedia?: SiteMediaMap;
 };
 
 export function HomePageContent({
   heroFrame = "bleed",
   heroLayout = "immersive",
+  siteMedia = STATIC_SITE_MEDIA,
 }: HomePageContentProps) {
+  const heroSlide = {
+    src: siteMedia.hero.imageUrl,
+    alt: siteMedia.hero.alt,
+  };
+
   return (
     <>
       <HeroSlider
-        slides={[heroHomeSlide]}
+        slides={[heroSlide]}
         frame={heroFrame}
         layout={heroLayout}
         title={heroHome.title}
@@ -71,11 +93,14 @@ export function HomePageContent({
 
       <section className="relative aspect-[5/4] w-full bg-parchment sm:aspect-[16/10]">
         <Image
-          src="/images/bb.jpg"
-          alt="Seasonal cut flowers from Grey Gables Farm"
+          src={siteMedia.home_feature.imageUrl}
+          alt={siteMedia.home_feature.alt}
           fill
           className="object-cover"
           sizes="100vw"
+          unoptimized={
+            siteMedia.home_feature.imageUrl.startsWith("http")
+          }
         />
       </section>
 

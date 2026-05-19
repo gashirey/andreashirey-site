@@ -80,6 +80,7 @@ export function HeroSlider({
             priority={i === 0}
             className="object-cover"
             sizes={inset ? "(max-width: 1280px) 100vw, 1280px" : "100vw"}
+            unoptimized={slide.src.startsWith("http")}
           />
         </div>
       ))}

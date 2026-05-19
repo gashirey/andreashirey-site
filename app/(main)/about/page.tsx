@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Section } from "@/components/Section";
 import { homeAbout, site } from "@/lib/content";
+import { getSiteMediaSlots } from "@/lib/site-media/queries";
 import { pageMetadata } from "@/lib/metadata";
 
 export const metadata: Metadata = pageMetadata({
@@ -11,7 +12,10 @@ export const metadata: Metadata = pageMetadata({
   path: "/about",
 });
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const siteMedia = await getSiteMediaSlots();
+  const about = siteMedia.about;
+
   return (
     <Section density="compact" className="pt-20 md:pt-28">
       <div className="grid gap-10 lg:grid-cols-[minmax(0,22rem)_1fr] lg:gap-16 lg:items-start">
@@ -42,12 +46,13 @@ export default function AboutPage() {
         </div>
         <div className="relative aspect-[4/5] min-h-[320px] w-full bg-parchment lg:aspect-[3/4]">
           <Image
-            src="/images/garden_row.jpg"
-            alt="Cutting garden at Grey Gables Farm"
+            src={about.imageUrl}
+            alt={about.alt}
             fill
             className="object-cover"
             sizes="(max-width: 1024px) 100vw, 55vw"
             priority
+            unoptimized={about.imageUrl.startsWith("http")}
           />
         </div>
       </div>
