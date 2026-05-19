@@ -33,6 +33,16 @@ export function normalizePhoneE164(input: string): string | null {
   return null;
 }
 
+export function formatFullName(
+  firstName: string,
+  lastName: string,
+): string | null {
+  const first = firstName.trim();
+  const last = lastName.trim();
+  if (!first || !last) return null;
+  return `${first} ${last}`;
+}
+
 export function formatPhoneDisplay(e164: string): string {
   if (e164.startsWith("+1") && e164.length === 12) {
     const d = e164.slice(2);

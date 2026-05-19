@@ -1,50 +1,62 @@
-# Supabase — mailing & SMS lists
+# Supabase — unified contacts
 
-Same pattern as SCS Surge: subscribers live in Supabase; the Next.js site writes via **API routes** using the **service role** key (never exposed to the browser).
+One **contacts** table holds each person. Email and SMS are opt-in attributes (`email_opt_in`, `sms_opt_in`), not separate lists. **contact_tags** drive segmentation; **contact_activity** logs events.
 
 ## 1. Create a Supabase project
 
-1. [supabase.com](https://supabase.com) → New project (e.g. `greygablesfarm`).
-2. Note **Project URL** and **service_role** key (Settings → API).
+1. [supabase.com](https://supabase.com) → New project.
+2. Copy **Project URL** and **secret** key (`sb_secret_…` or legacy `service_role` JWT).
 
-## 2. Run the migration
+## 2. Run migrations
 
-In the Supabase dashboard → **SQL Editor**, paste and run:
+In **SQL Editor**, run in order:
 
-`supabase/migrations/001_mailing_and_sms_lists.sql`
-
-This creates:
-
-| Table | Purpose |
-|-------|---------|
-| `mailing_list` | Email subscribers |
-| `sms_list` | SMS subscribers (E.164 phone numbers) |
+1. `supabase/migrations/001_mailing_and_sms_lists.sql` — only if you already used the old lists
+2. `supabase/migrations/002_unified_contacts.sql` — **required**
+3. `supabase/migrations/003_migrate_legacy_lists.sql` — optional, if you have rows in `mailing_list` / `sms_list`
 
 ## 3. Environment variables
 
-Copy `.env.example` to `.env.local`:
-
 ```bash
 NEXT_PUBLIC_SUPABASE_URL=https://xxxx.supabase.co
-SUPABASE_SERVICE_ROLE_KEY=eyJ...
+SUPABASE_SERVICE_ROLE_KEY=sb_secret_...
 ```
 
-Add the same variables in **Vercel** → Project → Settings → Environment Variables.
+Add the same in **Vercel**. Never expose the secret key to the browser.
 
-`NEXT_PUBLIC_SUPABASE_URL` is safe in the browser (used only to detect “configured” state).  
-`SUPABASE_SERVICE_ROLE_KEY` is **server-only** — never prefix with `NEXT_PUBLIC_`.
+## 4. API routes
 
-## 4. Verify
+| Route | Purpose |
+|-------|---------|
+| `POST /api/contacts` | General upsert (any form) |
+| `POST /api/subscribe` | Footer newsletter signup |
+| `POST /api/contact` | Contact page inquiry |
+
+Legacy `POST /api/subscribe/mailing` and `/sms` still work but are deprecated.
+
+## 5. Segmentation examples
+
+```sql
+-- Wedding leads with email opt-in
+select c.* from contacts c
+join contact_tags t on t.contact_id = c.id
+where t.tag = 'wedding_inquiry' and c.email_opt_in = true;
+
+-- SMS-ready flower customers
+select c.* from contacts c
+join contact_tags t on t.contact_id = c.id
+where t.tag = 'flowers' and c.sms_opt_in = true;
+```
+
+## 6. Verify locally
 
 1. `npm run dev`
-2. Footer → subscribe with email and/or phone
-3. Supabase → Table Editor → confirm rows in `mailing_list` / `sms_list`
+2. Footer sign-up (choose email and/or text opt-in)
+3. Contact page message
+4. **Table Editor** → `contacts`, `contact_tags`, `contact_activity`
 
-## Exporting for campaigns
+## Dedup & review
 
-- **Email:** export `mailing_list` where `unsubscribed_at` is null → CSV → Mailchimp, Resend audiences, etc.
-- **SMS:** export `sms_list` where `unsubscribed_at` is null → Twilio, etc. (wire sending separately)
-
-## Unsubscribes (later)
-
-Add `/unsubscribe` routes that set `unsubscribed_at` using signed tokens or admin tools.
+- Match by **email** or **phone** updates the same row.
+- If email and phone match **different** rows, both are flagged `needs_review` and the user sees a friendly error.
+- Opt-ins are only set when explicitly checked; inquiries do not enable marketing without consent.

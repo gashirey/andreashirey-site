@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
+import { splitName, upsertContact } from "@/lib/contacts";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
-import { subscribeToSmsList } from "@/lib/subscribe/sms";
 
+/** @deprecated Use POST /api/contacts or /api/subscribe */
 export async function POST(request: Request) {
   if (!isSupabaseConfigured()) {
     return NextResponse.json(
@@ -18,23 +19,22 @@ export async function POST(request: Request) {
   }
 
   const payload = body as Record<string, unknown>;
-
   if (payload.website) {
     return NextResponse.json({ ok: true, status: "created" });
   }
 
-  const phone = typeof payload.phone === "string" ? payload.phone : "";
   const fullName =
-    typeof payload.fullName === "string" ? payload.fullName : undefined;
-  const source =
-    typeof payload.source === "string" ? payload.source : undefined;
-  const consentSms = payload.consentSms === true;
+    typeof payload.fullName === "string" ? payload.fullName : "";
+  const names = fullName ? splitName(fullName) : { firstName: "", lastName: "" };
 
-  const result = await subscribeToSmsList({
-    phone,
-    fullName,
-    source,
-    consentSms,
+  const result = await upsertContact({
+    firstName: names.firstName,
+    lastName: names.lastName,
+    phone: typeof payload.phone === "string" ? payload.phone : "",
+    smsOptIn: payload.consentSms === true,
+    source: typeof payload.source === "string" ? payload.source : "sms_signup",
+    tags: ["sms_interest"],
+    activityType: "sms_opted_in",
   });
 
   if (!result.ok) {

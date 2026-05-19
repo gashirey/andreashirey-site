@@ -62,16 +62,21 @@ export const subscribe = {
   heading: "Stay in the loop",
   description:
     "Seasonal availability, farm updates, and occasional reminders — no spam, just flowers.",
+  firstNameLabel: "First name",
+  lastNameLabel: "Last name",
+  firstNamePlaceholder: "Jane",
+  lastNamePlaceholder: "Doe",
   emailLabel: "Email",
   emailPlaceholder: "you@example.com",
-  emailButton: "Join email list",
-  emailSuccess: "You're on the list. We'll be in touch from the farm.",
-  smsLabel: "Text alerts",
-  smsPlaceholder: "(540) 555-1234",
-  smsButton: "Join text list",
-  smsSuccess: "You're signed up for text updates.",
-  smsConsent:
-    "I agree to receive recurring automated marketing texts from Grey Gables Farm. Msg & data rates may apply. Reply STOP to opt out.",
+  phoneLabel: "Mobile phone",
+  phonePlaceholder: "(540) 555-1234",
+  submitButton: "Sign up",
+  success: "You're on the list. We'll be in touch from the farm.",
+  emailOptIn:
+    "Send me farm updates and availability by email.",
+  smsOptIn:
+    "Send me recurring automated text messages from Grey Gables Farm. Msg & data rates may apply. Reply STOP to opt out.",
+  optInRequired: "Please choose email or text updates (or both).",
   notConfigured:
     "Sign-ups are almost ready — we're connecting our list service.",
 } as const;

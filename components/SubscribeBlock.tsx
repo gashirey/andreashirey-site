@@ -8,13 +8,14 @@ const supabaseReady = Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL);
 type FormStatus = "idle" | "loading" | "success" | "error";
 
 export function SubscribeBlock() {
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
-  const [smsConsent, setSmsConsent] = useState(false);
-  const [emailStatus, setEmailStatus] = useState<FormStatus>("idle");
-  const [smsStatus, setSmsStatus] = useState<FormStatus>("idle");
-  const [emailMessage, setEmailMessage] = useState("");
-  const [smsMessage, setSmsMessage] = useState("");
+  const [emailOptIn, setEmailOptIn] = useState(false);
+  const [smsOptIn, setSmsOptIn] = useState(false);
+  const [status, setStatus] = useState<FormStatus>("idle");
+  const [message, setMessage] = useState("");
 
   if (!supabaseReady) {
     return (
@@ -27,66 +28,55 @@ export function SubscribeBlock() {
     );
   }
 
-  async function submitMailing(e: React.FormEvent) {
+  async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setEmailStatus("loading");
-    setEmailMessage("");
 
-    try {
-      const res = await fetch("/api/subscribe/mailing", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, source: "footer" }),
-      });
-      const data = await res.json();
-
-      if (!res.ok) {
-        setEmailStatus("error");
-        setEmailMessage(data.error ?? "Something went wrong.");
-        return;
-      }
-
-      setEmailStatus("success");
-      setEmailMessage(subscribe.emailSuccess);
-      setEmail("");
-    } catch {
-      setEmailStatus("error");
-      setEmailMessage("Something went wrong. Please try again.");
+    if (!emailOptIn && !smsOptIn) {
+      setStatus("error");
+      setMessage(subscribe.optInRequired);
+      return;
     }
-  }
 
-  async function submitSms(e: React.FormEvent) {
-    e.preventDefault();
-    setSmsStatus("loading");
-    setSmsMessage("");
+    setStatus("loading");
+    setMessage("");
 
     try {
-      const res = await fetch("/api/subscribe/sms", {
+      const res = await fetch("/api/subscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          firstName,
+          lastName,
+          email,
           phone,
-          consentSms: smsConsent,
+          emailOptIn,
+          smsOptIn,
           source: "footer",
         }),
       });
       const data = await res.json();
 
       if (!res.ok) {
-        setSmsStatus("error");
-        setSmsMessage(data.error ?? "Something went wrong.");
+        setStatus("error");
+        setMessage(data.error ?? "Something went wrong.");
         return;
       }
 
-      setSmsStatus("success");
-      setSmsMessage(subscribe.smsSuccess);
+      setStatus("success");
+      setMessage(subscribe.success);
+      setFirstName("");
+      setLastName("");
+      setEmail("");
       setPhone("");
-      setSmsConsent(false);
+      setEmailOptIn(false);
+      setSmsOptIn(false);
     } catch {
-      setSmsStatus("error");
-      setSmsMessage("Something went wrong. Please try again.");
+      setStatus("error");
+      setMessage("Something went wrong. Please try again.");
     }
   }
+
+  const disabled = status === "loading" || status === "success";
 
   return (
     <div className="border border-parchment bg-site-surface p-5">
@@ -95,31 +85,102 @@ export function SubscribeBlock() {
       </p>
       <p className="mt-2 text-sm leading-relaxed text-stone">{subscribe.description}</p>
 
-      <form onSubmit={submitMailing} className="mt-5 space-y-2">
-        <label htmlFor="subscribe-email" className="sr-only">
-          {subscribe.emailLabel}
-        </label>
-        <div className="flex flex-col gap-2 sm:flex-row">
+      <form onSubmit={onSubmit} className="mt-5 space-y-3">
+        <div className="grid gap-3 sm:grid-cols-2">
+          <div>
+            <label htmlFor="subscribe-first-name" className="sr-only">
+              {subscribe.firstNameLabel}
+            </label>
+            <input
+              id="subscribe-first-name"
+              type="text"
+              name="firstName"
+              autoComplete="given-name"
+              required
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              placeholder={subscribe.firstNamePlaceholder}
+              disabled={disabled}
+              className="input w-full"
+            />
+          </div>
+          <div>
+            <label htmlFor="subscribe-last-name" className="sr-only">
+              {subscribe.lastNameLabel}
+            </label>
+            <input
+              id="subscribe-last-name"
+              type="text"
+              name="lastName"
+              autoComplete="family-name"
+              required
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+              placeholder={subscribe.lastNamePlaceholder}
+              disabled={disabled}
+              className="input w-full"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label htmlFor="subscribe-email" className="sr-only">
+            {subscribe.emailLabel}
+          </label>
           <input
             id="subscribe-email"
             type="email"
             name="email"
             autoComplete="email"
-            required
+            required={emailOptIn}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder={subscribe.emailPlaceholder}
-            disabled={emailStatus === "loading" || emailStatus === "success"}
-            className="input min-w-0 flex-1"
+            disabled={disabled}
+            className="input w-full"
           />
-          <button
-            type="submit"
-            disabled={emailStatus === "loading" || emailStatus === "success"}
-            className="btn shrink-0 border-[var(--color-salmon-button)] bg-[var(--color-salmon-button)] text-white hover:border-[var(--color-salmon-button-hover)] hover:bg-[var(--color-salmon-button-hover)] disabled:opacity-60"
-          >
-            {emailStatus === "loading" ? "Sending…" : subscribe.emailButton}
-          </button>
         </div>
+
+        <div>
+          <label htmlFor="subscribe-phone" className="sr-only">
+            {subscribe.phoneLabel}
+          </label>
+          <input
+            id="subscribe-phone"
+            type="tel"
+            name="phone"
+            autoComplete="tel"
+            required={smsOptIn}
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            placeholder={subscribe.phonePlaceholder}
+            disabled={disabled}
+            className="input w-full"
+          />
+        </div>
+
+        <fieldset className="space-y-2" disabled={disabled}>
+          <legend className="sr-only">Communication preferences</legend>
+          <label className="flex gap-2 text-xs leading-relaxed text-stone">
+            <input
+              type="checkbox"
+              checked={emailOptIn}
+              onChange={(e) => setEmailOptIn(e.target.checked)}
+              className="mt-0.5 shrink-0 rounded-sm border-parchment"
+            />
+            <span>{subscribe.emailOptIn}</span>
+          </label>
+          <label className="flex gap-2 text-xs leading-relaxed text-stone">
+            <input
+              type="checkbox"
+              checked={smsOptIn}
+              onChange={(e) => setSmsOptIn(e.target.checked)}
+              className="mt-0.5 shrink-0 rounded-sm border-parchment"
+            />
+            <span>{subscribe.smsOptIn}</span>
+          </label>
+        </fieldset>
+
         <input
           type="text"
           name="website"
@@ -128,56 +189,21 @@ export function SubscribeBlock() {
           className="sr-only"
           aria-hidden
         />
-        {emailMessage && (
-          <p
-            className={`text-sm ${emailStatus === "error" ? "text-bark" : "text-stone"}`}
-            role={emailStatus === "error" ? "alert" : "status"}
-          >
-            {emailMessage}
-          </p>
-        )}
-      </form>
 
-      <form onSubmit={submitSms} className="mt-6 space-y-3 border-t border-parchment pt-5">
-        <label htmlFor="subscribe-phone" className="block text-xs font-medium text-bark">
-          {subscribe.smsLabel}
-        </label>
-        <div className="flex flex-col gap-2 sm:flex-row">
-          <input
-            id="subscribe-phone"
-            type="tel"
-            name="phone"
-            autoComplete="tel"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            placeholder={subscribe.smsPlaceholder}
-            disabled={smsStatus === "loading" || smsStatus === "success"}
-            className="input min-w-0 flex-1"
-          />
-          <button
-            type="submit"
-            disabled={smsStatus === "loading" || smsStatus === "success"}
-            className="btn shrink-0 border-bark/25 bg-transparent text-bark hover:border-site-green hover:text-site-green disabled:opacity-60"
-          >
-            {smsStatus === "loading" ? "Sending…" : subscribe.smsButton}
-          </button>
-        </div>
-        <label className="flex gap-2 text-xs leading-relaxed text-stone">
-          <input
-            type="checkbox"
-            checked={smsConsent}
-            onChange={(e) => setSmsConsent(e.target.checked)}
-            required
-            className="mt-0.5 shrink-0 rounded-sm border-parchment"
-          />
-          <span>{subscribe.smsConsent}</span>
-        </label>
-        {smsMessage && (
+        <button
+          type="submit"
+          disabled={disabled}
+          className="btn w-full border-[var(--color-salmon-button)] bg-[var(--color-salmon-button)] text-white hover:border-[var(--color-salmon-button-hover)] hover:bg-[var(--color-salmon-button-hover)] disabled:opacity-60 sm:w-auto"
+        >
+          {status === "loading" ? "Sending…" : subscribe.submitButton}
+        </button>
+
+        {message && (
           <p
-            className={`text-sm ${smsStatus === "error" ? "text-bark" : "text-stone"}`}
-            role={smsStatus === "error" ? "alert" : "status"}
+            className={`text-sm ${status === "error" ? "text-bark" : "text-stone"}`}
+            role={status === "error" ? "alert" : "status"}
           >
-            {smsMessage}
+            {message}
           </p>
         )}
       </form>
