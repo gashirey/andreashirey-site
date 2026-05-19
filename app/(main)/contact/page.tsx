@@ -1,79 +1,67 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { Hero } from "@/components/Hero";
 import { Section } from "@/components/Section";
 import { ContactForm } from "@/components/ContactForm";
+import { LocationBlock } from "@/components/LocationBlock";
 import { site, social } from "@/lib/content";
 import { pageMetadata } from "@/lib/metadata";
 
 export const metadata: Metadata = pageMetadata({
   title: "Contact",
-  description: `Get in touch with ${site.name} — flower inquiries, events, and general questions.`,
+  description: `Contact ${site.name} — orders and questions.`,
   path: "/contact",
 });
 
 export default function ContactPage() {
   return (
-    <>
-      <Hero
-        compact
-        title="Contact us"
-        subtitle="We'd love to hear from you"
-        imageSrc="/images/placeholders/contact-hero.svg"
-        imageAlt="Placeholder — replace with inviting farm or studio photo"
-      />
-
-      <Section>
-        <div className="grid gap-12 lg:grid-cols-2">
-          <div>
-            <h2 className="font-serif text-2xl text-bark">Reach out</h2>
-            <p className="mt-4 text-stone leading-relaxed">
-              For flower orders, event florals, or general questions,
-              send us a note. We typically respond within 2–3 business days.
-            </p>
-            <dl className="mt-8 space-y-4 text-sm">
+    <Section className="pt-24 md:pt-32">
+      <div className="grid gap-14 lg:grid-cols-2 lg:gap-16">
+        <div className="max-w-md">
+          <h1 className="font-serif text-4xl font-medium leading-tight text-bark md:text-5xl">
+            Contact
+          </h1>
+          <p className="mt-6 text-base leading-relaxed text-stone">
+            Orders, availability, and event inquiries. We reply within a few
+            business days.
+          </p>
+          <dl className="mt-8 space-y-4 text-sm">
+            <div>
+              <dt className="font-medium text-bark">Email</dt>
+              <dd>
+                <a
+                  href={`mailto:${site.email}`}
+                  className="text-salmon-dark underline underline-offset-2"
+                >
+                  {site.email}
+                </a>
+              </dd>
+            </div>
+            {social.instagram ? (
               <div>
-                <dt className="font-medium text-bark">Email</dt>
+                <dt className="font-medium text-bark">Instagram</dt>
                 <dd>
                   <a
-                    href={`mailto:${site.email}`}
-                    className="text-salmon-dark hover:text-salmon transition-colors"
+                    href={social.instagram}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-salmon-dark underline underline-offset-2"
                   >
-                    {site.email}
+                    Follow
                   </a>
                 </dd>
               </div>
-              <div>
-                <dt className="font-medium text-bark">Location</dt>
-                <dd className="text-stone">{site.location}</dd>
-              </div>
-              {social.instagram ? (
-                <div>
-                  <dt className="font-medium text-bark">Instagram</dt>
-                  <dd>
-                    <a
-                      href={social.instagram}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-salmon-dark hover:text-salmon transition-colors"
-                    >
-                      Follow us
-                    </a>
-                  </dd>
-                </div>
-              ) : null}
-            </dl>
-          </div>
-
-          <Suspense
-            fallback={
-              <div className="card h-96 bg-parchment" aria-hidden />
-            }
-          >
-            <ContactForm />
-          </Suspense>
+            ) : null}
+          </dl>
         </div>
-      </Section>
-    </>
+
+        <Suspense
+          fallback={<div className="card h-96 bg-parchment" aria-hidden />}
+        >
+          <ContactForm />
+        </Suspense>
+      </div>
+
+      <LocationBlock className="mt-16 max-w-md border-t border-parchment pt-12" />
+    </Section>
   );
 }

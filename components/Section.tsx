@@ -28,23 +28,25 @@ export function Section({
   return (
     <section
       id={id}
-      className={`py-16 md:py-24 ${variants[variant]} ${className}`}
+      className={`py-20 md:py-28 lg:py-32 ${variants[variant]} ${className}`}
     >
-      <div className="mx-auto max-w-6xl px-6 lg:px-8">
+      <div className="mx-auto max-w-6xl px-6 lg:px-10">
         {(eyebrow || title || description) && (
-          <header className="mb-12 max-w-2xl">
+          <header className="mb-14 max-w-xl">
             {eyebrow && (
-              <p className="text-xs font-medium uppercase tracking-[0.2em] text-site-green">
+              <p className="text-xs font-medium tracking-wide text-site-green">
                 {eyebrow}
               </p>
             )}
             {title && (
-              <h2 className="mt-2 font-serif text-3xl font-medium text-bark md:text-4xl">
+              <h2
+                className={`font-serif text-3xl font-medium leading-tight text-bark md:text-4xl lg:text-[2.75rem] ${eyebrow ? "mt-2" : ""}`}
+              >
                 {title}
               </h2>
             )}
             {description && (
-              <p className="mt-4 text-base leading-relaxed text-stone md:text-lg">
+              <p className="mt-3 text-sm leading-relaxed text-stone md:text-base">
                 {description}
               </p>
             )}

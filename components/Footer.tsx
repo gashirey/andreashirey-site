@@ -2,8 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { SubscribeBlock } from "@/components/SubscribeBlock";
 import { nav, site, social } from "@/lib/content";
-import { getRootedFarmersHref } from "@/lib/links";
-
+import { googleMapsUrl } from "@/lib/location";
 export function Footer() {
   const year = new Date().getFullYear();
 
@@ -26,10 +25,7 @@ export function Footer() {
           </div>
 
           <div className="lg:col-span-2">
-            <p className="text-xs font-medium uppercase tracking-[0.15em] text-stone">
-              Explore
-            </p>
-            <ul className="mt-4 flex flex-col gap-2">
+            <ul className="mt-1 flex flex-col gap-2">
               {nav.map((item) => (
                 <li key={item.href}>
                   <Link
@@ -40,14 +36,6 @@ export function Footer() {
                   </Link>
                 </li>
               ))}
-              <li>
-                <Link
-                  href={getRootedFarmersHref()}
-                  className="text-sm text-bark/80 transition-colors hover:text-salmon-dark"
-                >
-                  Current availability
-                </Link>
-              </li>
             </ul>
           </div>
 
@@ -56,10 +44,17 @@ export function Footer() {
           </div>
 
           <div className="lg:col-span-3">
-            <p className="text-xs font-medium uppercase tracking-[0.15em] text-stone">
-              Get in touch
+            <p className="text-xs font-medium tracking-wide text-stone">
+              Contact
             </p>
-            <p className="mt-4 text-sm text-bark/80">{site.location}</p>
+            <a
+              href={googleMapsUrl()}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-4 block text-sm leading-relaxed text-bark/80 transition-colors hover:text-salmon-dark"
+            >
+              {site.location}
+            </a>
             <a
               href={`mailto:${site.email}`}
               className="mt-2 inline-block text-sm text-salmon-dark transition-colors hover:text-salmon"

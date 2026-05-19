@@ -1,13 +1,11 @@
 /**
- * External links — update these when Rooted Farmers / Shopify go live.
+ * External links — update when Rooted Farmers goes live.
  */
 export const links = {
-  /** Rooted Farmers shop URL — set when live */
   rootedFarmers: "" as string,
-  /** Future Shopify store */
   shopify: "" as string,
 } as const;
 
 export function getRootedFarmersHref(): string {
-  return links.rootedFarmers || "/flowers";
+  return links.rootedFarmers || "/available-now";
 }

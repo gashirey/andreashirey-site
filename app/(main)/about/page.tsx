@@ -1,115 +1,65 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import { Hero } from "@/components/Hero";
 import { Section } from "@/components/Section";
-import { CTA } from "@/components/CTA";
+import { Button } from "@/components/Button";
 import { site } from "@/lib/content";
-import { getRootedFarmersHref } from "@/lib/links";
 import { pageMetadata } from "@/lib/metadata";
 
 export const metadata: Metadata = pageMetadata({
   title: "About",
-  description: `Learn about ${site.name} — our story, values, and approach to seasonal flower farming.`,
+  description: `Grey Gables Farm — seasonal cut flowers in ${site.locationRegion}.`,
   path: "/about",
 });
 
 export default function AboutPage() {
   return (
     <>
-      <Hero
-        compact
-        title="Our story"
-        subtitle="A small farm with a big heart for seasonal beauty"
-        imageSrc="/images/placeholders/about-hero.svg"
-        imageAlt="Placeholder — replace with farm landscape or barn photo"
-      />
-
-      <Section title="Grey Gables Farm">
-        <div className="max-w-3xl space-y-6 text-stone leading-relaxed">
-          <p>
-            Grey Gables Farm began with a simple wish: to grow flowers that
-            feel honest, fragrant, and alive — the kind you want to bring
-            inside and linger over.
-          </p>
-          <p>
-            Nestled in Louisa, in Virginia&apos;s Central Piedmont, our fields and cutting gardens
-            supply seasonal blooms for local bouquets, farmers markets, and
-            celebrations throughout the year.
-          </p>
-          <p>
-            We farm with intention — building healthy soil, choosing varieties
-            for scent and texture, and harvesting at the moment they&apos;re
-            ready, not a moment before.
-          </p>
-        </div>
-      </Section>
-
-      <Section variant="white" title="What we believe">
-        <ul className="grid gap-8 md:grid-cols-3">
-          {[
-            {
-              title: "Seasonal first",
-              text: "We grow with the rhythm of the seasons, celebrating each bloom at its peak.",
-            },
-            {
-              title: "Thoughtful design",
-              text: "Whether a simple bunch or full event florals, every arrangement is gathered with care.",
-            },
-            {
-              title: "Community rooted",
-              text: "We are proud to share our flowers with neighbors, couples, and makers in our region.",
-            },
-          ].map((value) => (
-            <li
-              key={value.title}
-              className="border border-parchment bg-cream p-6"
-            >
-              <h3 className="font-serif text-xl text-bark">{value.title}</h3>
-              <p className="mt-3 text-sm leading-relaxed text-stone">
-                {value.text}
+      <Section className="pt-24 md:pt-32">
+        <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
+          <div className="max-w-md">
+            <h1 className="font-serif text-4xl font-medium leading-tight text-bark md:text-5xl">
+              About Grey Gables Farm
+            </h1>
+            <div className="mt-8 space-y-4 text-base leading-relaxed text-stone">
+              <p>
+                Grey Gables Farm is a Central Virginia flower farm growing
+                seasonal cut flowers for local markets, events, and everyday
+                use.
               </p>
-            </li>
-          ))}
-        </ul>
-      </Section>
-
-      <Section>
-        <div className="grid gap-12 lg:grid-cols-2">
-          <div className="image-frame relative aspect-[3/4]">
-            {/* PHOTO: Replace with portrait of farmers or hands-in-soil image */}
+              <p>
+                We focus on varieties that hold well, photograph cleanly, and
+                match the season.
+              </p>
+            </div>
+            <p className="mt-6 text-sm text-stone">
+              {site.locationShort} —{" "}
+              <a
+                href="/contact"
+                className="text-salmon-dark underline underline-offset-2"
+              >
+                directions & contact
+              </a>
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Button href="/available-now" variant="primary">
+                View availability
+              </Button>
+              <Button href="/contact" variant="outline">
+                Contact
+              </Button>
+            </div>
+          </div>
+          <div className="image-frame relative aspect-[4/5] min-h-[280px]">
             <Image
-              src="/images/placeholders/farmers.svg"
-              alt="Placeholder — replace with farmers or team photo"
+              src="/images/garden_row.jpg"
+              alt="Cutting garden at Grey Gables Farm"
               fill
               className="object-cover"
-              sizes="50vw"
+              sizes="(max-width: 1024px) 100vw, 50vw"
+              priority
             />
           </div>
-          <div className="flex flex-col justify-center space-y-6">
-            <h2 className="font-serif text-3xl text-bark">Visit the farm</h2>
-            <p className="text-stone leading-relaxed">
-              We welcome inquiries for farm visits during open days and by
-              appointment. Follow along as we share seasonal updates and
-              behind-the-scenes moments from the fields.
-            </p>
-            <p className="text-sm text-stone">{site.location}</p>
-          </div>
         </div>
-      </Section>
-
-      <Section variant="parchment">
-        <CTA
-          title="Ready to bring our flowers home?"
-          description="Browse what's available this week or send us a note — we'd love to help."
-          primary={{
-            label: "View Current Availability",
-            href: getRootedFarmersHref(),
-          }}
-          secondary={{
-            label: "Inquire About Flowers",
-            href: "/contact?subject=flowers",
-          }}
-        />
       </Section>
     </>
   );

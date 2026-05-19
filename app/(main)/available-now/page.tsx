@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Hero } from "@/components/Hero";
 import { Section } from "@/components/Section";
 import { AvailableNowCard } from "@/components/inventory/AvailableNowCard";
 import { formatDisplayDate } from "@/lib/inventory/date";
@@ -11,8 +10,8 @@ import { pageMetadata } from "@/lib/metadata";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Available Now",
-  description: `See what ${site.name} has fresh today — bunches, pricing, and quantity updated from the field.`,
+  title: "Availability",
+  description: `Current stems and bunches from ${site.name}, Louisa Virginia.`,
   path: "/available-now",
 });
 
@@ -23,64 +22,39 @@ export default async function AvailableNowPage() {
     : { date: "", items: [] };
 
   return (
-    <>
-      <Hero
-        compact
-        title="Available now"
-        subtitle="Fresh from the field — updated daily"
-        imageSrc="/images/bb.jpg"
-        imageAlt="Fresh flowers from Grey Gables Farm"
-        primaryCta={{
-          label: "Inquire to order",
-          href: "/contact?subject=flowers",
-        }}
-        secondaryCta={{
-          label: "All flowers",
-          href: "/flowers",
-        }}
-      />
-
-      <Section
-        title="Today's offerings"
-        description={
-          configured
-            ? formatDisplayDate(date)
-            : "Live inventory is being connected."
-        }
-      >
-        {!configured ? (
-          <p className="text-sm text-stone">
-            Check the{" "}
-            <Link href="/flowers" className="text-salmon-dark underline">
-              flowers page
-            </Link>{" "}
-            or{" "}
-            <Link href="/contact?subject=flowers" className="text-salmon-dark underline">
-              contact us
-            </Link>{" "}
-            for availability.
-          </p>
-        ) : items.length === 0 ? (
-          <div className="border border-parchment bg-site-surface px-5 py-10 text-center">
-            <p className="text-stone">Nothing listed for today yet.</p>
-            <p className="mt-4 text-sm">
-              <Link
-                href="/contact?subject=flowers"
-                className="text-salmon-dark underline underline-offset-2"
-              >
-                Send an inquiry
-              </Link>{" "}
-              and we&apos;ll let you know what&apos;s in bloom.
-            </p>
-          </div>
-        ) : (
-          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {items.map((item) => (
-              <AvailableNowCard key={item.availabilityId} item={item} />
-            ))}
-          </div>
+    <Section className="pt-24 md:pt-32">
+      <header className="mb-14 max-w-xl border-b border-parchment pb-10">
+        <h1 className="font-serif text-4xl font-medium leading-tight text-bark md:text-5xl">
+          Available now
+        </h1>
+        {configured && items.length > 0 && (
+          <p className="mt-3 text-sm text-stone">{formatDisplayDate(date)}</p>
         )}
-      </Section>
-    </>
+        <p className="mt-3 text-sm text-stone">Limited weekly harvests.</p>
+      </header>
+
+      {!configured ? (
+        <p className="text-sm text-stone">
+          <Link href="/contact?subject=flowers" className="underline">
+            Contact us
+          </Link>{" "}
+          for this week&apos;s list.
+        </p>
+      ) : items.length === 0 ? (
+        <p className="text-sm text-stone">
+          Nothing listed today.{" "}
+          <Link href="/contact?subject=flowers" className="underline">
+            Ask what&apos;s in bloom
+          </Link>
+          .
+        </p>
+      ) : (
+        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
+          {items.map((item) => (
+            <AvailableNowCard key={item.availabilityId} item={item} />
+          ))}
+        </div>
+      )}
+    </Section>
   );
 }

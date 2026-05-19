@@ -47,7 +47,7 @@
   --site-muted: #857a75;
   --site-border: #e8ddd6;
   --site-green: #7f9a85;
-  --site-scrim: rgba(62, 54, 50, 0.36);
+  --site-scrim: rgba(62, 54, 50, 0.28);
   --site-muted-band: #f5ebe8;
   background: var(--site-bg);
   color: var(--site-text);

@@ -89,8 +89,8 @@ export function ContactForm() {
     <form onSubmit={handleSubmit} className="card p-6 md:p-8">
       <p className="mb-6 text-sm text-stone">
         {supabaseReady
-          ? "Send a message and we'll follow up within 2–3 business days."
-          : "Submitting opens your email app with your message pre-filled. We typically reply within 2–3 business days."}
+          ? "We reply within a few business days."
+          : "Opens your email app with your message pre-filled."}
       </p>
 
       <div className="space-y-5">

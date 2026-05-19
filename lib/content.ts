@@ -1,38 +1,41 @@
 /**
  * Site copy — edit here to update pages without touching components.
- *
- * PHOTO FOLDERS (drop real images here, then update paths below):
- *   public/images/logo.jpg          — header / footer mark
- *   public/images/hero.jpg          — home hero
- *   public/images/bb.jpg            — bouquet (welcome, availability, gallery)
- *   public/images/garden_row.jpg    — garden rows (gallery)
- *   public/images/about.jpg         — about page (optional)
- *   public/images/flowers/{id}.jpg  — availability cards (match item id)
- *   public/images/gallery/01.jpg    — gallery grid
  */
 
 export const site = {
   name: "Grey Gables Farm",
   domain: "greygablesfarm.com",
-  tagline: "Seasonal flowers, grown with care",
+  tagline: "Field-grown flowers in Central Virginia",
   description:
-    "Grey Gables Farm grows thoughtful, seasonal flowers for everyday bouquets, weddings, and special gatherings in Louisa, Central Virginia.",
-  email: "hello@greygablesfarm.com",
-  location: "Louisa, Virginia",
+    "Seasonal cut flowers from a small farm in Louisa, Virginia.",
+  email: "info@greygablesfarm.com",
+  /** Full mailing / farm address */
+  address: {
+    street: "2217 Brickhouse Rd",
+    city: "Louisa",
+    state: "VA",
+  },
+  /** One-line address for display */
+  location: "2217 Brickhouse Rd, Louisa, VA",
+  /** Regional label for SEO and hero copy */
+  locationShort: "Louisa, Virginia",
   locationRegion: "Central Virginia",
+  /** Shown on Contact — adjust if you add regular open hours */
+  visitNote: "Pickup and visits are by appointment.",
   logo: "/images/logo.jpg",
   logoAlt: "Grey Gables Farm",
-  /** Home page hero — update path when you replace the image */
   heroImage: "/images/hero.jpg",
-  heroImageAlt: "Grey Gables Farm — seasonal flowers in Louisa, Virginia",
+  heroImageAlt: "Cut flowers at Grey Gables Farm, Louisa Virginia",
 } as const;
 
-/** Home hero slider — add or reorder as you add farm photos */
+export const heroHome = {
+  title: "Seasonal flowers from Central Virginia",
+  subtitle: "Grown in Louisa. Listed weekly.",
+  primaryCta: { label: "View availability", href: "/available-now" },
+} as const;
+
 export const heroSlides = [
-  {
-    src: site.heroImage,
-    alt: site.heroImageAlt,
-  },
+  { src: site.heroImage, alt: site.heroImageAlt },
   {
     src: "/images/bb.jpg",
     alt: "Mixed seasonal bouquet from Grey Gables Farm",
@@ -43,25 +46,21 @@ export const heroSlides = [
   },
 ] as const;
 
-/** Home hero layout: full bleed edge-to-edge, or inset with side margins */
 export type HeroFrame = "bleed" | "inset";
 
 /** @deprecated Prefer lib/site-theme.ts activeHeroFrame */
 export const homeHeroFrame: HeroFrame = "bleed";
 
-/** Set when you refresh listings — shown on Flowers page */
 export const availabilityUpdated = "2026-05-19";
 
 export const announcement = {
-  enabled: true,
-  message:
-    "We're refreshing photos and availability listings this week — check back soon or inquire for what's in bloom.",
+  enabled: false,
+  message: "Weekly listings updated from the field.",
 } as const;
 
 export const subscribe = {
   heading: "Stay in the loop",
-  description:
-    "Seasonal availability, farm updates, and occasional reminders — no spam, just flowers.",
+  description: "Availability and farm notes — a few times a season.",
   firstNameLabel: "First name",
   lastNameLabel: "Last name",
   firstNamePlaceholder: "Jane",
@@ -71,48 +70,41 @@ export const subscribe = {
   phoneLabel: "Mobile phone",
   phonePlaceholder: "(540) 555-1234",
   submitButton: "Sign up",
-  success: "You're on the list. We'll be in touch from the farm.",
-  emailOptIn:
-    "Send me farm updates and availability by email.",
+  success: "You're on the list.",
+  emailOptIn: "Email me availability updates.",
   smsOptIn:
-    "Send me recurring automated text messages from Grey Gables Farm. Msg & data rates may apply. Reply STOP to opt out.",
-  optInRequired: "Please choose email or text updates (or both).",
-  notConfigured:
-    "Sign-ups are almost ready — we're connecting our list service.",
+    "Text me from Grey Gables Farm. Msg & data rates may apply. Reply STOP to opt out.",
+  optInRequired: "Choose email or text updates (or both).",
+  notConfigured: "Sign-ups are almost ready.",
 } as const;
 
 export const social = {
-  /** Add Instagram URL when ready, e.g. "https://instagram.com/greygablesfarm" */
   instagram: "" as string,
 } as const;
 
 export const ordering = {
-  intro:
-    "We list seasonal stems and bouquets as they're ready from the field. Availability changes weekly.",
+  intro: "Availability changes weekly.",
   steps: [
     {
-      title: "See what's available",
-      text: "Browse this week's offerings on our Flowers page or Rooted Farmers shop when live.",
+      title: "See the list",
+      text: "Check Available Now for stems and pricing.",
     },
     {
-      title: "Place your order",
-      text: "Order online when Rooted Farmers is connected, or email us for pickup and custom requests.",
+      title: "Order",
+      text: "Shop on Rooted Farmers when live, or email us to reserve.",
     },
     {
-      title: "Pick up fresh",
-      text: "We'll confirm timing and any pickup details by email. Flowers are harvested close to hand-off.",
+      title: "Pick up",
+      text: "We confirm pickup by email.",
     },
   ],
-  pickupNote:
-    "Pickup details shared upon order confirmation. Delivery and event florals available by inquiry.",
+  pickupNote: "Event florals by inquiry.",
 } as const;
 
 export const nav = [
   { label: "Home", href: "/" },
+  { label: "Availability", href: "/available-now" },
   { label: "About", href: "/about" },
-  { label: "Available Now", href: "/available-now" },
-  { label: "Flowers", href: "/flowers" },
-  { label: "Events", href: "/weddings" },
   { label: "Contact", href: "/contact" },
 ] as const;
 
@@ -121,47 +113,27 @@ export type AvailabilityItem = {
   name: string;
   description: string;
   status: "available" | "limited" | "seasonal";
-  /** Replace with real farm photo path, e.g. /images/flowers/mixed-bouquets.jpg */
   image: string;
   imageAlt: string;
 };
 
+/** Fallback when live inventory is empty — keep descriptions short */
 export const currentAvailability: AvailabilityItem[] = [
   {
     id: "mixed-bouquets",
-    name: "Mixed Seasonal Bouquets",
-    description:
-      "Hand-tied bouquets featuring the best of what's in bloom this week — perfect for your table or a thoughtful gift.",
+    name: "Mixed bunches",
+    description: "What’s in bloom this week.",
     status: "available",
     image: "/images/bb.jpg",
-    imageAlt: "Mixed seasonal bouquet from Grey Gables Farm",
+    imageAlt: "Mixed seasonal bouquet",
   },
   {
-    id: "garden-roses",
-    name: "Garden Roses",
-    description:
-      "Fragrant, romantic blooms with soft petals and garden-gathered charm.",
+    id: "zinnias",
+    name: "Zinnias",
+    description: "Limited harvest.",
     status: "limited",
-    image: "/images/placeholders/roses.svg",
-    imageAlt: "Placeholder — replace with garden roses photo",
-  },
-  {
-    id: "dahlias",
-    name: "Dahlias",
-    description:
-      "Bold, sculptural dahlias in a rotating palette of late-summer and autumn hues.",
-    status: "seasonal",
-    image: "/images/placeholders/dahlias.svg",
-    imageAlt: "Placeholder — replace with dahlia photo",
-  },
-  {
-    id: "foliage-bunches",
-    name: "Foliage & Accent Bunches",
-    description:
-      "Textural greens and accent stems to complement your own arrangements.",
-    status: "available",
-    image: "/images/placeholders/foliage.svg",
-    imageAlt: "Placeholder — replace with foliage bunch photo",
+    image: "/images/bb.jpg",
+    imageAlt: "Zinnia stems",
   },
 ];
 
@@ -172,41 +144,4 @@ export type GalleryImage = {
   caption?: string;
 };
 
-export const galleryImages: GalleryImage[] = [
-  {
-    id: "g1",
-    src: "/images/garden_row.jpg",
-    alt: "Cutting garden rows at Grey Gables Farm",
-    caption: "Morning light in the cutting garden",
-  },
-  {
-    id: "g2",
-    src: "/images/bb.jpg",
-    alt: "Mixed seasonal bouquet from Grey Gables Farm",
-    caption: "Seasonal bouquet",
-  },
-  {
-    id: "g3",
-    src: "/images/placeholders/gallery-3.svg",
-    alt: "Placeholder — replace with wedding arrangement photo",
-    caption: "Wedding centerpiece",
-  },
-  {
-    id: "g4",
-    src: "/images/placeholders/gallery-4.svg",
-    alt: "Placeholder — replace with harvest or bucket photo",
-    caption: "Fresh from the field",
-  },
-  {
-    id: "g5",
-    src: "/images/placeholders/gallery-5.svg",
-    alt: "Placeholder — replace with bride or event florals photo",
-    caption: "Celebration florals",
-  },
-  {
-    id: "g6",
-    src: "/images/placeholders/gallery-6.svg",
-    alt: "Placeholder — replace with greenhouse or farm detail photo",
-    caption: "Behind the blooms",
-  },
-];
+export const galleryImages: GalleryImage[] = [];

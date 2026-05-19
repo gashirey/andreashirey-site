@@ -37,7 +37,7 @@ export function HeroSlider({
   const [reducedMotion, setReducedMotion] = useState(false);
 
   useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-div: reduce)");
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
     setReducedMotion(mq.matches);
     const onChange = () => setReducedMotion(mq.matches);
     mq.addEventListener("change", onChange);
@@ -83,18 +83,18 @@ export function HeroSlider({
       ))}
       <div className="hero-scrim" aria-hidden />
       <div
-        className={`relative flex ${minHeight} flex-col justify-end px-6 pb-14 pt-8 lg:px-8 ${immersive ? "md:pb-20" : "lg:pb-16"}`}
+        className={`relative flex ${minHeight} flex-col justify-end px-6 pb-16 pt-10 lg:px-10 ${immersive ? "md:pb-24" : "lg:pb-20"}`}
       >
-        <h1 className="max-w-2xl font-serif text-4xl font-medium leading-tight text-white md:text-5xl lg:text-6xl">
+        <h1 className="max-w-2xl font-serif text-4xl font-medium leading-[1.1] text-white md:text-5xl lg:text-[3.25rem]">
           {title}
         </h1>
         {subtitle && (
-          <p className="mt-3 max-w-xl text-base leading-relaxed text-white/90 md:text-lg">
+          <p className="mt-4 max-w-md text-base text-white/85 md:text-lg">
             {subtitle}
           </p>
         )}
         {(primaryCta || secondaryCta) && (
-          <div className="mt-7 flex flex-wrap gap-3">
+          <div className="mt-8 flex flex-wrap gap-3">
             {primaryCta && (
               <Button href={primaryCta.href} variant="primary">
                 {primaryCta.label}
