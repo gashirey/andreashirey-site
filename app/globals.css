@@ -118,7 +118,13 @@
   }
 
   .hero-scrim {
-    @apply absolute inset-0 bg-bark/40;
+    @apply pointer-events-none absolute inset-0;
+    background: linear-gradient(
+      to top,
+      rgb(58 56 52 / 0.55) 0%,
+      rgb(58 56 52 / 0.12) 45%,
+      transparent 70%
+    );
   }
 
   .site-header {

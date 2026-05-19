@@ -5,13 +5,14 @@ import { AvailableNowCard } from "@/components/inventory/AvailableNowCard";
 import { formatDisplayDate } from "@/lib/inventory/date";
 import { getAvailableNow, isInventoryConfigured } from "@/lib/inventory/queries";
 import { site } from "@/lib/content";
+import { getRootedFarmersHref } from "@/lib/links";
 import { pageMetadata } from "@/lib/metadata";
 
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Availability",
-  description: `Current stems and bunches from ${site.name}, Louisa Virginia.`,
+  title: "Current availability",
+  description: `Weekly harvest list — ${site.name}, ${site.locationRegion}.`,
   path: "/available-now",
 });
 
@@ -20,31 +21,34 @@ export default async function AvailableNowPage() {
   const { date, items } = configured
     ? await getAvailableNow()
     : { date: "", items: [] };
+  const rootedHref = getRootedFarmersHref();
 
   return (
-    <Section className="pt-24 md:pt-32">
-      <header className="mb-14 max-w-xl border-b border-parchment pb-10">
-        <h1 className="font-serif text-4xl font-medium leading-tight text-bark md:text-5xl">
-          Available now
+    <Section density="compact" className="pt-20 md:pt-28">
+      <header className="mb-10 max-w-xl border-b border-parchment pb-8">
+        <h1 className="font-serif text-3xl font-medium leading-tight text-bark md:text-4xl">
+          Current availability
         </h1>
         {configured && items.length > 0 && (
-          <p className="mt-3 text-sm text-stone">{formatDisplayDate(date)}</p>
+          <p className="mt-2 text-sm text-stone">{formatDisplayDate(date)}</p>
         )}
-        <p className="mt-3 text-sm text-stone">Limited weekly harvests.</p>
+        <p className="mt-2 text-sm text-stone">
+          Seasonal harvests. Limited quantities each week.
+        </p>
       </header>
 
       {!configured ? (
         <p className="text-sm text-stone">
           <Link href="/contact?subject=flowers" className="underline">
-            Contact us
+            Contact the farm
           </Link>{" "}
           for this week&apos;s list.
         </p>
       ) : items.length === 0 ? (
         <p className="text-sm text-stone">
-          Nothing listed today.{" "}
+          Nothing listed this week.{" "}
           <Link href="/contact?subject=flowers" className="underline">
-            Ask what&apos;s in bloom
+            Contact the farm
           </Link>
           .
         </p>
@@ -55,6 +59,19 @@ export default async function AvailableNowPage() {
           ))}
         </div>
       )}
+
+      <p className="mt-12 border-t border-parchment pt-8 text-sm text-stone">
+        <Link
+          href={rootedHref}
+          className="text-bark underline underline-offset-4"
+        >
+          Shop on Rooted
+        </Link>
+        {" · "}
+        <Link href="/contact" className="text-bark underline underline-offset-4">
+          Contact the farm
+        </Link>
+      </p>
     </Section>
   );
 }

@@ -22,6 +22,7 @@ type HeroSliderProps = {
   layout?: HeroLayout;
   primaryCta?: { label: string; href: string };
   secondaryCta?: { label: string; href: string };
+  showSlideControls?: boolean;
 };
 
 export function HeroSlider({
@@ -32,6 +33,7 @@ export function HeroSlider({
   layout = "standard",
   primaryCta,
   secondaryCta,
+  showSlideControls = true,
 }: HeroSliderProps) {
   const [index, setIndex] = useState(0);
   const [reducedMotion, setReducedMotion] = useState(false);
@@ -83,7 +85,7 @@ export function HeroSlider({
       ))}
       <div className="hero-scrim" aria-hidden />
       <div
-        className={`relative flex ${minHeight} flex-col justify-end px-6 pb-16 pt-10 lg:px-10 ${immersive ? "md:pb-24" : "lg:pb-20"}`}
+        className={`relative flex ${minHeight} flex-col justify-end px-6 pb-12 pt-8 lg:px-10 ${immersive ? "md:pb-20" : "lg:pb-16"}`}
       >
         <h1 className="max-w-2xl font-serif text-4xl font-medium leading-[1.1] text-white md:text-5xl lg:text-[3.25rem]">
           {title}
@@ -113,7 +115,7 @@ export function HeroSlider({
         )}
       </div>
 
-      {slides.length > 1 && (
+      {showSlideControls && slides.length > 1 && (
         <div
           className="absolute bottom-5 left-6 flex gap-2 lg:left-8"
           role="tablist"

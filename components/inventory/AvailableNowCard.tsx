@@ -16,8 +16,8 @@ export function AvailableNowCard({ item }: AvailableNowCardProps) {
   const statusKey = item.status === "limited" ? "limited" : "available";
 
   return (
-    <article className="card">
-      <div className="image-frame relative aspect-[4/3]">
+    <article>
+      <div className="relative aspect-[4/3] overflow-hidden bg-parchment">
         <Image
           src={item.imageUrl}
           alt={item.imageAlt}
@@ -26,11 +26,11 @@ export function AvailableNowCard({ item }: AvailableNowCardProps) {
           sizes="(max-width: 768px) 100vw, 33vw"
         />
       </div>
-      <div className="border-t border-parchment p-5 md:p-6">
+      <div className="pt-4">
         <span className={`chip ${statusChipStyles[statusKey]}`}>
           {statusLabels[item.status]}
         </span>
-        <h3 className="mt-3 font-serif text-xl text-bark md:text-2xl">
+        <h3 className="mt-2 font-serif text-xl text-bark md:text-2xl">
           {item.name}
         </h3>
         {(item.variety || item.color) && (
@@ -38,7 +38,7 @@ export function AvailableNowCard({ item }: AvailableNowCardProps) {
             {[item.variety, item.color].filter(Boolean).join(" · ")}
           </p>
         )}
-        <p className="mt-4 text-sm text-bark">
+        <p className="mt-3 text-sm text-bark">
           <span className="font-medium">{formatPricePerBunch(item.bunchPrice)}</span>
           <span className="text-stone"> · {formatStemsPerBunch(item.stemsPerBunch)}</span>
         </p>
@@ -46,7 +46,7 @@ export function AvailableNowCard({ item }: AvailableNowCardProps) {
           {formatBunchesAvailable(item.bunchesAvailable)}
         </p>
         {item.notes ? (
-          <p className="mt-3 text-sm text-stone">{item.notes}</p>
+          <p className="mt-2 text-sm text-stone">{item.notes}</p>
         ) : null}
       </div>
     </article>

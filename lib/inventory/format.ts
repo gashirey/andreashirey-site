@@ -21,8 +21,8 @@ export function formatHarvestLabel(harvestDate: string | null): string | null {
 }
 
 export const statusLabels: Record<AvailabilityStatus, string> = {
-  available: "Available",
-  limited: "Limited",
+  available: "Available this week",
+  limited: "Limited quantities",
   sold_out: "Sold out",
   hidden: "Hidden",
 };

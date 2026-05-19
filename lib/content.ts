@@ -5,9 +5,8 @@
 export const site = {
   name: "Grey Gables Farm",
   domain: "greygablesfarm.com",
-  tagline: "Field-grown flowers in Central Virginia",
-  description:
-    "Seasonal cut flowers from a small farm in Louisa, Virginia.",
+  tagline: "Seasonal flowers grown in Virginia",
+  description: "Field-grown stems. Weekly harvest availability.",
   email: "info@greygablesfarm.com",
   /** Full mailing / farm address */
   address: {
@@ -29,13 +28,19 @@ export const site = {
 } as const;
 
 export const heroHome = {
-  title: "Seasonal flowers from Central Virginia",
-  subtitle: "Grown in Louisa. Listed weekly.",
-  primaryCta: { label: "View availability", href: "/available-now" },
+  title: "Seasonal Flowers from Central Virginia",
+  subtitle: "Weekly harvests and limited seasonal availability.",
+  primaryCta: { label: "Current Availability", href: "/available-now" },
+} as const;
+
+/** Single image on homepage — calmer hero */
+export const heroHomeSlide = {
+  src: site.heroImage,
+  alt: site.heroImageAlt,
 } as const;
 
 export const heroSlides = [
-  { src: site.heroImage, alt: site.heroImageAlt },
+  heroHomeSlide,
   {
     src: "/images/bb.jpg",
     alt: "Mixed seasonal bouquet from Grey Gables Farm",
@@ -45,6 +50,24 @@ export const heroSlides = [
     alt: "Cutting garden rows at Grey Gables Farm",
   },
 ] as const;
+
+export const homeAbout = [
+  "Grey Gables Farm is a Central Virginia flower farm growing seasonal cut flowers for markets, events, and everyday use.",
+  "We focus on varieties selected for seasonality, color, and vase life.",
+] as const;
+
+export const homeSections = {
+  availability: {
+    title: "Current availability",
+    description: "Seasonal harvests — updated weekly.",
+  },
+} as const;
+
+export const homeCta = {
+  note: "Central Virginia grown. Limited quantities each week.",
+  rooted: "Shop on Rooted",
+  contact: "Contact the farm",
+} as const;
 
 export type HeroFrame = "bleed" | "inset";
 
@@ -59,8 +82,8 @@ export const announcement = {
 } as const;
 
 export const subscribe = {
-  heading: "Stay in the loop",
-  description: "Availability and farm notes — a few times a season.",
+  heading: "Weekly list",
+  description: "Email or text when availability is posted.",
   firstNameLabel: "First name",
   lastNameLabel: "Last name",
   firstNamePlaceholder: "Jane",
@@ -83,22 +106,22 @@ export const social = {
 } as const;
 
 export const ordering = {
-  intro: "Availability changes weekly.",
+  intro: "Updated weekly from the field.",
   steps: [
     {
-      title: "See the list",
-      text: "Check Available Now for stems and pricing.",
+      title: "Current availability",
+      text: "Stems, bunches, and pricing for this week.",
     },
     {
       title: "Order",
-      text: "Shop on Rooted Farmers when live, or email us to reserve.",
+      text: "Shop on Rooted or email to reserve.",
     },
     {
-      title: "Pick up",
-      text: "We confirm pickup by email.",
+      title: "Pickup",
+      text: "Confirmed by email. By appointment.",
     },
   ],
-  pickupNote: "Event florals by inquiry.",
+  pickupNote: "Event florals — contact the farm.",
 } as const;
 
 export const nav = [
