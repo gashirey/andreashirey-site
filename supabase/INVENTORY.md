@@ -52,6 +52,7 @@ Then open `/available-now` — you should see both listings.
 
 1. Run `migrations/008_media_library.sql` in Supabase SQL Editor.
 2. Open **`/admin/media`** — create a shoot, drag in files, use **Use on site** on each image.
+   Uploads are auto-resized (2400px max edge, JPEG ~82%) for fast page loads.
 3. Site slots still need `007_site_media_slots.sql` for hero / home / about.
 
 ## Site images (hero, home, about) — launch today

@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/admin/require";
-import { createServiceClient } from "@/lib/supabase/server";
-
-const BUCKET = "product-photos";
+import { uploadImageToStorage } from "@/lib/admin/storage-upload";
 
 export async function POST(request: Request) {
   const denied = await requireAdmin(request);
@@ -16,29 +14,21 @@ export async function POST(request: Request) {
   }
 
   const productId = formData.get("product_id");
-  const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
-  const safeExt = ["jpg", "jpeg", "png", "webp", "gif"].includes(ext)
-    ? ext
-    : "jpg";
-  const path = `${productId ?? "misc"}/${Date.now()}-${crypto.randomUUID().slice(0, 8)}.${safeExt}`;
+  const prefix = `${productId ?? "misc"}`;
+  const uploaded = await uploadImageToStorage(file, prefix);
 
-  const supabase = createServiceClient();
-  const buffer = Buffer.from(await file.arrayBuffer());
-
-  const { error } = await supabase.storage.from(BUCKET).upload(path, buffer, {
-    contentType: file.type || `image/${safeExt}`,
-    upsert: false,
-  });
-
-  if (error) {
-    console.error("[photo upload]", error);
-    return NextResponse.json({ error: error.message }, { status: 400 });
+  if ("error" in uploaded) {
+    return NextResponse.json({ error: uploaded.error }, { status: 400 });
   }
 
-  const { data: publicUrl } = supabase.storage.from(BUCKET).getPublicUrl(path);
-
   return NextResponse.json({
-    path,
-    imageUrl: publicUrl.publicUrl,
+    path: uploaded.path,
+    imageUrl: uploaded.imageUrl,
+    width: uploaded.width,
+    height: uploaded.height,
+    optimized: {
+      bytesIn: uploaded.bytesIn,
+      bytesOut: uploaded.bytesOut,
+    },
   });
 }

@@ -263,7 +263,8 @@ export function MediaLibrary() {
       >
         <p className="font-medium text-bark">Drop images here</p>
         <p className="mt-1 text-sm text-stone">
-          JPEG, PNG, or WebP — up to 50 files at a time, 15MB each
+          JPEG, PNG, or WebP — up to 50 at a time, 15MB each before processing.
+          Images are resized to 2400px max edge and saved as optimized JPEG.
         </p>
         <input
           ref={inputRef}

@@ -57,7 +57,12 @@ export async function POST(request: Request) {
     shootPrefix = `library/${slug || shoot.id}`;
   }
 
-  const uploaded: { filename: string; public_url: string; id?: string }[] = [];
+  const uploaded: {
+    filename: string;
+    public_url: string;
+    id?: string;
+    bytesOut?: number;
+  }[] = [];
   const errors: { filename: string; error: string }[] = [];
 
   for (const file of files) {
