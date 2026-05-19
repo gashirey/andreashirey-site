@@ -22,12 +22,21 @@ export default function AdminDashboardPage() {
           </p>
         </Link>
         <Link
+          href="/admin/media"
+          className="border border-parchment bg-white p-5 hover:border-bark/30"
+        >
+          <p className="font-medium text-bark">Media library</p>
+          <p className="mt-1 text-sm text-stone">
+            Bulk upload a shoot and assign images to the site or products.
+          </p>
+        </Link>
+        <Link
           href="/admin/site"
           className="border border-parchment bg-white p-5 hover:border-bark/30"
         >
           <p className="font-medium text-bark">Site images</p>
           <p className="mt-1 text-sm text-stone">
-            Hero, homepage feature, and about — upload from your shoot.
+            Quick swap for hero, homepage band, and about (one file each).
           </p>
         </Link>
         <Link

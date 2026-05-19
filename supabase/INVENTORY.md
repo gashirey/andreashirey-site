@@ -48,6 +48,12 @@ Run `migrations/006_mvp_availability_seed.sql` (zinnia + dahlia for today, Easte
 
 Then open `/available-now` — you should see both listings.
 
+## Media library (bulk upload in browser)
+
+1. Run `migrations/008_media_library.sql` in Supabase SQL Editor.
+2. Open **`/admin/media`** — create a shoot, drag in files, use **Use on site** on each image.
+3. Site slots still need `007_site_media_slots.sql` for hero / home / about.
+
 ## Site images (hero, home, about) — launch today
 
 1. Run `migrations/007_site_media_slots.sql` in Supabase SQL Editor (once).

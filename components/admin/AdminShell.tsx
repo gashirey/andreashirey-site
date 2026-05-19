@@ -6,6 +6,7 @@ const links = [
   { href: "/admin", label: "Dashboard" },
   { href: "/admin/availability", label: "Today" },
   { href: "/admin/products", label: "Products" },
+  { href: "/admin/media", label: "Media" },
   { href: "/admin/site", label: "Site images" },
   { href: "/available-now", label: "View site" },
 ];
@@ -41,7 +42,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
           </nav>
         </div>
       </header>
-      <main className="mx-auto max-w-5xl px-4 py-6">{children}</main>
+      <main className="mx-auto max-w-6xl px-4 py-6">{children}</main>
     </div>
   );
 }
