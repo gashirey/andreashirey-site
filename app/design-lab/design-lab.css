@@ -1,17 +1,27 @@
 /* Design lab — scoped button + label utilities (per-direction CSS vars) */
 
-.lab-direction .lab-label {
+.lab-direction .lab-label,
+.lab-home .lab-label {
   font-family: var(--lab-sans);
   font-size: 0.6875rem;
   font-weight: 500;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--lab-muted);
+  color: var(--lab-green);
+}
+
+.lab-direction .lab-btn-outline:hover,
+.lab-home .lab-btn-outline:hover {
+  border-color: var(--lab-green);
+  color: var(--lab-green);
 }
 
 .lab-direction .lab-btn-primary,
 .lab-direction .lab-btn-outline,
-.lab-direction .lab-btn-ghost {
+.lab-direction .lab-btn-ghost,
+.lab-home .lab-btn-primary,
+.lab-home .lab-btn-outline,
+.lab-home .lab-btn-ghost {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -24,29 +34,28 @@
   transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
 }
 
-.lab-direction .lab-btn-primary {
+.lab-direction .lab-btn-primary,
+.lab-home .lab-btn-primary {
   background-color: var(--lab-accent);
   border: 1px solid var(--lab-accent);
   color: #fff;
 }
 
-.lab-direction .lab-btn-primary:hover {
+.lab-direction .lab-btn-primary:hover,
+.lab-home .lab-btn-primary:hover {
   background-color: var(--lab-accent-hover);
   border-color: var(--lab-accent-hover);
 }
 
-.lab-direction .lab-btn-outline {
+.lab-direction .lab-btn-outline,
+.lab-home .lab-btn-outline {
   background: transparent;
   border: 1px solid var(--lab-border);
   color: var(--lab-text);
 }
 
-.lab-direction .lab-btn-outline:hover {
-  border-color: var(--lab-accent);
-  color: var(--lab-accent);
-}
-
-.lab-direction .lab-btn-ghost {
+.lab-direction .lab-btn-ghost,
+.lab-home .lab-btn-ghost {
   background: transparent;
   border: 1px solid transparent;
   color: var(--lab-muted);
@@ -54,7 +63,8 @@
   text-underline-offset: 3px;
 }
 
-.lab-direction .lab-btn-ghost:hover {
+.lab-direction .lab-btn-ghost:hover,
+.lab-home .lab-btn-ghost:hover {
   color: var(--lab-text);
 }
 

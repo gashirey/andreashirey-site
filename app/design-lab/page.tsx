@@ -5,7 +5,7 @@ import { designDirections } from "@/lib/design-lab/directions";
 
 export default function DesignLabPage() {
   return (
-    <div className="min-h-screen bg-[#f0ebe8]">
+    <div className="min-h-screen bg-[#eef2ee]">
       <DesignLabNav />
 
       <header className="border-b border-parchment bg-cream px-6 py-16 md:px-12 md:py-20">
@@ -16,19 +16,21 @@ export default function DesignLabPage() {
           Grey Gables Farm — Design Lab
         </h1>
         <p className="mt-4 max-w-2xl text-stone leading-relaxed">
-          Compare three visual directions on the specimen overview below, or open a{" "}
-          <strong className="font-medium text-bark">full-page preview</strong> for each.
-          Uses <strong className="font-medium text-bark">hero.jpg</strong> and{" "}
-          <strong className="font-medium text-bark">bb.jpg</strong> where wired; remaining
-          slots show placeholders until more photos are added.
+          Compare five visual directions on the specimen overview below, or open a{" "}
+          <strong className="font-medium text-bark">full-page home preview</strong> for each.
+          Uses <strong className="font-medium text-bark">hero.jpg</strong>,{" "}
+          <strong className="font-medium text-bark">bb.jpg</strong>, and{" "}
+          <strong className="font-medium text-bark">garden_row.jpg</strong> where wired.
+          Every direction pairs <strong className="font-medium text-bark">light salmon</strong>{" "}
+          with <strong className="font-medium text-bark">meadow sage</strong> — blush page tones on
+          B &amp; E, sage-led on D.
         </p>
         <p className="mt-6 max-w-2xl text-sm text-stone">
           Target feeling:{" "}
           <em className="text-bark">
-            quiet editorial countryside elegance with emotional warmth and authentic
-            farm grounding
+            quiet editorial countryside elegance — blooms and stems, table and field
           </em>
-          — anchored in a light salmon / blush palette for Louisa, Central Virginia.
+          — for Louisa, Central Virginia.
         </p>
         <ul className="mt-8 flex flex-wrap gap-3">
           {designDirections.map((d) => (
@@ -37,7 +39,7 @@ export default function DesignLabPage() {
                 href={`/design-lab/${d.id}`}
                 className="btn border-salmon-dark bg-salmon-dark text-white hover:bg-salmon"
               >
-                Full page — {d.name}
+                Home preview — {d.name}
               </Link>
             </li>
           ))}
@@ -50,8 +52,8 @@ export default function DesignLabPage() {
 
       <footer className="border-t border-parchment bg-cream px-6 py-12 text-center text-sm text-stone md:px-12">
         <p>
-          End of design lab. Share feedback on Direction A, B, or C before applying to
-          the live site.
+          End of design lab. Share feedback on Directions A–E before applying to the live
+          site.
         </p>
         <Link
           href="/"

@@ -3,7 +3,8 @@ import Link from "next/link";
 type Variant = "primary" | "secondary" | "outline";
 
 const variants: Record<Variant, string> = {
-  primary: "bg-salmon-dark text-white hover:bg-salmon border-salmon-dark",
+  primary:
+    "bg-[var(--color-salmon-button)] text-white hover:bg-[var(--color-salmon-button-hover)] border-[var(--color-salmon-button)] hover:border-[var(--color-salmon-button-hover)]",
   secondary: "bg-parchment text-bark hover:bg-parchment/90 border-parchment",
   outline:
     "bg-transparent text-bark border-bark/25 hover:border-salmon-dark hover:text-salmon-dark",

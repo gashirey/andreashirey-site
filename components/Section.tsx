@@ -4,14 +4,16 @@ type SectionProps = {
   eyebrow?: string;
   description?: string;
   children: React.ReactNode;
-  variant?: "default" | "white" | "parchment";
+  variant?: "default" | "surface" | "muted" | "white" | "parchment";
   className?: string;
 };
 
-const variants = {
-  default: "bg-cream",
-  white: "bg-white",
-  parchment: "bg-parchment",
+const variants: Record<NonNullable<SectionProps["variant"]>, string> = {
+  default: "bg-site-page",
+  surface: "bg-site-surface",
+  muted: "bg-site-muted-band border-y border-site-border",
+  white: "bg-site-surface",
+  parchment: "bg-site-muted-band",
 };
 
 export function Section({
@@ -24,12 +26,15 @@ export function Section({
   className = "",
 }: SectionProps) {
   return (
-    <section id={id} className={`py-16 md:py-24 ${variants[variant]} ${className}`}>
+    <section
+      id={id}
+      className={`py-16 md:py-24 ${variants[variant]} ${className}`}
+    >
       <div className="mx-auto max-w-6xl px-6 lg:px-8">
         {(eyebrow || title || description) && (
           <header className="mb-12 max-w-2xl">
             {eyebrow && (
-              <p className="text-xs font-medium uppercase tracking-[0.2em] text-salmon">
+              <p className="text-xs font-medium uppercase tracking-[0.2em] text-site-green">
                 {eyebrow}
               </p>
             )}

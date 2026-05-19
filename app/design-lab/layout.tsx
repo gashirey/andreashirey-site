@@ -5,6 +5,10 @@ import {
   Fraunces,
   Karla,
   Libre_Baskerville,
+  Lora,
+  Nunito_Sans,
+  Playfair_Display,
+  Source_Sans_3,
   Work_Sans,
 } from "next/font/google";
 import "./design-lab.css";
@@ -45,6 +49,30 @@ const workSans = Work_Sans({
   weight: ["400", "500"],
 });
 
+const lora = Lora({
+  variable: "--font-lab-lora",
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+});
+
+const sourceSans = Source_Sans_3({
+  variable: "--font-lab-source",
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+});
+
+const playfair = Playfair_Display({
+  variable: "--font-lab-playfair",
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+});
+
+const nunitoSans = Nunito_Sans({
+  variable: "--font-lab-nunito",
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+});
+
 export const metadata: Metadata = {
   title: "Design Lab",
   description:
@@ -59,7 +87,7 @@ export default function DesignLabLayout({
 }) {
   return (
     <div
-      className={`design-lab-fonts ${cormorant.variable} ${dmSans.variable} ${fraunces.variable} ${karla.variable} ${libre.variable} ${workSans.variable}`}
+      className={`design-lab-fonts ${cormorant.variable} ${dmSans.variable} ${fraunces.variable} ${karla.variable} ${libre.variable} ${workSans.variable} ${lora.variable} ${sourceSans.variable} ${playfair.variable} ${nunitoSans.variable}`}
     >
       {children}
     </div>

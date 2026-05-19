@@ -1,6 +1,6 @@
 import { brand } from "@/lib/brand";
 
-export type DesignDirectionId = "a" | "b" | "c";
+export type DesignDirectionId = "a" | "b" | "c" | "d" | "e";
 
 export type DesignDirection = {
   id: DesignDirectionId;
@@ -13,8 +13,12 @@ export type DesignDirection = {
     surface: string;
     text: string;
     muted: string;
+    /** Warm accent — primary buttons, links */
     accent: string;
     accentHover: string;
+    /** Garden accent — eyebrows, labels, chips, quote rules */
+    green: string;
+    greenMuted: string;
     border: string;
     scrim: string;
     chip: string;
@@ -28,73 +32,130 @@ export type DesignDirection = {
   hero: "split" | "immersive" | "grounded";
 };
 
-/** Salmon-forward palettes — three expressions of the same brand warmth */
+/**
+ * Five directions — each pairs light salmon/blush warmth with meadow sage.
+ * B & E lean blush on the page; D leads with green; A & C stay editorial linen.
+ */
 export const designDirections: DesignDirection[] = [
   {
     id: "a",
-    name: "Quiet Editorial",
+    name: "Meadow Editorial",
     essence:
-      "Airy and restrained — pale shell and blush, typography and whitespace lead.",
+      "Pale meadow cream and sage structure — salmon for warmth, green for quiet hierarchy. Typography leads.",
     serifVar: "var(--font-lab-cormorant)",
     sansVar: "var(--font-lab-dm)",
     colors: {
-      bg: "#faf6f4",
-      surface: "#fffcfb",
-      text: "#3f3834",
-      muted: "#7a716c",
-      accent: "#d4a094",
-      accentHover: "#c08272",
-      border: "#efe6e2",
-      scrim: "rgba(63, 56, 52, 0.34)",
-      chip: "#f5ebe7",
-      chipText: "#a06b5c",
+      bg: brand.cream,
+      surface: brand.white,
+      text: brand.bark,
+      muted: "#75726c",
+      accent: brand.salmon,
+      accentHover: brand.salmonDark,
+      green: brand.moss,
+      greenMuted: brand.mossLight,
+      border: brand.parchment,
+      scrim: "rgba(58, 56, 52, 0.32)",
+      chip: brand.mossLight,
+      chipText: brand.mossDark,
     },
     spacing: { sectionY: "7rem", blockY: "2rem", gutter: "1.5rem" },
     hero: "split",
   },
   {
     id: "b",
-    name: "Romantic Botanical",
+    name: "Blush Botanica",
     essence:
-      "Softer salmon wash — immersive florals, emotionally lush without sweetness overload.",
+      "Salmon-blush page wash with stem-green labels — romantic, field-grown, never saccharine.",
     serifVar: "var(--font-lab-fraunces)",
     sansVar: "var(--font-lab-karla)",
     colors: {
-      bg: "#f9f0ed",
-      surface: "#fff9f7",
-      text: "#423936",
-      muted: "#8a7872",
-      accent: "#d9a89a",
-      accentHover: "#c4897a",
-      border: "#eddcd6",
-      scrim: "rgba(66, 57, 54, 0.38)",
-      chip: "#f3e0d9",
-      chipText: "#9a6356",
+      bg: brand.meadowBlush,
+      surface: "#fff7f4",
+      text: "#3f3836",
+      muted: "#857a75",
+      accent: "#e8c4b8",
+      accentHover: brand.salmonDark,
+      green: "#7f9a85",
+      greenMuted: "#e5efe7",
+      border: "#e8ddd6",
+      scrim: "rgba(62, 54, 50, 0.36)",
+      chip: "#e8f0ea",
+      chipText: brand.mossDark,
     },
     spacing: { sectionY: "6rem", blockY: "1.75rem", gutter: "1.25rem" },
     hero: "immersive",
   },
   {
     id: "c",
-    name: "Refined Countryside",
+    name: "Linen & Laurel",
     essence:
-      "Dusty rose and linen — grounded Central Virginia elegance, tactile and authentic.",
+      "Warm linen ground, laurel borders, dusty rose CTAs — countryside restraint with garden undertones.",
     serifVar: "var(--font-lab-libre)",
     sansVar: "var(--font-lab-work)",
     colors: {
-      bg: "#f6f1ee",
-      surface: "#faf7f5",
-      text: "#3a3430",
-      muted: "#736a64",
-      accent: "#c99588",
-      accentHover: "#b07d6f",
-      border: "#e5d8d2",
-      scrim: "rgba(58, 52, 48, 0.42)",
-      chip: "#ede4df",
-      chipText: "#8f5f52",
+      bg: brand.linen,
+      surface: "#fbfaf7",
+      text: brand.bark,
+      muted: "#736e68",
+      accent: "#e0b5aa",
+      accentHover: brand.salmonDark,
+      green: brand.moss,
+      greenMuted: brand.mossMuted,
+      border: "#e4e8e2",
+      scrim: "rgba(54, 52, 48, 0.4)",
+      chip: "#e6ede8",
+      chipText: brand.mossDark,
     },
     spacing: { sectionY: "6.5rem", blockY: "2rem", gutter: "1.5rem" },
     hero: "grounded",
+  },
+  {
+    id: "d",
+    name: "Sage Proportion",
+    essence:
+      "Meadow-forward — sage leads buttons and borders, salmon softens chips and secondary warmth.",
+    serifVar: "var(--font-lab-lora)",
+    sansVar: "var(--font-lab-source)",
+    colors: {
+      bg: brand.meadow,
+      surface: "#fafcf9",
+      text: "#353834",
+      muted: "#6b726c",
+      accent: brand.moss,
+      accentHover: brand.mossDark,
+      green: brand.salmon,
+      greenMuted: brand.salmonLight,
+      border: brand.mossMuted,
+      scrim: "rgba(48, 58, 52, 0.38)",
+      chip: brand.salmonLight,
+      chipText: "#a87d70",
+    },
+    spacing: { sectionY: "6.5rem", blockY: "2rem", gutter: "1.5rem" },
+    hero: "split",
+  },
+  {
+    id: "e",
+    name: "Rose & Stem",
+    essence:
+      "Blush-rose fields behind every section — stem green on labels, salmon on action, editorial glow.",
+    serifVar: "var(--font-lab-playfair)",
+    sansVar: "var(--font-lab-nunito)",
+    colors: {
+      bg: brand.blushBg,
+      surface: "#fdf7f4",
+      text: "#403836",
+      muted: "#857874",
+      accent: "#ecc9be",
+      accentHover: brand.salmon,
+      green: "#7d9683",
+      greenMuted: "#e6efe8",
+      border: "#e6ddd6",
+      scrim: "rgba(62, 54, 52, 0.35)",
+      chip: "#e5efe7",
+      chipText: brand.mossDark,
+    },
+    spacing: { sectionY: "6rem", blockY: "1.75rem", gutter: "1.25rem" },
+    hero: "immersive",
   },
 ];
 
@@ -116,7 +177,7 @@ export const labCopy = {
 };
 
 export function isValidDirectionId(id: string): id is DesignDirectionId {
-  return id === "a" || id === "b" || id === "c";
+  return designDirections.some((d) => d.id === id);
 }
 
 export function getDirection(id: string): DesignDirection | undefined {

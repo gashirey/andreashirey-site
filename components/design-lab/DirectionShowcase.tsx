@@ -24,6 +24,8 @@ export function DirectionShowcase({
     "--lab-muted": d.colors.muted,
     "--lab-accent": d.colors.accent,
     "--lab-accent-hover": d.colors.accentHover,
+    "--lab-green": d.colors.green,
+    "--lab-green-muted": d.colors.greenMuted,
     "--lab-border": d.colors.border,
     "--lab-scrim": d.colors.scrim,
     "--lab-chip": d.colors.chip,
@@ -100,13 +102,14 @@ export function DirectionShowcase({
 
       {/* Palette */}
       <LabBlock title={isFull ? undefined : "Color palette"}>
-        <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-6">
+        <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-7">
           {[
             { name: "Background", hex: d.colors.bg },
             { name: "Surface", hex: d.colors.surface },
             { name: "Text", hex: d.colors.text },
             { name: "Muted", hex: d.colors.muted },
             { name: "Accent", hex: d.colors.accent },
+            { name: "Garden", hex: d.colors.green },
             { name: "Border", hex: d.colors.border },
           ].map((swatch) => (
             <li key={swatch.name}>
@@ -141,7 +144,7 @@ export function DirectionShowcase({
               <a
                 key={item}
                 href="#"
-                className="transition-colors hover:text-[var(--lab-text)]"
+                className="transition-colors hover:text-[var(--lab-green)]"
                 onClick={(e) => e.preventDefault()}
               >
                 {item}
@@ -182,7 +185,12 @@ export function DirectionShowcase({
             aspect="aspect-square"
             className="sm:mt-8"
           />
-          <PhotoPlaceholder label="cutting garden row" aspect="aspect-[4/5]" />
+          <PhotoPlaceholder
+            src={labPhotos.gardenRow.src}
+            alt={labPhotos.gardenRow.alt}
+            label="cutting garden row"
+            aspect="aspect-[4/5]"
+          />
         </div>
       </LabBlock>
 
@@ -217,7 +225,7 @@ export function DirectionShowcase({
 
       {/* Quote */}
       <LabBlock title={isFull ? undefined : "Quote / testimonial"}>
-        <blockquote className="max-w-2xl border-l-2 border-[var(--lab-accent)] pl-6">
+        <blockquote className="max-w-2xl border-l-2 border-[var(--lab-green)] pl-6">
           <p className="font-[family-name:var(--lab-serif)] text-2xl leading-snug md:text-3xl">
             &ldquo;{labCopy.quote.text}&rdquo;
           </p>

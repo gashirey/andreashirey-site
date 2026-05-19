@@ -46,11 +46,27 @@ export function DesignLabNav() {
                     href={fullHref}
                     className={onFull ? "font-medium text-salmon-dark" : "hover:text-bark"}
                   >
-                    {d.id.toUpperCase()} full
+                    {d.id.toUpperCase()} home
                   </Link>
                 </li>
               );
             })}
+            <li>
+              <Link
+                href="/design-lab/hero"
+                className={pathname === "/design-lab/hero" ? "font-medium text-salmon-dark" : "hover:text-bark"}
+              >
+                Hero frames
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/design-lab/samples"
+                className={pathname.startsWith("/design-lab/samples") ? "font-medium text-salmon-dark" : "hover:text-bark"}
+              >
+                Snapshots
+              </Link>
+            </li>
             <li>
               <Link href="/" className="hover:text-bark">
                 ← Site

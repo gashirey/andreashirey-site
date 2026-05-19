@@ -36,7 +36,7 @@ export function Hero({
       />
       {/* Flat scrim only — no gradients */}
       <div className="hero-scrim" aria-hidden />
-      <div className="relative mx-auto flex max-w-6xl flex-col justify-end px-6 pb-14 pt-28 lg:px-8 lg:pb-16">
+      <div className="relative mx-auto flex max-w-6xl flex-col justify-end px-6 pb-14 pt-8 lg:px-8 lg:pb-16">
         <h1 className="max-w-2xl font-serif text-4xl font-medium leading-tight text-white md:text-5xl">
           {title}
         </h1>

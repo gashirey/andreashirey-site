@@ -1,0 +1,31 @@
+---
+description: When the user says "snapshot", freeze the current homepage config for team demos
+alwaysApply: true
+---
+
+# Homepage snapshots
+
+When the user says **snapshot** (or "take a snapshot", "save this view"):
+
+1. Capture the **current live** homepage configuration using `buildSnapshotFromLive()` from `lib/snapshots/build-snapshot.ts`.
+2. Assign the next id via `suggestNextSampleId()` from `lib/snapshots/registry.ts` (e.g. `sample-a`, `sample-b`, …) unless the user names one.
+3. Create `lib/snapshots/samples/{id}.ts` exporting a `SiteSnapshot` constant (copy structure from `sample-b.ts`).
+4. Register the import in `lib/snapshots/registry.ts` → `siteSnapshots` array (newest last or first — keep chronological in label).
+5. Tell the user the demo URL: `/design-lab/samples/{id}` and the index at `/design-lab/samples`.
+
+## What to freeze
+
+`SiteSnapshot` includes:
+
+- `directionId` — from `lib/site-theme.ts` → `activeDirectionId`
+- `home.heroFrame` / `home.heroLayout` — from `activeHeroFrame` / `activeHeroLayout`
+- `label`, `createdAt`, optional `notes` (ask briefly if milestone-worthy, or infer from recent changes)
+
+Do **not** snapshot on every small tweak unless asked. Snapshot = intentional checkpoint for team review.
+
+## Live site vs snapshots
+
+- **Live homepage** (`/`) reads `lib/site-theme.ts` + `components/home/HomePageContent.tsx`.
+- **Snapshots** are immutable files under `lib/snapshots/samples/` rendered at `/design-lab/samples/[sampleId]`.
+
+Changing the live site does not change existing snapshots.

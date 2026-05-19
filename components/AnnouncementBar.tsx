@@ -5,7 +5,7 @@ export function AnnouncementBar() {
   if (!announcement.enabled) return null;
 
   return (
-    <div className="border-b border-salmon/15 bg-salmon/10 px-4 py-2.5 text-center text-sm text-bark">
+    <div className="border-b border-salmon/15 bg-salmon/10 px-4 py-2 text-center text-xs text-bark sm:text-sm">
       <p>
         {announcement.message}{" "}
         <Link

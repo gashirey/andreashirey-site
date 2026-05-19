@@ -22,6 +22,12 @@ Open [http://localhost:3000](http://localhost:3000).
 
 Replace placeholder images in `public/images/placeholders/` with real photos (keep filenames or update paths in `lib/content.ts`).
 
+## Mailing & SMS lists (Supabase)
+
+Email and text sign-ups in the footer write to Supabase (`mailing_list`, `sms_list` tables).
+
+Setup: see [supabase/README.md](supabase/README.md) and copy `.env.example` → `.env.local`.
+
 ## Deploy to Vercel
 
 1. Push this repo to GitHub.

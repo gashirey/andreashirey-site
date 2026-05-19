@@ -2,8 +2,10 @@
  * Site copy — edit here to update pages without touching components.
  *
  * PHOTO FOLDERS (drop real images here, then update paths below):
+ *   public/images/logo.jpg          — header / footer mark
  *   public/images/hero.jpg          — home hero
  *   public/images/bb.jpg            — bouquet (welcome, availability, gallery)
+ *   public/images/garden_row.jpg    — garden rows (gallery)
  *   public/images/about.jpg         — about page (optional)
  *   public/images/flowers/{id}.jpg  — availability cards (match item id)
  *   public/images/gallery/01.jpg    — gallery grid
@@ -18,10 +20,34 @@ export const site = {
   email: "hello@greygablesfarm.com",
   location: "Louisa, Virginia",
   locationRegion: "Central Virginia",
+  logo: "/images/logo.jpg",
+  logoAlt: "Grey Gables Farm",
   /** Home page hero — update path when you replace the image */
   heroImage: "/images/hero.jpg",
   heroImageAlt: "Grey Gables Farm — seasonal flowers in Louisa, Virginia",
 } as const;
+
+/** Home hero slider — add or reorder as you add farm photos */
+export const heroSlides = [
+  {
+    src: site.heroImage,
+    alt: site.heroImageAlt,
+  },
+  {
+    src: "/images/bb.jpg",
+    alt: "Mixed seasonal bouquet from Grey Gables Farm",
+  },
+  {
+    src: "/images/garden_row.jpg",
+    alt: "Cutting garden rows at Grey Gables Farm",
+  },
+] as const;
+
+/** Home hero layout: full bleed edge-to-edge, or inset with side margins */
+export type HeroFrame = "bleed" | "inset";
+
+/** @deprecated Prefer lib/site-theme.ts activeHeroFrame */
+export const homeHeroFrame: HeroFrame = "bleed";
 
 /** Set when you refresh listings — shown on Flowers page */
 export const availabilityUpdated = "2026-05-19";
@@ -30,6 +56,24 @@ export const announcement = {
   enabled: true,
   message:
     "We're refreshing photos and availability listings this week — check back soon or inquire for what's in bloom.",
+} as const;
+
+export const subscribe = {
+  heading: "Stay in the loop",
+  description:
+    "Seasonal availability, farm updates, and occasional reminders — no spam, just flowers.",
+  emailLabel: "Email",
+  emailPlaceholder: "you@example.com",
+  emailButton: "Join email list",
+  emailSuccess: "You're on the list. We'll be in touch from the farm.",
+  smsLabel: "Text alerts",
+  smsPlaceholder: "(540) 555-1234",
+  smsButton: "Join text list",
+  smsSuccess: "You're signed up for text updates.",
+  smsConsent:
+    "I agree to receive recurring automated marketing texts from Grey Gables Farm. Msg & data rates may apply. Reply STOP to opt out.",
+  notConfigured:
+    "Sign-ups are almost ready — we're connecting our list service.",
 } as const;
 
 export const social = {
@@ -126,8 +170,8 @@ export type GalleryImage = {
 export const galleryImages: GalleryImage[] = [
   {
     id: "g1",
-    src: "/images/placeholders/gallery-1.svg",
-    alt: "Placeholder — replace with field or farm landscape photo",
+    src: "/images/garden_row.jpg",
+    alt: "Cutting garden rows at Grey Gables Farm",
     caption: "Morning light in the cutting garden",
   },
   {

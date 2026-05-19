@@ -1,16 +1,16 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, DM_Sans } from "next/font/google";
+import { Fraunces, Karla } from "next/font/google";
 import { site } from "@/lib/content";
 import "./globals.css";
 
-const cormorant = Cormorant_Garamond({
-  variable: "--font-cormorant",
+const fraunces = Fraunces({
+  variable: "--font-fraunces",
   subsets: ["latin"],
   weight: ["400", "500", "600"],
 });
 
-const dmSans = DM_Sans({
-  variable: "--font-dm-sans",
+const karla = Karla({
+  variable: "--font-karla",
   subsets: ["latin"],
   weight: ["400", "500", "600"],
 });
@@ -37,7 +37,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${cormorant.variable} ${dmSans.variable}`}>
+    <html lang="en" className={`${fraunces.variable} ${karla.variable}`}>
       <body className="flex min-h-screen flex-col antialiased">
         <a
           href="#main-content"

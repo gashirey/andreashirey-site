@@ -1,15 +1,20 @@
 @import "tailwindcss";
 
 :root {
-  --color-cream: #faf6f4;
-  --color-parchment: #efe6e2;
-  --color-salmon: #d4a094;
-  --color-salmon-dark: #c08272;
-  --color-salmon-light: #f5ebe7;
-  --color-salmon-muted: #e8d4cd;
-  --color-bark: #3f3834;
-  --color-stone: #7a716c;
-  --color-blush: #d4a094;
+  --color-cream: #f9f8f6;
+  --color-parchment: #ebe8e4;
+  --color-salmon: #e4b8ae;
+  --color-salmon-button: #e0b5aa;
+  --color-salmon-button-hover: #d4a69a;
+  --color-salmon-dark: #d4a69a;
+  --color-salmon-light: #faf3f0;
+  --color-salmon-muted: #f3e6e1;
+  --color-sage: #7a9480;
+  --color-sage-dark: #627a68;
+  --color-sage-light: #e8f0ea;
+  --color-bark: #3a3834;
+  --color-stone: #6f6c66;
+  --color-blush: #e4b8ae;
   --color-white: #fffcfb;
 }
 
@@ -17,16 +22,78 @@
   --color-cream: var(--color-cream);
   --color-parchment: var(--color-parchment);
   --color-salmon: var(--color-salmon);
+  --color-salmon-button: var(--color-salmon-button);
+  --color-salmon-button-hover: var(--color-salmon-button-hover);
   --color-salmon-dark: var(--color-salmon-dark);
   --color-salmon-light: var(--color-salmon-light);
   --color-salmon-muted: var(--color-salmon-muted);
+  --color-sage: var(--color-sage);
+  --color-sage-dark: var(--color-sage-dark);
+  --color-sage-light: var(--color-sage-light);
   --color-bark: var(--color-bark);
   --color-stone: var(--color-stone);
   --color-blush: var(--color-blush);
   --color-white: var(--color-white);
-  --font-serif: var(--font-cormorant);
-  --font-sans: var(--font-dm-sans);
+  --font-serif: var(--font-fraunces, var(--font-cormorant));
+  --font-sans: var(--font-karla, var(--font-dm-sans));
   --radius-sm: 2px;
+}
+
+/* Production theme (direction B) — overridden on .site-theme wrapper */
+.site-theme {
+  --site-bg: #f2ece9;
+  --site-surface: #fff7f4;
+  --site-text: #3f3836;
+  --site-muted: #857a75;
+  --site-border: #e8ddd6;
+  --site-green: #7f9a85;
+  --site-scrim: rgba(62, 54, 50, 0.36);
+  --site-muted-band: #f5ebe8;
+  background: var(--site-bg);
+  color: var(--site-text);
+  font-family: var(--font-karla), var(--font-dm-sans), system-ui, sans-serif;
+}
+
+.site-theme .font-serif {
+  font-family: var(--font-fraunces), var(--font-cormorant), Georgia, serif;
+}
+
+.bg-site-page {
+  background-color: var(--site-bg);
+}
+
+.bg-site-surface {
+  background-color: var(--site-surface);
+}
+
+.bg-site-muted-band {
+  background-color: var(--site-muted-band);
+}
+
+.border-site-border {
+  border-color: var(--site-border);
+}
+
+.text-site-green {
+  color: var(--site-green);
+}
+
+.site-theme .site-header {
+  background-color: var(--site-surface);
+  border-color: var(--site-border);
+}
+
+.site-theme .hero-scrim {
+  background: var(--site-scrim);
+}
+
+.site-theme .image-frame {
+  background-color: var(--site-border);
+}
+
+.site-theme .card {
+  border-color: var(--site-border);
+  background-color: var(--site-surface);
 }
 
 @layer components {
@@ -52,6 +119,20 @@
 
   .hero-scrim {
     @apply absolute inset-0 bg-bark/40;
+  }
+
+  .site-header {
+    @apply bg-cream;
+  }
+
+  .hero-slider-fade {
+    transition: opacity 2s ease-in-out;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-slider-fade {
+      transition: none;
+    }
   }
 }
 

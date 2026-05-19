@@ -1,0 +1,38 @@
+---
+description: Agent manages local dev server start/stop/restart for this project
+alwaysApply: true
+---
+
+# Dev server — agent-managed
+
+The user wants **you** to start, stop, and restart the dev server — do not ask them to run `npm run dev` unless something blocks you (missing deps, port permission, etc.).
+
+## Default
+
+- **Command:** `npm run dev` (uses `127.0.0.1` per `package.json`)
+- **URL:** http://127.0.0.1:3000
+- **Project root:** workspace root (`greygablesfarm`)
+
+## When to act
+
+- Before verifying pages in the browser or after code changes that affect routing, layout, or client components
+- When the user reports Internal Server Error, blank pages, or stale HMR behavior
+- When starting work on UI — confirm the server is up; start it if not
+
+## Restart procedure
+
+1. Stop anything on port **3000** (or the port in use): `lsof -ti:3000 | xargs kill -9` (only when restarting)
+2. If errors persist (`require is not defined`, 500 on routes that `npm run build` passes): `rm -rf .next`
+3. Start in background: `npm run dev` from project root
+4. Wait until ready, then `curl -sS -o /dev/null -w "%{http_code}" http://127.0.0.1:3000/` (expect `200`)
+5. Tell the user the URL; mention restart if you cleared cache
+
+## Do not
+
+- Leave multiple `next dev` processes fighting for the same port
+- Ask the user to restart unless you lack shell access or hit an environment blocker
+- Use `sed` replacements that touch strings like `prefers-reduced-motion` (use targeted edits only)
+
+## Production check
+
+Use `npm run build` for compile errors; use the dev server for runtime/HMR issues.
