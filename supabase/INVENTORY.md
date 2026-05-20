@@ -50,6 +50,12 @@ Run `migrations/006_mvp_availability_seed.sql` (zinnia + dahlia for today, Easte
 
 Then open `/available-now` — you should see both listings.
 
+## Social (phone → Instagram)
+
+1. Open **`/admin/social`** on your phone (same admin login). Pin to home screen if helpful.
+2. Filter **Library** / **Products** / **All**, tap **Save** to download to Photos, **Copy** a caption starter, post in Instagram.
+3. New phone shots: upload in **`/admin/media`** first, then grab them from Social.
+
 ## Media library (bulk upload in browser)
 
 1. Run `migrations/008_media_library.sql` in Supabase SQL Editor.

@@ -396,30 +396,54 @@ export function MediaLibrary() {
           Use on site — assigns to homepage, about, or a product.
         </p>
 
+        <p className="mt-2 text-sm text-stone">
+          On your phone:{" "}
+          <a href="/admin/social" className="underline hover:text-bark">
+            Social
+          </a>{" "}
+          for save-to-Photos and captions.
+        </p>
+
         {assets.length === 0 ? (
           <p className="mt-6 text-sm text-stone">No images in this shoot yet.</p>
         ) : (
-          <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <ul className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {assets.map((asset) => (
               <li
                 key={asset.id}
-                className="border border-parchment bg-white p-3"
+                className="border border-parchment bg-white p-2 sm:p-3"
               >
-                <div className="relative aspect-[4/3] overflow-hidden bg-parchment">
+                <div className="relative aspect-square overflow-hidden bg-parchment sm:aspect-[4/3]">
                   <Image
                     src={asset.public_url}
                     alt={asset.alt_text ?? asset.filename}
                     fill
                     className="object-cover"
-                    sizes="240px"
+                    sizes="(max-width: 640px) 50vw, 240px"
                     unoptimized={isRemoteSrc(asset.public_url)}
                   />
                 </div>
                 <p className="mt-2 truncate text-xs text-stone">{asset.filename}</p>
+                <div className="mt-2 grid grid-cols-2 gap-1">
+                  <a
+                    href={asset.public_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn border-parchment py-2 text-center text-xs"
+                  >
+                    Open
+                  </a>
+                  <a
+                    href={`/api/admin/social/download?kind=media&id=${asset.id}`}
+                    className="btn border-bark bg-bark py-2 text-center text-xs text-cream"
+                  >
+                    Save
+                  </a>
+                </div>
                 <label className="mt-2 block text-xs">
                   Use on site
                   <select
-                    className="input mt-1 w-full text-xs disabled:opacity-50"
+                    className="input mt-1 w-full text-base disabled:opacity-50 sm:text-xs"
                     disabled={assigningId === asset.id}
                     value=""
                     onChange={(e) => {

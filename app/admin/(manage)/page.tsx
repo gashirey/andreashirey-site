@@ -31,6 +31,15 @@ export default function AdminDashboardPage() {
           </p>
         </Link>
         <Link
+          href="/admin/social"
+          className="border border-parchment bg-white p-5 hover:border-bark/30"
+        >
+          <p className="font-medium text-bark">Social (phone)</p>
+          <p className="mt-1 text-sm text-stone">
+            Save images and copy captions for Instagram from your library.
+          </p>
+        </Link>
+        <Link
           href="/admin/site"
           className="border border-parchment bg-white p-5 hover:border-bark/30"
         >

@@ -7,6 +7,7 @@ const links = [
   { href: "/admin/availability", label: "Today" },
   { href: "/admin/products", label: "Products" },
   { href: "/admin/media", label: "Media" },
+  { href: "/admin/social", label: "Social" },
   { href: "/admin/site", label: "Site editor" },
   { href: "/available-now", label: "View site" },
 ];
