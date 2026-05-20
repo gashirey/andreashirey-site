@@ -7,6 +7,11 @@ import {
   SITE_MEDIA_SLOTS,
   type SiteMediaSlotKey,
 } from "@/lib/site-media/slots";
+import {
+  compressImageBeforeUpload,
+  formatBytes,
+} from "@/lib/admin/client-compress-image";
+import { readAdminUploadError } from "@/lib/admin/upload-response";
 import type { MediaAsset, MediaShoot } from "@/lib/media/types";
 import type { FarmProduct } from "@/lib/inventory/types";
 
@@ -114,11 +119,38 @@ export function MediaLibrary() {
 
     for (let i = 0; i < files.length; i += BATCH_SIZE) {
       const batch = files.slice(i, i + BATCH_SIZE);
-      setUploadProgress(`Uploading ${done + 1}–${Math.min(done + batch.length, files.length)} of ${files.length}…`);
+      const prepared: File[] = [];
+
+      for (const file of batch) {
+        setUploadProgress(
+          `Optimizing ${done + prepared.length + 1} of ${files.length} (${formatBytes(file.size)})…`,
+        );
+        try {
+          const { file: ready, compressed, originalBytes, outputBytes } =
+            await compressImageBeforeUpload(file);
+          if (compressed) {
+            console.info(
+              `[upload] ${file.name}: ${formatBytes(originalBytes)} → ${formatBytes(outputBytes)}`,
+            );
+          }
+          prepared.push(ready);
+        } catch {
+          allErrors.push(`${file.name}: could not optimize in browser.`);
+        }
+      }
+
+      if (!prepared.length) {
+        done += batch.length;
+        continue;
+      }
+
+      setUploadProgress(
+        `Uploading ${done + 1}–${done + prepared.length} of ${files.length}…`,
+      );
 
       const formData = new FormData();
       formData.append("shoot_id", shootId);
-      for (const file of batch) {
+      for (const file of prepared) {
         formData.append("files", file);
       }
 
@@ -126,14 +158,14 @@ export function MediaLibrary() {
         method: "POST",
         body: formData,
       });
-      const data = await res.json();
       done += batch.length;
 
       if (!res.ok) {
-        allErrors.push(data.error ?? "Upload failed.");
+        allErrors.push(await readAdminUploadError(res));
         continue;
       }
 
+      const data = await res.json();
       const batchErrors = (data.errors ?? []) as { filename: string; error: string }[];
       for (const err of batchErrors) {
         allErrors.push(`${err.filename}: ${err.error}`);
@@ -263,8 +295,8 @@ export function MediaLibrary() {
       >
         <p className="font-medium text-bark">Drop images here</p>
         <p className="mt-1 text-sm text-stone">
-          JPEG, PNG, or WebP — up to 50 at a time, 15MB each before processing.
-          Images are resized to 2400px max edge and saved as optimized JPEG.
+          Large files (e.g. 30MB+) are optimized in your browser first, then
+          uploaded. Saved at 2400px max edge as JPEG. GIFs upload as-is.
         </p>
         <input
           ref={inputRef}

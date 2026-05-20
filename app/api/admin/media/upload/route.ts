@@ -3,8 +3,11 @@ import { requireAdmin } from "@/lib/admin/require";
 import { uploadImageToStorage } from "@/lib/admin/storage-upload";
 import { createServiceClient } from "@/lib/supabase/server";
 
+export const maxDuration = 60;
+
 const MAX_FILES = 50;
-const MAX_BYTES = 15 * 1024 * 1024;
+/** After browser compress; guards runaway uploads. */
+const MAX_BYTES = 12 * 1024 * 1024;
 
 export async function POST(request: Request) {
   const denied = await requireAdmin(request);
@@ -30,7 +33,9 @@ export async function POST(request: Request) {
   const tooLarge = files.find((f) => f.size > MAX_BYTES);
   if (tooLarge) {
     return NextResponse.json(
-      { error: `${tooLarge.name} exceeds 15MB.` },
+      {
+        error: `${tooLarge.name} is still too large after optimization. Try a smaller export.`,
+      },
       { status: 400 },
     );
   }

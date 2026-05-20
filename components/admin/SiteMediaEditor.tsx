@@ -2,6 +2,8 @@
 
 import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
+import { compressImageBeforeUpload } from "@/lib/admin/client-compress-image";
+import { readAdminUploadError } from "@/lib/admin/upload-response";
 import {
   SITE_MEDIA_SLOT_LABELS,
   SITE_MEDIA_SLOTS,
@@ -30,10 +32,20 @@ export function SiteMediaEditor() {
 
   async function onUpload(slotKey: SiteMediaSlotKey, file: File) {
     setUploading(slotKey);
-    setMessage("");
+    setMessage("Optimizing…");
 
+    let ready: File;
+    try {
+      ({ file: ready } = await compressImageBeforeUpload(file));
+    } catch {
+      setUploading(null);
+      setMessage("Could not optimize image in browser.");
+      return;
+    }
+
+    setMessage("Uploading…");
     const formData = new FormData();
-    formData.append("file", file);
+    formData.append("file", ready);
     formData.append("slot_key", slotKey);
     const slot = slots.find((s) => s.slot_key === slotKey);
     if (slot?.alt_text) formData.append("alt_text", slot.alt_text);
@@ -42,11 +54,10 @@ export function SiteMediaEditor() {
       method: "POST",
       body: formData,
     });
-    const data = await res.json();
     setUploading(null);
 
     if (!res.ok) {
-      setMessage(data.error ?? "Upload failed.");
+      setMessage(await readAdminUploadError(res));
       return;
     }
 

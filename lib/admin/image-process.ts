@@ -1,10 +1,10 @@
 import sharp from "sharp";
+import {
+  WEB_IMAGE_JPEG_QUALITY,
+  WEB_IMAGE_MAX_EDGE,
+} from "./image-constants";
 
-/** Longest side stored on the site (matches photographer brief). */
-export const WEB_IMAGE_MAX_EDGE = 2400;
-
-/** JPEG quality for web exports (balance size vs clarity). */
-export const WEB_IMAGE_JPEG_QUALITY = 82;
+export { WEB_IMAGE_JPEG_QUALITY, WEB_IMAGE_MAX_EDGE } from "./image-constants";
 
 /** Flatten transparent PNGs to site cream before JPEG encode. */
 const FLATTEN_BG = { r: 249, g: 248, b: 246 };

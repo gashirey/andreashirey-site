@@ -2,6 +2,8 @@
 
 import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
+import { compressImageBeforeUpload } from "@/lib/admin/client-compress-image";
+import { readAdminUploadError } from "@/lib/admin/upload-response";
 import type { FarmProductPhoto } from "@/lib/inventory/types";
 
 type PhotoManagerProps = {
@@ -38,23 +40,34 @@ export function PhotoManager({ productId, availabilityId = null }: PhotoManagerP
     if (!file) return;
 
     setUploading(true);
-    setMessage("");
+    setMessage("Optimizing…");
 
+    let ready: File;
+    try {
+      ({ file: ready } = await compressImageBeforeUpload(file));
+    } catch {
+      setMessage("Could not optimize image in browser.");
+      setUploading(false);
+      return;
+    }
+
+    setMessage("Uploading…");
     const formData = new FormData();
-    formData.append("file", file);
+    formData.append("file", ready);
     formData.append("product_id", productId);
 
     const uploadRes = await fetch("/api/admin/photos/upload", {
       method: "POST",
       body: formData,
     });
-    const uploadData = await uploadRes.json();
 
     if (!uploadRes.ok) {
-      setMessage(uploadData.error ?? "Upload failed.");
+      setMessage(await readAdminUploadError(uploadRes));
       setUploading(false);
       return;
     }
+
+    const uploadData = await uploadRes.json();
 
     const createRes = await fetch("/api/admin/photos", {
       method: "POST",
