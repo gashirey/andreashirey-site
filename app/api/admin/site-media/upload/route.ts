@@ -1,3 +1,4 @@
+import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/admin/require";
 import { uploadImageToStorage } from "@/lib/admin/storage-upload";
@@ -48,6 +49,9 @@ export async function POST(request: Request) {
     console.error("[site-media upload]", error);
     return NextResponse.json({ error: error.message }, { status: 400 });
   }
+
+  revalidatePath("/");
+  revalidatePath("/about");
 
   return NextResponse.json({
     path: uploaded.path,

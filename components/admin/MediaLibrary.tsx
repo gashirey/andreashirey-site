@@ -34,6 +34,7 @@ export function MediaLibrary() {
   const [uploadProgress, setUploadProgress] = useState("");
   const [message, setMessage] = useState("");
   const [dragOver, setDragOver] = useState(false);
+  const [assigningId, setAssigningId] = useState<string | null>(null);
 
   const loadShoots = useCallback(async () => {
     const res = await fetch("/api/admin/media/shoots");
@@ -196,7 +197,9 @@ export function MediaLibrary() {
     target: "site_slot" | "product",
     slotOrProduct: string,
   ) {
-    setMessage("");
+    setAssigningId(assetId);
+    setMessage("Applying to site…");
+
     const body =
       target === "site_slot"
         ? {
@@ -211,13 +214,23 @@ export function MediaLibrary() {
             is_primary: true,
           };
 
-    const res = await fetch("/api/admin/media/assign", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    });
-    const data = await res.json();
-    setMessage(res.ok ? (data.message as string) : (data.error ?? "Assign failed."));
+    try {
+      const res = await fetch("/api/admin/media/assign", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      const data = (await res.json()) as { message?: string; error?: string };
+      setMessage(
+        res.ok
+          ? (data.message ?? "Updated.")
+          : (data.error ?? "Assign failed. If this mentions a missing table, run migration 007 in Supabase."),
+      );
+    } catch {
+      setMessage("Assign failed — network or server error.");
+    } finally {
+      setAssigningId(null);
+    }
   }
 
   if (loading) {
@@ -242,7 +255,24 @@ export function MediaLibrary() {
 
   return (
     <div className="space-y-8">
-      {message && <p className="text-sm text-bark">{message}</p>}
+      {message && (
+        <p
+          className={`text-sm ${message.includes("failed") || message.includes("issues") ? "text-bark" : "border border-parchment bg-white p-3 text-bark"}`}
+          role="status"
+        >
+          {message}{" "}
+          {message.includes("updated") || message.includes("Added to") ? (
+            <a
+              href="/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-salmon-dark underline"
+            >
+              View site
+            </a>
+          ) : null}
+        </p>
+      )}
 
       <section className="border border-parchment bg-white p-5">
         <h2 className="font-serif text-lg text-bark">Shoot</h2>
@@ -354,21 +384,21 @@ export function MediaLibrary() {
                 <label className="mt-2 block text-xs">
                   Use on site
                   <select
-                    defaultValue=""
-                    className="input mt-1 w-full text-xs"
+                    className="input mt-1 w-full text-xs disabled:opacity-50"
+                    disabled={assigningId === asset.id}
+                    value=""
                     onChange={(e) => {
                       const v = e.target.value;
-                      if (!v) return;
+                      if (!v || assigningId) return;
                       if (v.startsWith("slot:")) {
                         void assign(
                           asset.id,
                           "site_slot",
-                          v.replace("slot:", "") as SiteMediaSlotKey,
+                          v.slice("slot:".length) as SiteMediaSlotKey,
                         );
                       } else if (v.startsWith("product:")) {
-                        void assign(asset.id, "product", v.replace("product:", ""));
+                        void assign(asset.id, "product", v.slice("product:".length));
                       }
-                      e.target.value = "";
                     }}
                   >
                     <option value="">Choose…</option>

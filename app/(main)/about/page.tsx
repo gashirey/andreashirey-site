@@ -6,6 +6,8 @@ import { homeAbout, site } from "@/lib/content";
 import { getSiteMediaSlots } from "@/lib/site-media/queries";
 import { pageMetadata } from "@/lib/metadata";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = pageMetadata({
   title: "About",
   description: `Seasonal cut flowers in ${site.locationRegion}.`,

@@ -1,3 +1,4 @@
+import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/admin/require";
 import { createServiceClient } from "@/lib/supabase/server";
@@ -50,6 +51,9 @@ export async function PATCH(request: Request) {
     console.error("[site-media PATCH]", error);
     return NextResponse.json({ error: error.message }, { status: 400 });
   }
+
+  revalidatePath("/");
+  revalidatePath("/about");
 
   return NextResponse.json({ slot: data });
 }

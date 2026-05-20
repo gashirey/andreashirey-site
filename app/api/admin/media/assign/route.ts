@@ -1,10 +1,18 @@
+import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/admin/require";
 import { createServiceClient } from "@/lib/supabase/server";
 import {
+  SITE_MEDIA_SLOT_LABELS,
   SITE_MEDIA_SLOTS,
   type SiteMediaSlotKey,
 } from "@/lib/site-media/slots";
+
+function revalidatePublicPages() {
+  revalidatePath("/");
+  revalidatePath("/about");
+  revalidatePath("/available-now");
+}
 
 export async function POST(request: Request) {
   const denied = await requireAdmin(request);
@@ -51,11 +59,20 @@ export async function POST(request: Request) {
       .single();
 
     if (error) {
-      return NextResponse.json({ error: error.message }, { status: 400 });
+      const hint =
+        error.code === "PGRST205"
+          ? " Run migration 007_site_media_slots.sql in Supabase."
+          : "";
+      return NextResponse.json(
+        { error: `${error.message}${hint}` },
+        { status: 400 },
+      );
     }
 
+    revalidatePublicPages();
+
     return NextResponse.json({
-      message: `Set as ${slotKey}.`,
+      message: `Live site updated: ${SITE_MEDIA_SLOT_LABELS[slotKey]}. Hard-refresh the homepage if you still see the old image.`,
       slot: data,
     });
   }
@@ -107,8 +124,10 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: error.message }, { status: 400 });
     }
 
+    revalidatePublicPages();
+
     return NextResponse.json({
-      message: `Added to ${product.name}.`,
+      message: `Added to ${product.name}. Check Available Now on the site.`,
       photo,
     });
   }
