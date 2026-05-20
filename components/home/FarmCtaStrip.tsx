@@ -1,8 +1,13 @@
 import Link from "next/link";
-import { homeCta } from "@/lib/content";
+import { homeCta as defaultHomeCta } from "@/lib/content";
 import { getRootedFarmersHref } from "@/lib/links";
+import type { ResolvedSiteCopy } from "@/lib/site-cms/types";
 
-export function FarmCtaStrip() {
+type FarmCtaStripProps = {
+  homeCta?: ResolvedSiteCopy["homeCta"];
+};
+
+export function FarmCtaStrip({ homeCta = defaultHomeCta }: FarmCtaStripProps) {
   const rootedHref = getRootedFarmersHref();
   const rootedExternal = rootedHref.startsWith("http");
 

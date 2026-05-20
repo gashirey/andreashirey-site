@@ -58,10 +58,20 @@ Then open `/available-now` — you should see both listings.
    Requires **`009_storage_bucket_repair.sql`** on production (bucket `product-photos`).
 3. Site slots still need `007_site_media_slots.sql` for hero / home / about.
 
+## Site editor (colors, copy, menu, framing) — designer CMS
+
+1. Run `migrations/012_site_cms.sql` in Supabase SQL Editor (after 007/010).
+2. Open **`/admin/site`** — tabs:
+   - **Images & framing** — hero, homepage band, about uploads + focal point / crop
+   - **Colors & layout** — design direction preset + color overrides, hero layout
+   - **Wording** — hero text, about paragraphs, announcement bar, CTAs
+   - **Menu** — header/footer links (label, path, order, visibility)
+3. Changes revalidate the live site immediately (no deploy for copy/colors/nav).
+
 ## Site images (hero, home, about) — launch today
 
 1. Run `migrations/007_site_media_slots.sql` in Supabase SQL Editor (once).
-2. **Admin → Site images** (`/admin/site`) — upload three picks from the shoot.
+2. **Admin → Site editor** (`/admin/site`) — upload three picks from the shoot.
 3. Or bulk upload then assign:
 
 ```bash

@@ -1,10 +1,12 @@
 import { createServiceClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
+import { clampFocal } from "@/lib/site-cms/focal";
 import { site } from "@/lib/content";
 import {
   SITE_MEDIA_SLOTS,
   type SiteMediaSlot,
   type SiteMediaSlotKey,
+  type SiteMediaView,
 } from "./slots";
 
 const FALLBACKS: Record<
@@ -26,14 +28,16 @@ const FALLBACKS: Record<
 };
 
 export async function getSiteMediaSlots(): Promise<
-  Record<SiteMediaSlotKey, { imageUrl: string; alt: string }>
+  Record<SiteMediaSlotKey, SiteMediaView>
 > {
-  const out = {} as Record<SiteMediaSlotKey, { imageUrl: string; alt: string }>;
+  const out = {} as Record<SiteMediaSlotKey, SiteMediaView>;
 
   for (const key of SITE_MEDIA_SLOTS) {
     out[key] = {
       imageUrl: FALLBACKS[key].image_url,
       alt: FALLBACKS[key].alt_text,
+      focalX: 50,
+      focalY: 50,
     };
   }
 
@@ -56,6 +60,8 @@ export async function getSiteMediaSlots(): Promise<
     out[key] = {
       imageUrl: row.image_url,
       alt: row.alt_text ?? FALLBACKS[key].alt_text,
+      focalX: clampFocal(row.focal_x),
+      focalY: clampFocal(row.focal_y),
     };
   }
 
@@ -68,6 +74,8 @@ export async function getSiteMediaSlotsRaw(): Promise<SiteMediaSlot[]> {
       slot_key,
       image_url: FALLBACKS[slot_key].image_url,
       alt_text: FALLBACKS[slot_key].alt_text,
+      focal_x: 50,
+      focal_y: 50,
       updated_at: new Date().toISOString(),
     }));
   }
@@ -84,6 +92,8 @@ export async function getSiteMediaSlotsRaw(): Promise<SiteMediaSlot[]> {
       slot_key,
       image_url: FALLBACKS[slot_key].image_url,
       alt_text: FALLBACKS[slot_key].alt_text,
+      focal_x: 50,
+      focal_y: 50,
       updated_at: new Date().toISOString(),
     }));
   }
@@ -99,6 +109,8 @@ export async function getSiteMediaSlotsRaw(): Promise<SiteMediaSlot[]> {
         slot_key,
         image_url: FALLBACKS[slot_key].image_url,
         alt_text: FALLBACKS[slot_key].alt_text,
+        focal_x: 50,
+        focal_y: 50,
         updated_at: new Date().toISOString(),
       }
     );

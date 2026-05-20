@@ -1,9 +1,13 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { SubscribeBlock } from "@/components/SubscribeBlock";
-import { nav, site, social } from "@/lib/content";
+import { site, social } from "@/lib/content";
+import { useSiteConfig } from "@/components/SiteConfigProvider";
 import { googleMapsUrl } from "@/lib/location";
 export function Footer() {
+  const { nav, copy } = useSiteConfig();
   const year = new Date().getFullYear();
 
   return (
@@ -20,7 +24,7 @@ export function Footer() {
             />
             <p className="mt-3 font-serif text-xl text-bark">{site.name}</p>
             <p className="mt-2 text-sm leading-relaxed text-stone">
-              {site.description}
+              {copy.site.description}
             </p>
           </div>
 

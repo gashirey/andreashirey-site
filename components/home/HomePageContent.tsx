@@ -10,22 +10,28 @@ import {
 import { Section } from "@/components/Section";
 import { AvailableNowSection } from "@/components/inventory/AvailableNowSection";
 import { FarmCtaStrip } from "@/components/home/FarmCtaStrip";
-import { heroHome, heroHomeSlide, homeAbout, homeSections } from "@/lib/content";
+import { heroHomeSlide } from "@/lib/content";
 import type { HeroFrame } from "@/lib/content";
-import type { SiteMediaSlotKey } from "@/lib/site-media/slots";
+import { focalObjectPosition } from "@/lib/site-cms/focal";
+import type { ResolvedSiteCopy } from "@/lib/site-cms/types";
+import type { SiteMediaSlotKey, SiteMediaView } from "@/lib/site-media/slots";
 import type { HeroLayout } from "@/lib/snapshots/types";
 
-type SiteMediaMap = Record<SiteMediaSlotKey, { imageUrl: string; alt: string }>;
+type SiteMediaMap = Record<SiteMediaSlotKey, SiteMediaView>;
 
 const STATIC_SITE_MEDIA: SiteMediaMap = {
-  hero: { imageUrl: heroHomeSlide.src, alt: heroHomeSlide.alt },
+  hero: { imageUrl: heroHomeSlide.src, alt: heroHomeSlide.alt, focalX: 50, focalY: 50 },
   home_feature: {
     imageUrl: "/images/bb.jpg",
     alt: "Seasonal cut flowers from Grey Gables Farm",
+    focalX: 50,
+    focalY: 50,
   },
   about: {
     imageUrl: "/images/garden_row.jpg",
     alt: "Cutting garden at Grey Gables Farm",
+    focalX: 50,
+    focalY: 50,
   },
 };
 
@@ -34,6 +40,7 @@ type HomePageContentProps = {
   heroLayout?: HeroLayout;
   siteMedia?: SiteMediaMap;
   heroSlides?: readonly HeroSlide[];
+  copy?: ResolvedSiteCopy;
 };
 
 export function HomePageContent({
@@ -41,7 +48,24 @@ export function HomePageContent({
   heroLayout = "immersive",
   siteMedia = STATIC_SITE_MEDIA,
   heroSlides = [{ src: STATIC_SITE_MEDIA.hero.imageUrl, alt: STATIC_SITE_MEDIA.hero.alt }],
+  copy,
 }: HomePageContentProps) {
+  const heroHome = copy?.heroHome ?? {
+    title: "Seasonal Flowers from Central Virginia",
+    subtitle: "Weekly harvests and limited seasonal availability.",
+    primaryCta: { label: "Current Availability", href: "/available-now" },
+  };
+  const homeAbout = copy?.homeAbout ?? [
+    "Grey Gables Farm is a Central Virginia flower farm growing seasonal cut flowers for markets, events, and everyday use.",
+    "We focus on varieties selected for seasonality, color, and vase life.",
+  ];
+  const homeSections = copy?.homeSections ?? {
+    availability: {
+      title: "Current availability",
+      description: "Seasonal harvests — updated weekly.",
+    },
+  };
+  const homeCta = copy?.homeCta;
   const multiHero = heroSlides.length > 1;
 
   return (
@@ -103,6 +127,12 @@ export function HomePageContent({
           alt={siteMedia.home_feature.alt}
           fill
           className="object-cover"
+          style={{
+            objectPosition: focalObjectPosition(
+              siteMedia.home_feature.focalX,
+              siteMedia.home_feature.focalY,
+            ),
+          }}
           sizes="100vw"
           unoptimized={
             siteMedia.home_feature.imageUrl.startsWith("http")
@@ -110,7 +140,7 @@ export function HomePageContent({
         />
       </section>
 
-      <FarmCtaStrip />
+      <FarmCtaStrip homeCta={homeCta} />
     </>
   );
 }

@@ -11,17 +11,24 @@ export async function PATCH(request: Request, { params }: Props) {
 
   const { id } = await params;
   const body = (await request.json()) as {
-    alt_text?: string | null;
-    focal_x?: number;
-    focal_y?: number;
-    display_order?: number;
+    label?: string;
+    href?: string;
+    sort_order?: number;
+    is_visible?: boolean;
   };
 
+  if (body.href != null && !body.href.trim().startsWith("/")) {
+    return NextResponse.json(
+      { error: "href must start with /." },
+      { status: 400 },
+    );
+  }
+
   const patch: Record<string, unknown> = {};
-  if (body.alt_text !== undefined) patch.alt_text = body.alt_text?.trim() || null;
-  if (body.focal_x != null) patch.focal_x = body.focal_x;
-  if (body.focal_y != null) patch.focal_y = body.focal_y;
-  if (body.display_order != null) patch.display_order = body.display_order;
+  if (body.label != null) patch.label = body.label.trim();
+  if (body.href != null) patch.href = body.href.trim();
+  if (body.sort_order != null) patch.sort_order = body.sort_order;
+  if (body.is_visible != null) patch.is_visible = body.is_visible;
 
   if (!Object.keys(patch).length) {
     return NextResponse.json({ error: "No fields to update." }, { status: 400 });
@@ -29,7 +36,7 @@ export async function PATCH(request: Request, { params }: Props) {
 
   const supabase = createServiceClient();
   const { data, error } = await supabase
-    .from("site_hero_slides")
+    .from("site_nav_items")
     .update(patch)
     .eq("id", id)
     .select()
@@ -39,8 +46,8 @@ export async function PATCH(request: Request, { params }: Props) {
     return NextResponse.json({ error: error.message }, { status: 400 });
   }
 
-  revalidatePath("/");
-  return NextResponse.json({ slide: data });
+  revalidatePath("/", "layout");
+  return NextResponse.json({ item: data });
 }
 
 export async function DELETE(request: Request, { params }: Props) {
@@ -49,12 +56,12 @@ export async function DELETE(request: Request, { params }: Props) {
 
   const { id } = await params;
   const supabase = createServiceClient();
-  const { error } = await supabase.from("site_hero_slides").delete().eq("id", id);
+  const { error } = await supabase.from("site_nav_items").delete().eq("id", id);
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 400 });
   }
 
-  revalidatePath("/");
+  revalidatePath("/", "layout");
   return NextResponse.json({ ok: true });
 }

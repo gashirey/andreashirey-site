@@ -13,5 +13,14 @@ export type SiteMediaSlot = {
   slot_key: SiteMediaSlotKey;
   image_url: string;
   alt_text: string | null;
+  focal_x?: number;
+  focal_y?: number;
   updated_at: string;
+};
+
+export type SiteMediaView = {
+  imageUrl: string;
+  alt: string;
+  focalX: number;
+  focalY: number;
 };

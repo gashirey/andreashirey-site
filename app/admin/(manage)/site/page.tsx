@@ -1,14 +1,16 @@
-import { SiteMediaEditor } from "@/components/admin/SiteMediaEditor";
+import { SiteEditor } from "@/components/admin/SiteEditor";
 
-export default function AdminSiteMediaPage() {
+export default function AdminSitePage() {
   return (
     <div>
-      <h1 className="font-serif text-2xl text-bark">Site images</h1>
-      <p className="mt-1 mb-6 max-w-xl text-sm text-stone">
-        Hero, homepage feature band, and about photo. Upload from your shoot —
-        changes go live on the public site immediately.
+      <h1 className="font-serif text-2xl text-bark">Site editor</h1>
+      <p className="mt-1 mb-6 max-w-2xl text-sm text-stone">
+        Change colors, wording, navigation, images, and how photos are cropped on
+        the public site — without a developer. Run migration{" "}
+        <code className="text-xs">012_site_cms.sql</code> in Supabase if settings
+        fail to load.
       </p>
-      <SiteMediaEditor />
+      <SiteEditor />
     </div>
   );
 }

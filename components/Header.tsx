@@ -4,7 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { nav, site } from "@/lib/content";
+import { site } from "@/lib/content";
+import { useSiteConfig } from "@/components/SiteConfigProvider";
 
 function NavLink({ href, label }: { href: string; label: string }) {
   const pathname = usePathname();
@@ -26,6 +27,7 @@ function NavLink({ href, label }: { href: string; label: string }) {
 }
 
 export function Header() {
+  const { nav } = useSiteConfig();
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (

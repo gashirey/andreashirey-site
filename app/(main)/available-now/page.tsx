@@ -46,11 +46,11 @@ export default async function AvailableNowPage() {
         </p>
       ) : items.length === 0 ? (
         <p className="text-sm text-stone">
-          Nothing listed this week.{" "}
+          Nothing listed for this week yet.{" "}
           <Link href="/contact?subject=flowers" className="underline">
             Contact the farm
-          </Link>
-          .
+          </Link>{" "}
+          for what&apos;s in season.
         </p>
       ) : (
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3">

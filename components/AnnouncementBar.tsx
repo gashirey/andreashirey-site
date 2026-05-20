@@ -1,7 +1,12 @@
+"use client";
+
 import Link from "next/link";
-import { announcement } from "@/lib/content";
+import { useSiteConfig } from "@/components/SiteConfigProvider";
 
 export function AnnouncementBar() {
+  const { copy } = useSiteConfig();
+  const { announcement } = copy;
+
   if (!announcement.enabled) return null;
 
   return (

@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { Section } from "@/components/Section";
-import { homeAbout, site } from "@/lib/content";
+import { site } from "@/lib/content";
+import { focalObjectPosition } from "@/lib/site-cms/focal";
+import { getPublicSiteConfig } from "@/lib/site-cms/queries";
 import { getSiteMediaSlots } from "@/lib/site-media/queries";
 import { pageMetadata } from "@/lib/metadata";
 
@@ -15,8 +17,12 @@ export const metadata: Metadata = pageMetadata({
 });
 
 export default async function AboutPage() {
-  const siteMedia = await getSiteMediaSlots();
+  const [siteMedia, config] = await Promise.all([
+    getSiteMediaSlots(),
+    getPublicSiteConfig(),
+  ]);
   const about = siteMedia.about;
+  const homeAbout = config.copy.homeAbout;
 
   return (
     <Section density="compact" className="pt-20 md:pt-28">
@@ -52,6 +58,9 @@ export default async function AboutPage() {
             alt={about.alt}
             fill
             className="object-cover"
+            style={{
+              objectPosition: focalObjectPosition(about.focalX, about.focalY),
+            }}
             sizes="(max-width: 1024px) 100vw, 55vw"
             priority
             unoptimized={about.imageUrl.startsWith("http")}

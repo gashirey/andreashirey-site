@@ -54,13 +54,25 @@ export function ProductsManager() {
           <p className="mt-1 text-sm text-stone">
             {loading
               ? "Loading…"
-              : `${products.length} total · ${activeCount} active (shown on site when listed today)`}
+              : `${products.length} total · ${activeCount} active in catalog`}
           </p>
         </div>
         <Link href="/admin/products/new" className="btn border-bark text-bark">
           Add product
         </Link>
       </div>
+
+      {!loadError && !loading ? (
+        <div className="mb-6 border border-parchment bg-sage-light/40 p-4 text-sm text-stone">
+          <p>
+            Active products do not appear on the public site until you{" "}
+            <Link href="/admin/availability" className="text-bark underline">
+              list them for today&apos;s date
+            </Link>
+            .
+          </p>
+        </div>
+      ) : null}
 
       {loadError ? (
         <div className="mb-6 border border-parchment bg-white p-4 text-sm text-stone">
@@ -212,6 +224,14 @@ function ProductRow({
           >
             {status === "saving" ? "Saving…" : "Save"}
           </button>
+          {active ? (
+            <Link
+              href="/admin/availability"
+              className="text-salmon-dark underline underline-offset-2"
+            >
+              List for today
+            </Link>
+          ) : null}
           <Link
             href={`/admin/products/${product.id}`}
             className="text-stone underline underline-offset-2 hover:text-bark"

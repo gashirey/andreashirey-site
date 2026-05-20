@@ -24,6 +24,8 @@ export async function PATCH(request: Request) {
     slot_key?: string;
     image_url?: string;
     alt_text?: string | null;
+    focal_x?: number;
+    focal_y?: number;
   };
 
   const slotKey = body.slot_key as SiteMediaSlotKey | undefined;
@@ -31,19 +33,33 @@ export async function PATCH(request: Request) {
     return NextResponse.json({ error: "Invalid slot_key." }, { status: 400 });
   }
 
-  if (!body.image_url?.trim()) {
+  const supabase = createServiceClient();
+  let imageUrl = body.image_url?.trim() ?? "";
+
+  if (!imageUrl) {
+    const { data: existing } = await supabase
+      .from("site_media_slots")
+      .select("image_url")
+      .eq("slot_key", slotKey)
+      .maybeSingle();
+    imageUrl = existing?.image_url?.trim() ?? "";
+  }
+
+  if (!imageUrl) {
     return NextResponse.json({ error: "image_url is required." }, { status: 400 });
   }
 
-  const supabase = createServiceClient();
+  const patch: Record<string, unknown> = {
+    slot_key: slotKey,
+    image_url: imageUrl,
+    updated_at: new Date().toISOString(),
+  };
+  if (body.alt_text !== undefined) patch.alt_text = body.alt_text?.trim() || null;
+  if (body.focal_x != null) patch.focal_x = body.focal_x;
+  if (body.focal_y != null) patch.focal_y = body.focal_y;
   const { data, error } = await supabase
     .from("site_media_slots")
-    .upsert({
-      slot_key: slotKey,
-      image_url: body.image_url.trim(),
-      alt_text: body.alt_text?.trim() || null,
-      updated_at: new Date().toISOString(),
-    })
+    .upsert(patch)
     .select()
     .single();
 

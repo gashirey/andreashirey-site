@@ -34,9 +34,9 @@ export default function AdminDashboardPage() {
           href="/admin/site"
           className="border border-parchment bg-white p-5 hover:border-bark/30"
         >
-          <p className="font-medium text-bark">Site images</p>
+          <p className="font-medium text-bark">Site editor</p>
           <p className="mt-1 text-sm text-stone">
-            Quick swap for hero, homepage band, and about (one file each).
+            Colors, menu, copy, images, and photo framing — no code changes.
           </p>
         </Link>
         <Link

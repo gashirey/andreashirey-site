@@ -1,0 +1,106 @@
+import { createServiceClient } from "@/lib/supabase/server";
+import { isSupabaseConfigured } from "@/lib/supabase/config";
+import { nav } from "@/lib/content";
+import { DEFAULT_SITE_SETTINGS } from "./defaults";
+import { mergeNavItems, mergeSiteCopy } from "./merge";
+import { buildSiteThemeStyle } from "./theme";
+import type {
+  PublicSiteConfig,
+  ResolvedSiteTheme,
+  SiteColorOverrides,
+  SiteContentOverrides,
+  SiteNavItemRow,
+  SiteSettingsRow,
+} from "./types";
+
+function parseSettingsRow(raw: Record<string, unknown>): SiteSettingsRow {
+  return {
+    id: String(raw.id ?? "default"),
+    direction_id: (raw.direction_id as SiteSettingsRow["direction_id"]) ?? "b",
+    hero_layout:
+      (raw.hero_layout as SiteSettingsRow["hero_layout"]) ?? "immersive",
+    hero_frame: (raw.hero_frame as SiteSettingsRow["hero_frame"]) ?? "bleed",
+    color_overrides: (raw.color_overrides as SiteColorOverrides) ?? {},
+    content_overrides: (raw.content_overrides as SiteContentOverrides) ?? {},
+    updated_at: String(raw.updated_at ?? new Date().toISOString()),
+  };
+}
+
+export async function getSiteSettingsRow(): Promise<SiteSettingsRow> {
+  if (!isSupabaseConfigured()) return DEFAULT_SITE_SETTINGS;
+
+  const supabase = createServiceClient();
+  const { data, error } = await supabase
+    .from("site_settings")
+    .select("*")
+    .eq("id", "default")
+    .maybeSingle();
+
+  if (error) {
+    console.error("[getSiteSettingsRow]", error);
+    return DEFAULT_SITE_SETTINGS;
+  }
+
+  if (!data) return DEFAULT_SITE_SETTINGS;
+  return parseSettingsRow(data as Record<string, unknown>);
+}
+
+export async function getSiteNavItemsRaw(): Promise<SiteNavItemRow[]> {
+  if (!isSupabaseConfigured()) {
+    return nav.map((item, i) => ({
+      id: `fallback-${i}`,
+      label: item.label,
+      href: item.href,
+      sort_order: (i + 1) * 10,
+      is_visible: true,
+      created_at: new Date().toISOString(),
+    }));
+  }
+
+  const supabase = createServiceClient();
+  const { data, error } = await supabase
+    .from("site_nav_items")
+    .select("*")
+    .order("sort_order", { ascending: true })
+    .order("created_at", { ascending: true });
+
+  if (error) {
+    console.error("[getSiteNavItemsRaw]", error);
+    return [];
+  }
+
+  return (data ?? []) as SiteNavItemRow[];
+}
+
+export async function getPublicSiteConfig(): Promise<PublicSiteConfig> {
+  const settings = await getSiteSettingsRow();
+  const navRows = await getSiteNavItemsRaw();
+
+  return {
+    theme: {
+      directionId: settings.direction_id,
+      heroLayout: settings.hero_layout,
+      heroFrame: settings.hero_frame,
+    },
+    copy: mergeSiteCopy(settings.content_overrides),
+    nav: mergeNavItems(navRows),
+  };
+}
+
+export async function getResolvedSiteTheme(): Promise<{
+  theme: ResolvedSiteTheme;
+  themeStyle: ReturnType<typeof buildSiteThemeStyle>;
+}> {
+  const settings = await getSiteSettingsRow();
+  return {
+    theme: {
+      directionId: settings.direction_id,
+      heroLayout: settings.hero_layout,
+      heroFrame: settings.hero_frame,
+    },
+    themeStyle: buildSiteThemeStyle(
+      settings.direction_id,
+      settings.color_overrides,
+    ),
+  };
+}

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/admin/require";
 import { todayFarmDate } from "@/lib/inventory/date";
+import { revalidateInventoryPaths } from "@/lib/inventory/revalidate";
 import { createServiceClient } from "@/lib/supabase/server";
 
 export async function GET(request: Request) {
@@ -73,5 +74,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: error.message }, { status: 400 });
   }
 
+  revalidateInventoryPaths();
   return NextResponse.json({ availability: data });
 }

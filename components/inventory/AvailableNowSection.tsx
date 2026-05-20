@@ -41,11 +41,11 @@ export async function AvailableNowSection({
 
       {items.length === 0 ? (
         <p className="text-sm text-stone">
-          Nothing listed this week.{" "}
+          Nothing listed for this week yet.{" "}
           <Link href="/contact?subject=flowers" className="underline">
             Contact the farm
-          </Link>
-          .
+          </Link>{" "}
+          for what&apos;s in season.
         </p>
       ) : (
         <>

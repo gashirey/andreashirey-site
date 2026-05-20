@@ -1,0 +1,108 @@
+import type { DesignDirectionId } from "@/lib/design-lab/directions";
+import type { HeroFrame } from "@/lib/content";
+import type { HeroLayout } from "@/lib/snapshots/types";
+
+export type SiteColorOverrides = Partial<{
+  bg: string;
+  surface: string;
+  text: string;
+  muted: string;
+  accent: string;
+  accentHover: string;
+  green: string;
+  greenMuted: string;
+  border: string;
+  scrim: string;
+  chip: string;
+  chipText: string;
+}>;
+
+export type SiteContentOverrides = {
+  site?: {
+    tagline?: string;
+    description?: string;
+  };
+  heroHome?: {
+    title?: string;
+    subtitle?: string;
+    primaryCtaLabel?: string;
+    primaryCtaHref?: string;
+  };
+  homeAbout?: string[];
+  homeSections?: {
+    availability?: {
+      title?: string;
+      description?: string;
+    };
+  };
+  homeCta?: {
+    note?: string;
+    rooted?: string;
+    contact?: string;
+  };
+  announcement?: {
+    enabled?: boolean;
+    message?: string;
+  };
+};
+
+export type SiteSettingsRow = {
+  id: string;
+  direction_id: DesignDirectionId;
+  hero_layout: HeroLayout;
+  hero_frame: HeroFrame;
+  color_overrides: SiteColorOverrides;
+  content_overrides: SiteContentOverrides;
+  updated_at: string;
+};
+
+export type SiteNavItemRow = {
+  id: string;
+  label: string;
+  href: string;
+  sort_order: number;
+  is_visible: boolean;
+  created_at: string;
+};
+
+export type ResolvedNavItem = {
+  label: string;
+  href: string;
+};
+
+export type ResolvedSiteCopy = {
+  site: {
+    tagline: string;
+    description: string;
+  };
+  heroHome: {
+    title: string;
+    subtitle: string;
+    primaryCta: { label: string; href: string };
+  };
+  homeAbout: string[];
+  homeSections: {
+    availability: { title: string; description: string };
+  };
+  homeCta: {
+    note: string;
+    rooted: string;
+    contact: string;
+  };
+  announcement: {
+    enabled: boolean;
+    message: string;
+  };
+};
+
+export type ResolvedSiteTheme = {
+  directionId: DesignDirectionId;
+  heroLayout: HeroLayout;
+  heroFrame: HeroFrame;
+};
+
+export type PublicSiteConfig = {
+  theme: ResolvedSiteTheme;
+  copy: ResolvedSiteCopy;
+  nav: ResolvedNavItem[];
+};

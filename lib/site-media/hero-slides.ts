@@ -1,5 +1,6 @@
 import { createServiceClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
+import { clampFocal } from "@/lib/site-cms/focal";
 import { site } from "@/lib/content";
 
 export type HeroSlideRecord = {
@@ -7,10 +8,18 @@ export type HeroSlideRecord = {
   image_url: string;
   alt_text: string | null;
   display_order: number;
+  focal_x?: number;
+  focal_y?: number;
   created_at: string;
 };
 
-export type HeroSlideView = { src: string; alt: string; id?: string };
+export type HeroSlideView = {
+  src: string;
+  alt: string;
+  id?: string;
+  focalX?: number;
+  focalY?: number;
+};
 
 const FALLBACK: HeroSlideView[] = [
   { src: site.heroImage, alt: site.heroImageAlt },
@@ -38,6 +47,8 @@ export async function getHeroSlides(): Promise<HeroSlideView[]> {
     id: row.id,
     src: row.image_url,
     alt: row.alt_text ?? "Grey Gables Farm",
+    focalX: clampFocal(row.focal_x),
+    focalY: clampFocal(row.focal_y),
   }));
 }
 

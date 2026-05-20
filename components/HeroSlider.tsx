@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
 import { Button } from "./Button";
 import type { HeroFrame } from "@/lib/content";
+import { focalObjectPosition } from "@/lib/site-cms/focal";
 import type { HeroLayout } from "@/lib/snapshots/types";
 
 const DEFAULT_SLIDE_MS = 9000;
@@ -17,6 +18,8 @@ export type HeroSlide = {
   src: string;
   alt: string;
   id?: string;
+  focalX?: number;
+  focalY?: number;
 };
 
 type HeroSliderProps = {
@@ -88,6 +91,9 @@ export function HeroSlider({
             fill
             priority={i === 0}
             className="object-cover"
+            style={{
+              objectPosition: focalObjectPosition(slide.focalX, slide.focalY),
+            }}
             sizes={inset ? "(max-width: 1280px) 100vw, 1280px" : "100vw"}
             unoptimized={slide.src.startsWith("http")}
           />
