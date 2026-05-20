@@ -116,6 +116,12 @@ export async function listProducts(): Promise<FarmProduct[]> {
   return (data ?? []) as FarmProduct[];
 }
 
+/** Active catalog items — for listings, dropdowns, and public inventory */
+export async function listActiveProducts(): Promise<FarmProduct[]> {
+  const all = await listProducts();
+  return all.filter((p) => p.is_active);
+}
+
 export async function getProduct(id: string): Promise<FarmProduct | null> {
   const supabase = createServiceClient();
   const { data, error } = await supabase

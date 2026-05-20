@@ -5,6 +5,7 @@
 1. Run `migrations/004_farm_inventory.sql` in Supabase SQL Editor (project must match `NEXT_PUBLIC_SUPABASE_URL` in `.env.local`).
 2. If you see **PGRST205 / schema cache** errors, run `migrations/005_farm_inventory_repair.sql` instead (then confirm with `select count(*) from farm_products;` — expect 7).
 3. If uploads fail with **Bucket not found**, run `migrations/009_storage_bucket_repair.sql` (creates public `product-photos` bucket).
+4. If **Products** admin is empty, run `005_farm_inventory_repair.sql` or `011_farm_products_seed.sql`.
 3. Set `ADMIN_PASSWORD` in `.env.local` and Vercel.
 4. Open `/admin` and sign in.
 

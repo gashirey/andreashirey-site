@@ -14,10 +14,18 @@ export async function GET(request: Request) {
     .order("name");
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error("[admin products GET]", error);
+    return NextResponse.json(
+      {
+        products: [],
+        error: error.message,
+        code: error.code,
+      },
+      { status: 500 },
+    );
   }
 
-  return NextResponse.json({ products: data });
+  return NextResponse.json({ products: data ?? [] });
 }
 
 export async function POST(request: Request) {

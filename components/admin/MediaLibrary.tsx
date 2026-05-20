@@ -83,9 +83,10 @@ export function MediaLibrary() {
       setLoading(true);
       const ok = await loadShoots();
       if (ok) {
-        const res = await fetch("/api/admin/products");
+        const res = await fetch("/api/admin/products", { cache: "no-store" });
         const pdata = await res.json();
-        setProducts((pdata.products ?? []) as FarmProduct[]);
+        const all = (pdata.products ?? []) as FarmProduct[];
+        setProducts(all.filter((p) => p.is_active));
       }
       setLoading(false);
     })();

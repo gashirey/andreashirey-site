@@ -19,9 +19,19 @@ export function AvailabilityForm({ availability }: AvailabilityFormProps) {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    fetch("/api/admin/products")
+    fetch("/api/admin/products", { cache: "no-store" })
       .then((r) => r.json())
-      .then((d) => setProducts(d.products ?? []));
+      .then((d) => {
+        const list = (d.products ?? []) as FarmProduct[];
+        const active = list.filter((p) => p.is_active);
+        setProducts(active);
+        if (d.error) {
+          setError(d.error);
+        } else if (!active.length && list.length) {
+          setError("No active products. Activate products on the Products page.");
+        }
+      })
+      .catch(() => setError("Could not load products."));
   }, []);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
