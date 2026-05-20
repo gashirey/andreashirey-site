@@ -4,6 +4,7 @@
 
 1. Run `migrations/004_farm_inventory.sql` in Supabase SQL Editor (project must match `NEXT_PUBLIC_SUPABASE_URL` in `.env.local`).
 2. If you see **PGRST205 / schema cache** errors, run `migrations/005_farm_inventory_repair.sql` instead (then confirm with `select count(*) from farm_products;` — expect 7).
+3. If uploads fail with **Bucket not found**, run `migrations/009_storage_bucket_repair.sql` (creates public `product-photos` bucket).
 3. Set `ADMIN_PASSWORD` in `.env.local` and Vercel.
 4. Open `/admin` and sign in.
 
@@ -53,6 +54,7 @@ Then open `/available-now` — you should see both listings.
 1. Run `migrations/008_media_library.sql` in Supabase SQL Editor.
 2. Open **`/admin/media`** — create a shoot, drag in files, use **Use on site** on each image.
    Uploads are auto-resized (2400px max edge, JPEG ~82%) for fast page loads.
+   Requires **`009_storage_bucket_repair.sql`** on production (bucket `product-photos`).
 3. Site slots still need `007_site_media_slots.sql` for hero / home / about.
 
 ## Site images (hero, home, about) — launch today
