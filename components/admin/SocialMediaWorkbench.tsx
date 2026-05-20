@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
 import { AdminNotice } from "@/components/admin/AdminNotice";
+import { SaveToPhotosButton } from "@/components/admin/SaveToPhotosButton";
 import { SOCIAL_CAPTION_TEMPLATES } from "@/lib/social/captions";
 import type { MediaShoot } from "@/lib/media/types";
 
@@ -120,8 +121,10 @@ export function SocialMediaWorkbench() {
       <section className="border border-parchment bg-white p-4">
         <h2 className="font-serif text-lg text-bark">Get images for Instagram</h2>
         <p className="mt-2 text-sm leading-relaxed text-stone">
-          Save a photo to your camera roll, then open Instagram and post from
-          Photos. Upload new shots in{" "}
+          Tap <strong className="font-medium text-bark">Photos</strong> on an
+          image, then choose <strong className="font-medium text-bark">Save Image</strong>{" "}
+          in the iPhone share sheet — that adds it to your camera roll. (A file
+          download goes to the Files app, not Photos.) Upload new shots in{" "}
           <a href="/admin/media" className="underline hover:text-bark">
             Media
           </a>
@@ -238,12 +241,19 @@ export function SocialMediaWorkbench() {
                   >
                     Open
                   </a>
-                  <a
-                    href={downloadUrl(item)}
-                    className="btn border-bark bg-bark py-2 text-center text-xs text-cream"
-                  >
-                    Save
-                  </a>
+                  <SaveToPhotosButton
+                    downloadUrl={downloadUrl(item)}
+                    filename={item.label}
+                    onResult={(r) =>
+                      setNotice(
+                        r.ok
+                          ? { type: "success", message: r.message }
+                          : r.message === "Cancelled."
+                            ? null
+                            : { type: "error", message: r.message },
+                      )
+                    }
+                  />
                 </div>
                 <button
                   type="button"
@@ -284,12 +294,21 @@ export function SocialMediaWorkbench() {
             >
               Open full size
             </a>
-            <a
-              href={downloadUrl(expanded)}
-              className="btn border-cream bg-cream text-bark"
-            >
-              Save to phone
-            </a>
+            <SaveToPhotosButton
+              downloadUrl={downloadUrl(expanded)}
+              filename={expanded.label}
+              variant="light"
+              className="text-sm"
+              onResult={(r) =>
+                setNotice(
+                  r.ok
+                    ? { type: "success", message: r.message }
+                    : r.message === "Cancelled."
+                      ? null
+                      : { type: "error", message: r.message },
+                )
+              }
+            />
           </div>
           <button
             type="button"

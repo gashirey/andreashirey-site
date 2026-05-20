@@ -13,6 +13,7 @@ import {
 } from "@/lib/admin/client-compress-image";
 import { readAdminUploadError } from "@/lib/admin/upload-response";
 import { AdminNotice } from "@/components/admin/AdminNotice";
+import { SaveToPhotosButton } from "@/components/admin/SaveToPhotosButton";
 import { SiteSlotsOverview } from "@/components/admin/SiteSlotsOverview";
 import type { MediaAsset, MediaShoot } from "@/lib/media/types";
 import type { FarmProduct } from "@/lib/inventory/types";
@@ -401,7 +402,7 @@ export function MediaLibrary() {
           <a href="/admin/social" className="underline hover:text-bark">
             Social
           </a>{" "}
-          for save-to-Photos and captions.
+          for Photos (share sheet) and captions.
         </p>
 
         {assets.length === 0 ? (
@@ -433,12 +434,14 @@ export function MediaLibrary() {
                   >
                     Open
                   </a>
-                  <a
-                    href={`/api/admin/social/download?kind=media&id=${asset.id}`}
-                    className="btn border-bark bg-bark py-2 text-center text-xs text-cream"
-                  >
-                    Save
-                  </a>
+                  <SaveToPhotosButton
+                    downloadUrl={`/api/admin/social/download?kind=media&id=${asset.id}`}
+                    filename={asset.filename}
+                    onResult={(r) => {
+                      if (r.ok) setMessage(r.message);
+                      else if (r.message !== "Cancelled.") setMessage(r.message);
+                    }}
+                  />
                 </div>
                 <label className="mt-2 block text-xs">
                   Use on site
