@@ -20,7 +20,7 @@ export async function POST(request: Request) {
 
   const body = (await request.json()) as {
     asset_id?: string;
-    target?: "site_slot" | "product";
+    target?: "site_slot" | "product" | "hero_slide";
     slot_key?: string;
     product_id?: string;
     is_primary?: boolean;
@@ -74,6 +74,37 @@ export async function POST(request: Request) {
     return NextResponse.json({
       message: `Live site updated: ${SITE_MEDIA_SLOT_LABELS[slotKey]}. Hard-refresh the homepage if you still see the old image.`,
       slot: data,
+    });
+  }
+
+  if (body.target === "hero_slide") {
+    const { data: slide, error } = await supabase
+      .from("site_hero_slides")
+      .insert({
+        image_url: asset.public_url,
+        alt_text: asset.alt_text ?? asset.filename,
+        display_order: 100,
+      })
+      .select()
+      .single();
+
+    if (error) {
+      const hint =
+        error.code === "PGRST205"
+          ? " Run migration 010_site_hero_slides.sql in Supabase."
+          : "";
+      return NextResponse.json(
+        { error: `${error.message}${hint}` },
+        { status: 400 },
+      );
+    }
+
+    revalidatePublicPages();
+
+    return NextResponse.json({
+      message:
+        "Added to hero slideshow. Add one more image for a slow crossfade on the homepage.",
+      slide,
     });
   }
 

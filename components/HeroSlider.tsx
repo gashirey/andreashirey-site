@@ -6,12 +6,17 @@ import { Button } from "./Button";
 import type { HeroFrame } from "@/lib/content";
 import type { HeroLayout } from "@/lib/snapshots/types";
 
-const SLIDE_MS = 9000;
-const FADE_MS = 2000;
+const DEFAULT_SLIDE_MS = 9000;
+const DEFAULT_FADE_MS = 2000;
+
+/** Slow crossfade for homepage hero carousel */
+export const HOME_HERO_SLIDE_MS = 14_000;
+export const HOME_HERO_FADE_MS = 2_800;
 
 export type HeroSlide = {
   src: string;
   alt: string;
+  id?: string;
 };
 
 type HeroSliderProps = {
@@ -23,6 +28,8 @@ type HeroSliderProps = {
   primaryCta?: { label: string; href: string };
   secondaryCta?: { label: string; href: string };
   showSlideControls?: boolean;
+  slideIntervalMs?: number;
+  fadeMs?: number;
 };
 
 export function HeroSlider({
@@ -34,6 +41,8 @@ export function HeroSlider({
   primaryCta,
   secondaryCta,
   showSlideControls = true,
+  slideIntervalMs = DEFAULT_SLIDE_MS,
+  fadeMs = DEFAULT_FADE_MS,
 }: HeroSliderProps) {
   const [index, setIndex] = useState(0);
   const [reducedMotion, setReducedMotion] = useState(false);
@@ -52,9 +61,9 @@ export function HeroSlider({
 
   useEffect(() => {
     if (reducedMotion || slides.length <= 1) return;
-    const id = window.setInterval(advance, SLIDE_MS);
+    const id = window.setInterval(advance, slideIntervalMs);
     return () => window.clearInterval(id);
-  }, [advance, reducedMotion, slides.length]);
+  }, [advance, reducedMotion, slides.length, slideIntervalMs]);
 
   const inset = frame === "inset";
   const immersive = layout === "immersive";
@@ -68,9 +77,9 @@ export function HeroSlider({
     >
       {slides.map((slide, i) => (
         <div
-          key={slide.src}
+          key={slide.id ?? `${slide.src}-${i}`}
           className={`hero-slider-fade absolute inset-0 ${i === index ? "opacity-100" : "opacity-0"}`}
-          style={{ transitionDuration: reducedMotion ? "0ms" : `${FADE_MS}ms` }}
+          style={{ transitionDuration: reducedMotion ? "0ms" : `${fadeMs}ms` }}
           aria-hidden={i !== index}
         >
           <Image

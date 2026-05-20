@@ -12,6 +12,8 @@ import {
   formatBytes,
 } from "@/lib/admin/client-compress-image";
 import { readAdminUploadError } from "@/lib/admin/upload-response";
+import { AdminNotice } from "@/components/admin/AdminNotice";
+import { SiteSlotsOverview } from "@/components/admin/SiteSlotsOverview";
 import type { MediaAsset, MediaShoot } from "@/lib/media/types";
 import type { FarmProduct } from "@/lib/inventory/types";
 
@@ -33,8 +35,20 @@ export function MediaLibrary() {
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState("");
   const [message, setMessage] = useState("");
+  const [notice, setNotice] = useState<{
+    type: "success" | "error";
+    message: string;
+  } | null>(null);
+  const [slotsRefreshKey, setSlotsRefreshKey] = useState(0);
   const [dragOver, setDragOver] = useState(false);
   const [assigningId, setAssigningId] = useState<string | null>(null);
+
+  function showNotice(type: "success" | "error", text: string) {
+    setNotice({ type, message: text });
+    if (type === "success") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }
 
   const loadShoots = useCallback(async () => {
     const res = await fetch("/api/admin/media/shoots");
@@ -178,9 +192,12 @@ export function MediaLibrary() {
     await loadAssets(shootId);
 
     if (allErrors.length) {
-      setMessage(`Finished with issues: ${allErrors.slice(0, 3).join("; ")}${allErrors.length > 3 ? "…" : ""}`);
+      showNotice(
+        "error",
+        `Upload issues: ${allErrors.slice(0, 3).join("; ")}${allErrors.length > 3 ? "…" : ""}`,
+      );
     } else {
-      setMessage(`Uploaded ${files.length} image(s).`);
+      showNotice("success", `Uploaded ${files.length} image(s). Assign them below.`);
     }
   }
 
@@ -194,25 +211,26 @@ export function MediaLibrary() {
 
   async function assign(
     assetId: string,
-    target: "site_slot" | "product",
-    slotOrProduct: string,
+    target: "site_slot" | "product" | "hero_slide",
+    slotOrProduct?: string,
   ) {
     setAssigningId(assetId);
-    setMessage("Applying to site…");
 
     const body =
-      target === "site_slot"
-        ? {
-            asset_id: assetId,
-            target: "site_slot" as const,
-            slot_key: slotOrProduct,
-          }
-        : {
-            asset_id: assetId,
-            target: "product" as const,
-            product_id: slotOrProduct,
-            is_primary: true,
-          };
+      target === "hero_slide"
+        ? { asset_id: assetId, target: "hero_slide" as const }
+        : target === "site_slot"
+          ? {
+              asset_id: assetId,
+              target: "site_slot" as const,
+              slot_key: slotOrProduct,
+            }
+          : {
+              asset_id: assetId,
+              target: "product" as const,
+              product_id: slotOrProduct,
+              is_primary: true,
+            };
 
     try {
       const res = await fetch("/api/admin/media/assign", {
@@ -221,13 +239,19 @@ export function MediaLibrary() {
         body: JSON.stringify(body),
       });
       const data = (await res.json()) as { message?: string; error?: string };
-      setMessage(
-        res.ok
-          ? (data.message ?? "Updated.")
-          : (data.error ?? "Assign failed. If this mentions a missing table, run migration 007 in Supabase."),
-      );
+      if (res.ok) {
+        const text = data.message ?? "Site updated.";
+        showNotice("success", text);
+        setSlotsRefreshKey((k) => k + 1);
+      } else {
+        showNotice(
+          "error",
+          data.error ??
+            "Assign failed. Check migrations 007 and 010 in Supabase.",
+        );
+      }
     } catch {
-      setMessage("Assign failed — network or server error.");
+      showNotice("error", "Assign failed — network or server error.");
     } finally {
       setAssigningId(null);
     }
@@ -255,24 +279,34 @@ export function MediaLibrary() {
 
   return (
     <div className="space-y-8">
-      {message && (
-        <p
-          className={`text-sm ${message.includes("failed") || message.includes("issues") ? "text-bark" : "border border-parchment bg-white p-3 text-bark"}`}
-          role="status"
-        >
-          {message}{" "}
-          {message.includes("updated") || message.includes("Added to") ? (
-            <a
-              href="/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-salmon-dark underline"
-            >
-              View site
-            </a>
-          ) : null}
+      {notice ? (
+        <AdminNotice
+          type={notice.type}
+          message={notice.message}
+          onDismiss={() => setNotice(null)}
+        />
+      ) : null}
+
+      {notice?.type === "success" ? (
+        <p className="text-sm">
+          <a
+            href="/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-medium text-salmon-dark underline underline-offset-2"
+          >
+            View live site
+          </a>
         </p>
-      )}
+      ) : null}
+
+      <SiteSlotsOverview refreshKey={slotsRefreshKey} />
+
+      {message && !notice ? (
+        <p className="text-sm text-stone" role="status">
+          {message}
+        </p>
+      ) : null}
 
       <section className="border border-parchment bg-white p-5">
         <h2 className="font-serif text-lg text-bark">Shoot</h2>
@@ -390,7 +424,9 @@ export function MediaLibrary() {
                     onChange={(e) => {
                       const v = e.target.value;
                       if (!v || assigningId) return;
-                      if (v.startsWith("slot:")) {
+                      if (v === "hero_slide") {
+                        void assign(asset.id, "hero_slide");
+                      } else if (v.startsWith("slot:")) {
                         void assign(
                           asset.id,
                           "site_slot",
@@ -403,9 +439,12 @@ export function MediaLibrary() {
                   >
                     <option value="">Choose…</option>
                     <optgroup label="Site">
+                      <option value="hero_slide">Add to hero slideshow</option>
                       {SITE_MEDIA_SLOTS.map((key) => (
                         <option key={key} value={`slot:${key}`}>
-                          {SITE_MEDIA_SLOT_LABELS[key]}
+                          {key === "hero"
+                            ? "Homepage hero (single fallback)"
+                            : SITE_MEDIA_SLOT_LABELS[key]}
                         </option>
                       ))}
                     </optgroup>

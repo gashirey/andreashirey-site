@@ -1,7 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Suspense } from "react";
-import { HeroSlider } from "@/components/HeroSlider";
+import {
+  HeroSlider,
+  HOME_HERO_FADE_MS,
+  HOME_HERO_SLIDE_MS,
+  type HeroSlide,
+} from "@/components/HeroSlider";
 import { Section } from "@/components/Section";
 import { AvailableNowSection } from "@/components/inventory/AvailableNowSection";
 import { FarmCtaStrip } from "@/components/home/FarmCtaStrip";
@@ -28,28 +33,29 @@ type HomePageContentProps = {
   heroFrame?: HeroFrame;
   heroLayout?: HeroLayout;
   siteMedia?: SiteMediaMap;
+  heroSlides?: readonly HeroSlide[];
 };
 
 export function HomePageContent({
   heroFrame = "bleed",
   heroLayout = "immersive",
   siteMedia = STATIC_SITE_MEDIA,
+  heroSlides = [{ src: STATIC_SITE_MEDIA.hero.imageUrl, alt: STATIC_SITE_MEDIA.hero.alt }],
 }: HomePageContentProps) {
-  const heroSlide = {
-    src: siteMedia.hero.imageUrl,
-    alt: siteMedia.hero.alt,
-  };
+  const multiHero = heroSlides.length > 1;
 
   return (
     <>
       <HeroSlider
-        slides={[heroSlide]}
+        slides={heroSlides}
         frame={heroFrame}
         layout={heroLayout}
         title={heroHome.title}
         subtitle={heroHome.subtitle}
         primaryCta={heroHome.primaryCta}
-        showSlideControls={false}
+        showSlideControls={multiHero}
+        slideIntervalMs={HOME_HERO_SLIDE_MS}
+        fadeMs={HOME_HERO_FADE_MS}
       />
 
       <Section
