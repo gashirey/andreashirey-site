@@ -17,10 +17,10 @@ export default function ContactPage() {
     <Section density="compact" className="pt-20 md:pt-28">
       <div className="grid gap-14 lg:grid-cols-2 lg:gap-16">
         <div className="max-w-md">
-          <h1 className="font-serif text-4xl font-medium leading-tight text-bark md:text-5xl">
+          <h1 className="type-page-title leading-tight">
             Contact
           </h1>
-          <p className="mt-6 text-sm leading-relaxed text-stone">
+          <p className="type-page-body mt-6 leading-relaxed">
             Weekly availability and orders. Reply within a few business days.
           </p>
           <dl className="mt-8 space-y-4 text-sm">

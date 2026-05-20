@@ -28,12 +28,14 @@ export default async function AboutPage() {
     <Section density="compact" className="pt-20 md:pt-28">
       <div className="grid gap-10 lg:grid-cols-[minmax(0,22rem)_1fr] lg:gap-16 lg:items-start">
         <div>
-          <h1 className="font-serif text-3xl font-medium leading-tight text-bark md:text-4xl">
+          <h1 className="type-page-title leading-tight md:text-4xl">
             About
           </h1>
-          <div className="mt-6 space-y-4 text-base leading-relaxed text-stone">
+          <div className="mt-6 space-y-4">
             {homeAbout.map((paragraph) => (
-              <p key={paragraph.slice(0, 24)}>{paragraph}</p>
+              <p key={paragraph.slice(0, 24)} className="type-page-body leading-relaxed">
+                {paragraph}
+              </p>
             ))}
           </div>
           <p className="mt-6 text-sm text-stone">

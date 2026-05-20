@@ -58,6 +58,105 @@
   font-family: var(--font-fraunces), var(--font-cormorant), Georgia, serif;
 }
 
+/* CMS typography — vars set inline on .site-theme from admin */
+.site-theme.type-body,
+.site-theme .type-body {
+  font-family: var(--type-body-font, var(--font-karla), system-ui, sans-serif);
+  font-size: var(--type-body-size, 1rem);
+  color: var(--type-body-color, var(--site-text));
+  font-weight: var(--type-body-weight, 400);
+}
+
+.type-hero-title {
+  font-family: var(--type-hero-title-font, var(--font-fraunces), Georgia, serif);
+  font-size: var(--type-hero-title-size, 3.25rem);
+  color: var(--type-hero-title-color, #fff);
+  font-weight: var(--type-hero-title-weight, 500);
+}
+
+.type-hero-subtitle {
+  font-family: var(--type-hero-subtitle-font, var(--font-karla), system-ui, sans-serif);
+  font-size: var(--type-hero-subtitle-size, 1.125rem);
+  color: var(--type-hero-subtitle-color, rgba(255, 255, 255, 0.85));
+  font-weight: var(--type-hero-subtitle-weight, 400);
+}
+
+.type-nav {
+  font-family: var(--type-nav-font, var(--font-karla), system-ui, sans-serif);
+  font-size: var(--type-nav-size, 0.75rem);
+  color: var(--type-nav-color, var(--color-stone));
+  font-weight: var(--type-nav-weight, 400);
+}
+
+.type-section-title {
+  font-family: var(--type-section-title-font, var(--font-fraunces), Georgia, serif);
+  font-size: var(--type-section-title-size, 2.25rem);
+  color: var(--type-section-title-color, var(--color-bark));
+  font-weight: var(--type-section-title-weight, 500);
+}
+
+.type-section-description {
+  font-family: var(--type-section-description-font, var(--font-karla), system-ui, sans-serif);
+  font-size: var(--type-section-description-size, 1rem);
+  color: var(--type-section-description-color, var(--color-stone));
+  font-weight: var(--type-section-description-weight, 400);
+}
+
+.type-page-title {
+  font-family: var(--type-page-title-font, var(--font-fraunces), Georgia, serif);
+  font-size: var(--type-page-title-size, 2.25rem);
+  color: var(--type-page-title-color, var(--color-bark));
+  font-weight: var(--type-page-title-weight, 500);
+}
+
+.type-page-body {
+  font-family: var(--type-page-body-font, var(--font-karla), system-ui, sans-serif);
+  font-size: var(--type-page-body-size, 1rem);
+  color: var(--type-page-body-color, var(--color-stone));
+  font-weight: var(--type-page-body-weight, 400);
+}
+
+.type-footer-brand {
+  font-family: var(--type-footer-brand-font, var(--font-fraunces), Georgia, serif);
+  font-size: var(--type-footer-brand-size, 1.25rem);
+  color: var(--type-footer-brand-color, var(--color-bark));
+  font-weight: var(--type-footer-brand-weight, 500);
+}
+
+.type-footer-text {
+  font-family: var(--type-footer-text-font, var(--font-karla), system-ui, sans-serif);
+  font-size: var(--type-footer-text-size, 0.875rem);
+  color: var(--type-footer-text-color, var(--color-stone));
+  font-weight: var(--type-footer-text-weight, 400);
+}
+
+.type-footer-link {
+  font-family: var(--type-footer-link-font, var(--font-karla), system-ui, sans-serif);
+  font-size: var(--type-footer-link-size, 0.875rem);
+  color: var(--type-footer-link-color, var(--color-bark));
+  font-weight: var(--type-footer-link-weight, 400);
+}
+
+.type-announcement {
+  font-family: var(--type-announcement-font, var(--font-karla), system-ui, sans-serif);
+  font-size: var(--type-announcement-size, 0.75rem);
+  color: var(--type-announcement-color, var(--color-stone));
+  font-weight: var(--type-announcement-weight, 400);
+}
+
+.type-button {
+  font-family: var(--type-button-font, var(--font-karla), system-ui, sans-serif);
+  font-size: var(--type-button-size, 0.875rem);
+  font-weight: var(--type-button-weight, 500);
+}
+
+.type-eyebrow {
+  font-family: var(--type-eyebrow-font, var(--font-karla), system-ui, sans-serif);
+  font-size: var(--type-eyebrow-size, 0.75rem);
+  color: var(--type-eyebrow-color, var(--site-green));
+  font-weight: var(--type-eyebrow-weight, 500);
+}
+
 .bg-site-page {
   background-color: var(--site-bg);
 }

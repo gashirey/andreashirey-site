@@ -9,14 +9,21 @@ export default async function MainSiteLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const [config, { themeStyle }] = await Promise.all([
+  const [config, { themeStyle, googleFontsUrl }] = await Promise.all([
     getPublicSiteConfig(),
     getResolvedSiteTheme(),
   ]);
 
   return (
     <SiteConfigProvider config={config}>
-      <div className="site-theme flex min-h-full flex-col" style={themeStyle}>
+      {googleFontsUrl ? (
+        // eslint-disable-next-line @next/next/no-page-custom-font
+        <link rel="stylesheet" href={googleFontsUrl} />
+      ) : null}
+      <div
+        className="site-theme type-body flex min-h-full flex-col"
+        style={themeStyle}
+      >
         <AnnouncementBar />
         <Header />
         {children}

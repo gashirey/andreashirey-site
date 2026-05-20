@@ -5,10 +5,12 @@ import { SiteAppearancePanel } from "@/components/admin/SiteAppearancePanel";
 import { SiteContentPanel } from "@/components/admin/SiteContentPanel";
 import { SiteMediaEditor } from "@/components/admin/SiteMediaEditor";
 import { SiteNavPanel } from "@/components/admin/SiteNavPanel";
+import { SiteTypographyPanel } from "@/components/admin/SiteTypographyPanel";
 
 const TABS = [
   { id: "images", label: "Images & framing" },
   { id: "appearance", label: "Colors & layout" },
+  { id: "typography", label: "Typography" },
   { id: "content", label: "Wording" },
   { id: "nav", label: "Menu" },
 ] as const;
@@ -42,6 +44,7 @@ export function SiteEditor() {
 
       {tab === "images" && <SiteMediaEditor />}
       {tab === "appearance" && <SiteAppearancePanel />}
+      {tab === "typography" && <SiteTypographyPanel />}
       {tab === "content" && <SiteContentPanel />}
       {tab === "nav" && <SiteNavPanel />}
     </div>

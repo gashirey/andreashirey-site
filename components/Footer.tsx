@@ -22,8 +22,8 @@ export function Footer() {
               height={40}
               className="h-9 w-auto object-contain object-left"
             />
-            <p className="mt-3 font-serif text-xl text-bark">{site.name}</p>
-            <p className="mt-2 text-sm leading-relaxed text-stone">
+            <p className="type-footer-brand mt-3">{site.name}</p>
+            <p className="type-footer-text mt-2 leading-relaxed">
               {copy.site.description}
             </p>
           </div>
@@ -34,7 +34,7 @@ export function Footer() {
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    className="text-sm text-bark/80 transition-colors hover:text-salmon-dark"
+                    className="type-footer-link transition-colors hover:text-salmon-dark"
                   >
                     {item.label}
                   </Link>
@@ -55,13 +55,13 @@ export function Footer() {
               href={googleMapsUrl()}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-4 block text-sm leading-relaxed text-bark/80 transition-colors hover:text-salmon-dark"
+              className="type-footer-text mt-4 block leading-relaxed transition-colors hover:text-salmon-dark"
             >
               {site.location}
             </a>
             <a
               href={`mailto:${site.email}`}
-              className="mt-2 inline-block text-sm text-salmon-dark transition-colors hover:text-salmon"
+              className="type-footer-link mt-2 inline-block text-salmon-dark transition-colors hover:text-salmon"
             >
               {site.email}
             </a>
@@ -70,7 +70,7 @@ export function Footer() {
                 href={social.instagram}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-2 block text-sm text-salmon-dark transition-colors hover:text-salmon"
+                className="type-footer-link mt-2 block text-salmon-dark transition-colors hover:text-salmon"
               >
                 Instagram
               </a>

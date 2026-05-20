@@ -72,7 +72,9 @@ Then open `/available-now` — you should see both listings.
    - **Colors & layout** — design direction preset + color overrides, hero layout
    - **Wording** — hero text, about paragraphs, announcement bar, CTAs
    - **Menu** — header/footer links (label, path, order, visibility)
-3. Changes revalidate the live site immediately (no deploy for copy/colors/nav).
+   - **Typography** — per-section font (50+ Google fonts), size, color, weight; filter by serif/sans/display/handwriting
+3. Run `migrations/013_site_typography.sql` after 012 for typography column.
+4. Changes revalidate the live site immediately (no deploy for copy/colors/nav/fonts).
 
 ## Site images (hero, home, about) — launch today
 

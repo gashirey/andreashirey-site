@@ -12,5 +12,6 @@ export const DEFAULT_SITE_SETTINGS: SiteSettingsRow = {
   hero_frame: activeHeroFrame,
   color_overrides: {},
   content_overrides: {},
+  typography_overrides: {},
   updated_at: new Date().toISOString(),
 };

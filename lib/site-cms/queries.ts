@@ -3,6 +3,7 @@ import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { nav } from "@/lib/content";
 import { DEFAULT_SITE_SETTINGS } from "./defaults";
 import { mergeNavItems, mergeSiteCopy } from "./merge";
+import { buildResolvedTypography } from "./typography";
 import { buildSiteThemeStyle } from "./theme";
 import type {
   PublicSiteConfig,
@@ -11,6 +12,7 @@ import type {
   SiteContentOverrides,
   SiteNavItemRow,
   SiteSettingsRow,
+  TypographyOverrides,
 } from "./types";
 
 function parseSettingsRow(raw: Record<string, unknown>): SiteSettingsRow {
@@ -22,6 +24,8 @@ function parseSettingsRow(raw: Record<string, unknown>): SiteSettingsRow {
     hero_frame: (raw.hero_frame as SiteSettingsRow["hero_frame"]) ?? "bleed",
     color_overrides: (raw.color_overrides as SiteColorOverrides) ?? {},
     content_overrides: (raw.content_overrides as SiteContentOverrides) ?? {},
+    typography_overrides:
+      (raw.typography_overrides as TypographyOverrides) ?? {},
     updated_at: String(raw.updated_at ?? new Date().toISOString()),
   };
 }
@@ -90,17 +94,23 @@ export async function getPublicSiteConfig(): Promise<PublicSiteConfig> {
 export async function getResolvedSiteTheme(): Promise<{
   theme: ResolvedSiteTheme;
   themeStyle: ReturnType<typeof buildSiteThemeStyle>;
+  googleFontsUrl: string | null;
 }> {
   const settings = await getSiteSettingsRow();
+  const colorStyle = buildSiteThemeStyle(
+    settings.direction_id,
+    settings.color_overrides,
+  );
+  const { cssVars: typographyVars, googleFontsUrl } =
+    buildResolvedTypography(settings);
+
   return {
     theme: {
       directionId: settings.direction_id,
       heroLayout: settings.hero_layout,
       heroFrame: settings.hero_frame,
     },
-    themeStyle: buildSiteThemeStyle(
-      settings.direction_id,
-      settings.color_overrides,
-    ),
+    themeStyle: { ...colorStyle, ...typographyVars },
+    googleFontsUrl,
   };
 }

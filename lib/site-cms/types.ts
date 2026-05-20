@@ -46,6 +46,42 @@ export type SiteContentOverrides = {
   };
 };
 
+export type TypographySectionId =
+  | "hero_title"
+  | "hero_subtitle"
+  | "nav"
+  | "body"
+  | "section_title"
+  | "section_description"
+  | "page_title"
+  | "page_body"
+  | "footer_brand"
+  | "footer_text"
+  | "footer_link"
+  | "announcement"
+  | "button"
+  | "eyebrow";
+
+export type TypographySectionOverride = {
+  fontId?: string;
+  fontSize?: string;
+  color?: string;
+  fontWeight?: string;
+};
+
+export type TypographyOverrides = Partial<
+  Record<TypographySectionId, TypographySectionOverride>
+>;
+
+export type TypographySectionResolved = {
+  id: TypographySectionId;
+  fontId: string;
+  fontFamily: string;
+  fontSize: string;
+  color: string;
+  fontWeight: string;
+};
+
 export type SiteSettingsRow = {
   id: string;
   direction_id: DesignDirectionId;
@@ -53,6 +89,7 @@ export type SiteSettingsRow = {
   hero_frame: HeroFrame;
   color_overrides: SiteColorOverrides;
   content_overrides: SiteContentOverrides;
+  typography_overrides: TypographyOverrides;
   updated_at: string;
 };
 

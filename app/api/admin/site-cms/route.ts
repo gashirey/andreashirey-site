@@ -8,6 +8,7 @@ import type {
   SiteColorOverrides,
   SiteContentOverrides,
   SiteSettingsRow,
+  TypographyOverrides,
 } from "@/lib/site-cms/types";
 
 const HERO_LAYOUTS = new Set([
@@ -40,6 +41,7 @@ export async function PATCH(request: Request) {
     hero_frame: string;
     color_overrides: SiteColorOverrides;
     content_overrides: SiteContentOverrides;
+    typography_overrides: TypographyOverrides;
   }>;
 
   const current = await getSiteSettingsRow();
@@ -74,6 +76,10 @@ export async function PATCH(request: Request) {
     next.content_overrides = body.content_overrides;
   }
 
+  if (body.typography_overrides != null) {
+    next.typography_overrides = body.typography_overrides;
+  }
+
   const supabase = createServiceClient();
   const { data, error } = await supabase
     .from("site_settings")
@@ -84,6 +90,7 @@ export async function PATCH(request: Request) {
       hero_frame: next.hero_frame,
       color_overrides: next.color_overrides,
       content_overrides: next.content_overrides,
+      typography_overrides: next.typography_overrides,
       updated_at: new Date().toISOString(),
     })
     .select()
@@ -92,7 +99,7 @@ export async function PATCH(request: Request) {
   if (error) {
     const hint =
       error.code === "PGRST205"
-        ? " Run migration 012_site_cms.sql in Supabase."
+        ? " Run migrations 012_site_cms.sql and 013_site_typography.sql in Supabase."
         : "";
     return NextResponse.json(
       { error: `${error.message}${hint}` },
@@ -102,6 +109,8 @@ export async function PATCH(request: Request) {
 
   revalidatePath("/", "layout");
   revalidatePath("/about");
+  revalidatePath("/contact");
+  revalidatePath("/available-now");
 
   return NextResponse.json({ settings: data });
 }

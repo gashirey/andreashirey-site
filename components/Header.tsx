@@ -15,10 +15,8 @@ function NavLink({ href, label }: { href: string; label: string }) {
   return (
     <Link
       href={href}
-      className={`text-xs tracking-wide transition-colors ${
-        isActive
-          ? "font-medium text-salmon-dark"
-          : "text-stone hover:text-bark"
+      className={`type-nav tracking-wide transition-colors ${
+        isActive ? "font-medium text-salmon-dark" : "hover:opacity-80"
       }`}
     >
       {label}
@@ -82,7 +80,7 @@ export function Header() {
               <li key={item.href}>
                 <Link
                   href={item.href}
-                  className="block font-serif text-lg text-bark"
+                  className="type-nav block text-lg"
                   onClick={() => setMenuOpen(false)}
                 >
                   {item.label}

@@ -103,18 +103,18 @@ export function HeroSlider({
       <div
         className={`relative flex ${minHeight} flex-col justify-end px-6 pb-12 pt-8 lg:px-10 ${immersive ? "md:pb-20" : "lg:pb-16"}`}
       >
-        <h1 className="max-w-2xl font-serif text-4xl font-medium leading-[1.1] text-white md:text-5xl lg:text-[3.25rem]">
+        <h1 className="type-hero-title max-w-2xl leading-[1.1]">
           {title}
         </h1>
         {subtitle && (
-          <p className="mt-4 max-w-md text-base text-white/85 md:text-lg">
+          <p className="type-hero-subtitle mt-4 max-w-md md:text-lg">
             {subtitle}
           </p>
         )}
         {(primaryCta || secondaryCta) && (
           <div className="mt-8 flex flex-wrap gap-3">
             {primaryCta && (
-              <Button href={primaryCta.href} variant="primary">
+              <Button href={primaryCta.href} variant="primary" className="type-button">
                 {primaryCta.label}
               </Button>
             )}

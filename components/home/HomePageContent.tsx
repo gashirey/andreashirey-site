@@ -105,7 +105,7 @@ export function HomePageContent({
           {homeAbout.map((paragraph) => (
             <p
               key={paragraph.slice(0, 24)}
-              className="text-base leading-relaxed text-stone"
+              className="type-page-body leading-relaxed"
             >
               {paragraph}
             </p>
