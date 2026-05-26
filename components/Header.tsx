@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
@@ -33,19 +32,18 @@ export function Header() {
       <div className="mx-auto flex h-11 max-w-6xl items-center justify-between gap-4 px-4 lg:h-12 lg:px-8">
         <Link
           href="/"
-          className="flex min-w-0 items-center transition-opacity hover:opacity-85"
+          className="min-w-0 transition-opacity hover:opacity-85"
         >
-          <Image
-            src={site.logo}
-            alt={site.logoAlt}
-            width={180}
-            height={44}
-            priority
-            className="h-7 w-auto max-w-[11rem] object-contain object-left lg:h-8 lg:max-w-[13rem]"
-          />
+          <span className="type-nav block font-serif text-lg leading-tight tracking-wide text-bark">
+            {site.name}
+          </span>
+          <span className="mt-0.5 block text-[0.65rem] font-normal uppercase tracking-[0.2em] text-stone">
+            Photography
+          </span>
         </Link>
 
         <nav className="hidden items-center gap-5 md:flex" aria-label="Main">
+          <NavLink href="/" label="Home" />
           {nav.map((item) => (
             <NavLink key={item.href} href={item.href} label={item.label} />
           ))}
@@ -76,6 +74,15 @@ export function Header() {
           aria-label="Mobile"
         >
           <ul className="flex flex-col gap-3">
+            <li>
+              <Link
+                href="/"
+                className="type-nav block text-lg"
+                onClick={() => setMenuOpen(false)}
+              >
+                Home
+              </Link>
+            </li>
             {nav.map((item) => (
               <li key={item.href}>
                 <Link

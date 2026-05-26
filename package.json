@@ -1,5 +1,5 @@
 {
-  "name": "greygablesfarm",
+  "name": "andreashirey-site",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "seed:inventory": "node scripts/seed-mvp-availability.mjs",
-    "upload:shoot": "node scripts/bulk-upload-media.mjs"
+    "upload:shoot": "node scripts/bulk-upload-media.mjs",
+    "gallery:sync-review": "node scripts/sync-review-gallery.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.106.0",

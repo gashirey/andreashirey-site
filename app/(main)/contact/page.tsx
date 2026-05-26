@@ -1,14 +1,16 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Suspense } from "react";
 import { Section } from "@/components/Section";
 import { ContactForm } from "@/components/ContactForm";
-import { LocationBlock } from "@/components/LocationBlock";
 import { site, social } from "@/lib/content";
+import { inquiryCtas } from "@/lib/inquiry/copy";
+import { formatLocationLine } from "@/lib/location";
 import { pageMetadata } from "@/lib/metadata";
 
 export const metadata: Metadata = pageMetadata({
   title: "Contact",
-  description: `Contact ${site.name} — orders and questions.`,
+  description: `Contact ${site.brand}.`,
   path: "/contact",
 });
 
@@ -17,11 +19,16 @@ export default function ContactPage() {
     <Section density="compact" className="pt-20 md:pt-28">
       <div className="grid gap-14 lg:grid-cols-2 lg:gap-16">
         <div className="max-w-md">
-          <h1 className="type-page-title leading-tight">
-            Contact
-          </h1>
-          <p className="type-page-body mt-6 leading-relaxed">
-            Weekly availability and orders. Reply within a few business days.
+          <h1 className="type-page-title leading-tight">Contact</h1>
+          <p className="type-page-body mt-6 leading-relaxed text-stone">
+            For a full commission inquiry,{" "}
+            <Link
+              href={inquiryCtas.primary.href}
+              className="text-bark underline underline-offset-4 decoration-parchment hover:text-salmon-dark"
+            >
+              begin here
+            </Link>
+            . This form is for brief notes.
           </p>
           <dl className="mt-8 space-y-4 text-sm">
             <div>
@@ -34,6 +41,10 @@ export default function ContactPage() {
                   {site.email}
                 </a>
               </dd>
+            </div>
+            <div>
+              <dt className="font-medium text-bark">Based in</dt>
+              <dd className="text-stone">{formatLocationLine()}</dd>
             </div>
             {social.instagram ? (
               <div>
@@ -59,8 +70,6 @@ export default function ContactPage() {
           <ContactForm />
         </Suspense>
       </div>
-
-      <LocationBlock className="mt-16 max-w-md border-t border-parchment pt-12" />
     </Section>
   );
 }

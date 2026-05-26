@@ -14,10 +14,11 @@ export function SiteContentPanel() {
     heroCtaLabel: "",
     heroCtaHref: "",
     aboutParagraphs: "",
-    availabilityTitle: "",
-    availabilityDescription: "",
+    selectedWorkTitle: "",
+    selectedWorkDescription: "",
+    featuredGalleryTitle: "",
+    featuredGalleryDescription: "",
     ctaNote: "",
-    ctaRooted: "",
     ctaContact: "",
     announcementEnabled: false,
     announcementMessage: "",
@@ -39,10 +40,12 @@ export function SiteContentPanel() {
       heroCtaLabel: merged.heroHome.primaryCta.label,
       heroCtaHref: merged.heroHome.primaryCta.href,
       aboutParagraphs: merged.homeAbout.join("\n\n"),
-      availabilityTitle: merged.homeSections.availability.title,
-      availabilityDescription: merged.homeSections.availability.description,
+      selectedWorkTitle: merged.homeSections.selectedWork.title,
+      selectedWorkDescription: merged.homeSections.selectedWork.description,
+      featuredGalleryTitle: merged.homeSections.featuredGallery.title,
+      featuredGalleryDescription:
+        merged.homeSections.featuredGallery.description,
       ctaNote: merged.homeCta.note,
-      ctaRooted: merged.homeCta.rooted,
       ctaContact: merged.homeCta.contact,
       announcementEnabled: merged.announcement.enabled,
       announcementMessage: merged.announcement.message,
@@ -84,14 +87,17 @@ export function SiteContentPanel() {
         ? draft.aboutParagraphs.split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean)
         : undefined,
       homeSections: {
-        availability: {
-          title: draft.availabilityTitle.trim() || undefined,
-          description: draft.availabilityDescription.trim() || undefined,
+        selectedWork: {
+          title: draft.selectedWorkTitle.trim() || undefined,
+          description: draft.selectedWorkDescription.trim() || undefined,
+        },
+        featuredGallery: {
+          title: draft.featuredGalleryTitle.trim() || undefined,
+          description: draft.featuredGalleryDescription.trim() || undefined,
         },
       },
       homeCta: {
         note: draft.ctaNote.trim() || undefined,
-        rooted: draft.ctaRooted.trim() || undefined,
         contact: draft.ctaContact.trim() || undefined,
       },
       announcement: {
@@ -234,22 +240,48 @@ export function SiteContentPanel() {
         </label>
         <div className="mt-4 grid gap-4 max-w-xl">
           <label className="text-sm">
-            Availability section title
+            Selected work section title
             <input
               className="input mt-1 w-full"
-              value={draft.availabilityTitle}
+              value={draft.selectedWorkTitle}
               onChange={(e) =>
-                setDraft({ ...draft, availabilityTitle: e.target.value })
+                setDraft({ ...draft, selectedWorkTitle: e.target.value })
               }
             />
           </label>
           <label className="text-sm">
-            Availability section description
+            Selected work section description
             <input
               className="input mt-1 w-full"
-              value={draft.availabilityDescription}
+              value={draft.selectedWorkDescription}
               onChange={(e) =>
-                setDraft({ ...draft, availabilityDescription: e.target.value })
+                setDraft({
+                  ...draft,
+                  selectedWorkDescription: e.target.value,
+                })
+              }
+            />
+          </label>
+          <label className="text-sm">
+            Featured gallery section title
+            <input
+              className="input mt-1 w-full"
+              value={draft.featuredGalleryTitle}
+              onChange={(e) =>
+                setDraft({ ...draft, featuredGalleryTitle: e.target.value })
+              }
+            />
+          </label>
+          <label className="text-sm">
+            Featured gallery section description
+            <input
+              className="input mt-1 w-full"
+              value={draft.featuredGalleryDescription}
+              onChange={(e) =>
+                setDraft({
+                  ...draft,
+                  featuredGalleryDescription: e.target.value,
+                })
               }
             />
           </label>
@@ -265,14 +297,6 @@ export function SiteContentPanel() {
               className="input mt-1 w-full"
               value={draft.ctaNote}
               onChange={(e) => setDraft({ ...draft, ctaNote: e.target.value })}
-            />
-          </label>
-          <label className="text-sm">
-            Rooted link label
-            <input
-              className="input mt-1 w-full"
-              value={draft.ctaRooted}
-              onChange={(e) => setDraft({ ...draft, ctaRooted: e.target.value })}
             />
           </label>
           <label className="text-sm">

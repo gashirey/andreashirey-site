@@ -1,5 +1,5 @@
 /**
- * Bulk-upload a shoot folder to Supabase Storage.
+ * Bulk-upload a shoot folder to Supabase Storage + media library.
  *
  *   node scripts/bulk-upload-media.mjs ./path/to/shoot
  *   node scripts/bulk-upload-media.mjs ./shoot --shoot may-2026
@@ -7,6 +7,7 @@
  *   node scripts/bulk-upload-media.mjs ./shoot --assign-product zinnia=IMG_002.jpg
  *
  * Writes ./shoot-upload-manifest.json with public URLs.
+ * Uploaded rows appear on /gallery automatically.
  * Requires .env.local and migration 007 for --set-slot.
  */
 
@@ -139,6 +140,18 @@ if (!files.length) {
 const prefix = `library/${flags.shoot}`;
 console.log(`Uploading ${files.length} files → ${BUCKET}/${prefix}/ …\n`);
 
+const { data: shoot, error: shootError } = await supabase
+  .from("media_shoots")
+  .insert({ name: flags.shoot })
+  .select("id, name")
+  .single();
+
+if (shootError) {
+  console.warn(
+    `Could not create media shoot row (${shootError.message}). Upload will continue, but gallery registration may be skipped.`,
+  );
+}
+
 const manifest = await pool(
   files,
   (f) => uploadOne(supabase, f, prefix),
@@ -153,6 +166,23 @@ for (const m of ok) {
 }
 for (const m of failed) {
   console.error(`  ✗ ${m.localPath}: ${m.error}`);
+}
+
+if (shoot?.id && ok.length) {
+  const rows = ok.map((m) => ({
+    shoot_id: shoot.id,
+    storage_path: m.storagePath,
+    public_url: m.publicUrl,
+    filename: m.name,
+    alt_text: m.name.replace(/\.[^.]+$/, "").replace(/[-_]+/g, " "),
+  }));
+
+  const { error } = await supabase.from("media_assets").insert(rows);
+  if (error) {
+    console.error(`\nMedia library registration failed: ${error.message}`);
+  } else {
+    console.log(`\nRegistered ${rows.length} image(s) in media library for /gallery.`);
+  }
 }
 
 const outPath = resolve(process.cwd(), "shoot-upload-manifest.json");

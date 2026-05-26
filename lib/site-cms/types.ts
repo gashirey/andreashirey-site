@@ -30,14 +30,17 @@ export type SiteContentOverrides = {
   };
   homeAbout?: string[];
   homeSections?: {
-    availability?: {
+    selectedWork?: {
+      title?: string;
+      description?: string;
+    };
+    featuredGallery?: {
       title?: string;
       description?: string;
     };
   };
   homeCta?: {
     note?: string;
-    rooted?: string;
     contact?: string;
   };
   announcement?: {
@@ -119,11 +122,11 @@ export type ResolvedSiteCopy = {
   };
   homeAbout: string[];
   homeSections: {
-    availability: { title: string; description: string };
+    selectedWork: { title: string; description: string };
+    featuredGallery: { title: string; description: string };
   };
   homeCta: {
     note: string;
-    rooted: string;
     contact: string;
   };
   announcement: {

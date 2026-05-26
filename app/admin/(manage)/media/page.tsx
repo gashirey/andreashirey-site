@@ -5,8 +5,8 @@ export default function AdminMediaPage() {
     <div className="mx-auto max-w-6xl">
       <h1 className="font-serif text-2xl text-bark">Media library</h1>
       <p className="mt-1 mb-6 max-w-2xl text-sm text-stone">
-        Upload your shoot in bulk, then assign images to the homepage hero, feature
-        band, about page, or product cards. No terminal scripts required.
+        Upload a full shoot in bulk. New images appear on the public Work
+        gallery automatically, then you can feature selected frames across the site.
       </p>
       <MediaLibrary />
     </div>

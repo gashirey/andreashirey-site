@@ -2,38 +2,41 @@
  * Site copy — edit here to update pages without touching components.
  */
 
+import { reviewGalleryImages } from "./gallery-review.generated";
+
 export const site = {
-  name: "Grey Gables Farm",
-  domain: "greygablesfarm.com",
-  tagline: "Seasonal flowers grown in Virginia",
-  description: "Field-grown stems. Weekly harvest availability.",
-  email: "info@greygablesfarm.com",
-  /** Full mailing / farm address */
+  name: "Andrea Shirey",
+  brand: "Andrea Shirey Photography",
+  domain: "andreashirey.com",
+  tagline: "Editorial photography",
+  description: "Observational work in light, place, and quiet detail.",
+  email: "hello@andreashirey.com",
   address: {
-    street: "2217 Brickhouse Rd",
-    city: "Louisa",
-    state: "VA",
+    street: "",
+    city: "",
+    state: "Virginia",
   },
-  /** One-line address for display */
-  location: "2217 Brickhouse Rd, Louisa, VA",
-  /** Regional label for SEO and hero copy */
-  locationShort: "Louisa, Virginia",
-  locationRegion: "Central Virginia",
-  /** Shown on Contact — adjust if you add regular open hours */
-  visitNote: "Pickup and visits are by appointment.",
-  logo: "/images/logo.jpg",
-  logoAlt: "Grey Gables Farm",
+  location: "Virginia",
+  locationShort: "Virginia",
+  locationRegion: "Virginia",
+  visitNote: "",
+  /** Text wordmark used in header/footer for this pass */
+  logo: "",
+  logoAlt: "Andrea Shirey Photography",
   heroImage: "/images/hero.jpg",
-  heroImageAlt: "Cut flowers at Grey Gables Farm, Louisa Virginia",
+  heroImageAlt: "Editorial photograph by Andrea Shirey",
 } as const;
 
 export const heroHome = {
-  title: "Seasonal Flowers from Central Virginia",
-  subtitle: "Weekly harvests and limited seasonal availability.",
-  primaryCta: { label: "Current Availability", href: "/available-now" },
+  title: "Andrea Shirey",
+  subtitle: "Editorial photography.",
+  primaryCta: { label: "View work", href: "/gallery" },
+  secondaryCta: {
+    label: "Inquire About a Commission",
+    href: "/inquire",
+  },
 } as const;
 
-/** Single image on homepage — calmer hero */
 export const heroHomeSlide = {
   src: site.heroImage,
   alt: site.heroImageAlt,
@@ -43,30 +46,32 @@ export const heroSlides = [
   heroHomeSlide,
   {
     src: "/images/bb.jpg",
-    alt: "Mixed seasonal bouquet from Grey Gables Farm",
+    alt: "Editorial photograph by Andrea Shirey",
   },
   {
     src: "/images/garden_row.jpg",
-    alt: "Cutting garden rows at Grey Gables Farm",
+    alt: "Landscape study by Andrea Shirey",
   },
 ] as const;
 
 export const homeAbout = [
-  "Grey Gables Farm is a Central Virginia flower farm growing seasonal cut flowers for markets, events, and everyday use.",
-  "We focus on varieties selected for seasonality, color, and vase life.",
+  "Photographs made slowly — attention to light, distance, and the ordinary.",
 ] as const;
 
 export const homeSections = {
-  availability: {
-    title: "Current availability",
-    description: "Seasonal harvests — updated weekly.",
+  selectedWork: {
+    title: "Selected work",
+    description: "",
+  },
+  featuredGallery: {
+    title: "From the archive",
+    description: "",
   },
 } as const;
 
 export const homeCta = {
-  note: "Central Virginia grown. Limited quantities each week.",
-  rooted: "Shop on Rooted",
-  contact: "Contact the farm",
+  note: "Andrea accepts a limited number of commissions each season.",
+  contact: "Inquire About a Commission",
 } as const;
 
 export type HeroFrame = "bleed" | "inset";
@@ -74,29 +79,26 @@ export type HeroFrame = "bleed" | "inset";
 /** @deprecated Prefer lib/site-theme.ts activeHeroFrame */
 export const homeHeroFrame: HeroFrame = "bleed";
 
-export const availabilityUpdated = "2026-05-19";
-
 export const announcement = {
   enabled: false,
-  message: "Weekly listings updated from the field.",
+  message: "",
 } as const;
 
 export const subscribe = {
-  heading: "Weekly list",
-  description: "Email or text when availability is posted.",
+  heading: "Updates",
+  description: "Occasional notes when new work is published.",
   firstNameLabel: "First name",
   lastNameLabel: "Last name",
   firstNamePlaceholder: "Jane",
   lastNamePlaceholder: "Doe",
   emailLabel: "Email",
   emailPlaceholder: "you@example.com",
-  phoneLabel: "Mobile phone",
+  phoneLabel: "Phone",
   phonePlaceholder: "(540) 555-1234",
-  submitButton: "Sign up",
+  submitButton: "Subscribe",
   success: "You're on the list.",
-  emailOptIn: "Email me availability updates.",
-  smsOptIn:
-    "Text me from Grey Gables Farm. Msg & data rates may apply. Reply STOP to opt out.",
+  emailOptIn: "Email me when new work is posted.",
+  smsOptIn: "Text me updates. Reply STOP to opt out.",
   optInRequired: "Choose email or text updates (or both).",
   notConfigured: "Sign-ups are almost ready.",
 } as const;
@@ -105,32 +107,95 @@ export const social = {
   instagram: "" as string,
 } as const;
 
-export const ordering = {
-  intro: "Updated weekly from the field.",
-  steps: [
-    {
-      title: "Current availability",
-      text: "Stems, bunches, and pricing for this week.",
-    },
-    {
-      title: "Order",
-      text: "Shop on Rooted or email to reserve.",
-    },
-    {
-      title: "Pickup",
-      text: "Confirmed by email. By appointment.",
-    },
-  ],
-  pickupNote: "Event florals — contact the farm.",
-} as const;
-
 export const nav = [
-  { label: "Home", href: "/" },
-  { label: "Availability", href: "/available-now" },
+  { label: "Work", href: "/gallery" },
   { label: "About", href: "/about" },
-  { label: "Contact", href: "/contact" },
+  { label: "Inquire", href: "/inquire" },
 ] as const;
 
+export type GalleryImage = {
+  id: string;
+  src: string;
+  alt: string;
+  caption?: string;
+  /** Intrinsic dimensions — optional for uploaded remote images. */
+  width?: number;
+  height?: number;
+};
+
+/** Core portfolio placeholders — review/test shots appended from gallery-review.generated.ts */
+const galleryImagesBase: GalleryImage[] = [
+  {
+    id: "work-1",
+    src: "/images/hero.jpg",
+    alt: "Editorial photograph by Andrea Shirey",
+    width: 1600,
+    height: 1067,
+  },
+  {
+    id: "work-2",
+    src: "/images/bb.jpg",
+    alt: "Editorial photograph by Andrea Shirey",
+    width: 1200,
+    height: 1800,
+  },
+  {
+    id: "work-3",
+    src: "/images/garden_row.jpg",
+    alt: "Landscape photograph by Andrea Shirey",
+    width: 1800,
+    height: 1200,
+  },
+  {
+    id: "work-4",
+    src: "/images/bb.jpg",
+    alt: "Editorial photograph by Andrea Shirey",
+    width: 1400,
+    height: 933,
+  },
+  {
+    id: "work-5",
+    src: "/images/hero.jpg",
+    alt: "Editorial photograph by Andrea Shirey",
+    width: 1200,
+    height: 1500,
+  },
+  {
+    id: "work-6",
+    src: "/images/garden_row.jpg",
+    alt: "Landscape photograph by Andrea Shirey",
+    width: 1600,
+    height: 900,
+  },
+  {
+    id: "work-7",
+    src: "/images/hero.jpg",
+    alt: "Editorial photograph by Andrea Shirey",
+    width: 1200,
+    height: 1600,
+  },
+  {
+    id: "work-8",
+    src: "/images/bb.jpg",
+    alt: "Editorial photograph by Andrea Shirey",
+    width: 1800,
+    height: 1350,
+  },
+  {
+    id: "work-9",
+    src: "/images/garden_row.jpg",
+    alt: "Landscape photograph by Andrea Shirey",
+    width: 1200,
+    height: 800,
+  },
+];
+
+export const galleryImages: GalleryImage[] = [
+  ...galleryImagesBase,
+  ...reviewGalleryImages,
+];
+
+/** @deprecated Farm inventory — kept for admin compatibility only */
 export type AvailabilityItem = {
   id: string;
   name: string;
@@ -140,31 +205,4 @@ export type AvailabilityItem = {
   imageAlt: string;
 };
 
-/** Fallback when live inventory is empty — keep descriptions short */
-export const currentAvailability: AvailabilityItem[] = [
-  {
-    id: "mixed-bouquets",
-    name: "Mixed bunches",
-    description: "What’s in bloom this week.",
-    status: "available",
-    image: "/images/bb.jpg",
-    imageAlt: "Mixed seasonal bouquet",
-  },
-  {
-    id: "zinnias",
-    name: "Zinnias",
-    description: "Limited harvest.",
-    status: "limited",
-    image: "/images/bb.jpg",
-    imageAlt: "Zinnia stems",
-  },
-];
-
-export type GalleryImage = {
-  id: string;
-  src: string;
-  alt: string;
-  caption?: string;
-};
-
-export const galleryImages: GalleryImage[] = [];
+export const currentAvailability: AvailabilityItem[] = [];

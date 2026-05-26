@@ -199,7 +199,10 @@ export function MediaLibrary() {
         `Upload issues: ${allErrors.slice(0, 3).join("; ")}${allErrors.length > 3 ? "…" : ""}`,
       );
     } else {
-      showNotice("success", `Uploaded ${files.length} image(s). Assign them below.`);
+      showNotice(
+        "success",
+        `Uploaded ${files.length} image(s). They now appear on the portfolio gallery.`,
+      );
     }
   }
 
@@ -313,7 +316,8 @@ export function MediaLibrary() {
       <section className="border border-parchment bg-white p-5">
         <h2 className="font-serif text-lg text-bark">Shoot</h2>
         <p className="mt-1 text-sm text-stone">
-          Group uploads (e.g. “May 2026 shoot”). Edited photos can go in a new shoot later.
+          Group uploads (e.g. “May 2026 shoot”). Uploaded images appear on
+          the public Work gallery automatically.
         </p>
         <div className="mt-4 flex flex-wrap items-end gap-3">
           <label className="text-sm">
@@ -361,8 +365,8 @@ export function MediaLibrary() {
       >
         <p className="font-medium text-bark">Drop images here</p>
         <p className="mt-1 text-sm text-stone">
-          Large files (e.g. 30MB+) are optimized in your browser first, then
-          uploaded. Saved at 2400px max edge as JPEG. GIFs upload as-is.
+          Large files are optimized in your browser first, then uploaded to the
+          portfolio gallery. Saved at 2400px max edge as JPEG. GIFs upload as-is.
         </p>
         <input
           ref={inputRef}
@@ -394,7 +398,8 @@ export function MediaLibrary() {
           Library {assets.length ? `(${assets.length})` : ""}
         </h2>
         <p className="mt-1 text-sm text-stone">
-          Use on site — assigns to homepage, about, or a product.
+          Uploads appear on the Work gallery automatically. Use the controls
+          below to feature a photo in the hero, homepage, about page, or social workflow.
         </p>
 
         <p className="mt-2 text-sm text-stone">

@@ -1,11 +1,6 @@
 /**
- * External links — update when Rooted Farmers goes live.
+ * External links — add portfolio platforms or print shop URLs when ready.
  */
 export const links = {
-  rootedFarmers: "" as string,
-  shopify: "" as string,
+  portfolio: "" as string,
 } as const;
-
-export function getRootedFarmersHref(): string {
-  return links.rootedFarmers || "/available-now";
-}

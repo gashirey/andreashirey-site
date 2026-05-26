@@ -1,7 +1,7 @@
 import { SocialMediaWorkbench } from "@/components/admin/SocialMediaWorkbench";
 
 export const metadata = {
-  title: "Social — Grey Gables Admin",
+  title: "Social — Andrea Shirey Admin",
 };
 
 export default function AdminSocialPage() {

@@ -1,11 +1,10 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
-import { SubscribeBlock } from "@/components/SubscribeBlock";
 import { site, social } from "@/lib/content";
 import { useSiteConfig } from "@/components/SiteConfigProvider";
-import { googleMapsUrl } from "@/lib/location";
+import { formatLocationLine } from "@/lib/location";
+
 export function Footer() {
   const { nav, copy } = useSiteConfig();
   const year = new Date().getFullYear();
@@ -13,23 +12,27 @@ export function Footer() {
   return (
     <footer className="mt-auto border-t border-parchment bg-site-surface">
       <div className="mx-auto max-w-6xl px-6 py-12 lg:px-8">
-        <div className="grid gap-10 lg:grid-cols-12">
-          <div className="lg:col-span-3">
-            <Image
-              src={site.logo}
-              alt={site.logoAlt}
-              width={160}
-              height={40}
-              className="h-9 w-auto object-contain object-left"
-            />
-            <p className="type-footer-brand mt-3">{site.name}</p>
-            <p className="type-footer-text mt-2 leading-relaxed">
+        <div className="grid gap-10 md:grid-cols-12">
+          <div className="md:col-span-5">
+            <p className="font-serif text-lg text-bark">{site.name}</p>
+            <p className="mt-1 text-xs uppercase tracking-[0.2em] text-stone">
+              Photography
+            </p>
+            <p className="type-footer-text mt-4 max-w-sm leading-relaxed">
               {copy.site.description}
             </p>
           </div>
 
-          <div className="lg:col-span-2">
-            <ul className="mt-1 flex flex-col gap-2">
+          <div className="md:col-span-3">
+            <ul className="flex flex-col gap-2">
+              <li>
+                <Link
+                  href="/"
+                  className="type-footer-link transition-colors hover:text-salmon-dark"
+                >
+                  Home
+                </Link>
+              </li>
               {nav.map((item) => (
                 <li key={item.href}>
                   <Link
@@ -43,22 +46,13 @@ export function Footer() {
             </ul>
           </div>
 
-          <div className="lg:col-span-4">
-            <SubscribeBlock />
-          </div>
-
-          <div className="lg:col-span-3">
+          <div className="md:col-span-4">
             <p className="text-xs font-medium tracking-wide text-stone">
               Contact
             </p>
-            <a
-              href={googleMapsUrl()}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="type-footer-text mt-4 block leading-relaxed transition-colors hover:text-salmon-dark"
-            >
-              {site.location}
-            </a>
+            <p className="type-footer-text mt-4 text-stone">
+              {formatLocationLine()}
+            </p>
             <a
               href={`mailto:${site.email}`}
               className="type-footer-link mt-2 inline-block text-salmon-dark transition-colors hover:text-salmon"
@@ -79,7 +73,7 @@ export function Footer() {
         </div>
 
         <p className="mt-10 border-t border-parchment pt-6 text-center text-xs text-stone">
-          © {year} {site.name}. All rights reserved.
+          © {year} {site.brand}. All rights reserved.
         </p>
       </div>
     </footer>

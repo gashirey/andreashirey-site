@@ -179,15 +179,15 @@ export function DirectionShowcase({
             aspect="aspect-[3/4]"
           />
           <PhotoPlaceholder
-            src={labPhotos.bouquet.src}
-            alt={labPhotos.bouquet.alt}
+            src={labPhotos.feature.src}
+            alt={labPhotos.feature.alt}
             label="bouquet detail"
             aspect="aspect-square"
             className="sm:mt-8"
           />
           <PhotoPlaceholder
-            src={labPhotos.gardenRow.src}
-            alt={labPhotos.gardenRow.alt}
+            src={labPhotos.landscape.src}
+            alt={labPhotos.landscape.alt}
             label="cutting garden row"
             aspect="aspect-[4/5]"
           />
@@ -198,8 +198,8 @@ export function DirectionShowcase({
       <LabBlock title={isFull ? undefined : "Product / inventory card"}>
         <article className="max-w-md border border-[var(--lab-border)] bg-[var(--lab-surface)]">
           <PhotoPlaceholder
-            src={labPhotos.bouquet.src}
-            alt={labPhotos.bouquet.alt}
+            src={labPhotos.feature.src}
+            alt={labPhotos.feature.alt}
             label="mixed seasonal bouquet — product"
             aspect="aspect-[4/3]"
           />

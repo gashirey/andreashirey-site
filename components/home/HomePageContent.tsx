@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Suspense } from "react";
 import {
   HeroSlider,
   HOME_HERO_FADE_MS,
@@ -8,9 +7,9 @@ import {
   type HeroSlide,
 } from "@/components/HeroSlider";
 import { Section } from "@/components/Section";
-import { AvailableNowSection } from "@/components/inventory/AvailableNowSection";
-import { FarmCtaStrip } from "@/components/home/FarmCtaStrip";
-import { heroHomeSlide } from "@/lib/content";
+import { GalleryGrid } from "@/components/GalleryGrid";
+import { HomeContactCta } from "@/components/home/HomeContactCta";
+import { galleryImages, heroHome as heroHomeDefaults, heroHomeSlide } from "@/lib/content";
 import type { HeroFrame } from "@/lib/content";
 import { focalObjectPosition } from "@/lib/site-cms/focal";
 import type { ResolvedSiteCopy } from "@/lib/site-cms/types";
@@ -23,17 +22,20 @@ const STATIC_SITE_MEDIA: SiteMediaMap = {
   hero: { imageUrl: heroHomeSlide.src, alt: heroHomeSlide.alt, focalX: 50, focalY: 50 },
   home_feature: {
     imageUrl: "/images/bb.jpg",
-    alt: "Seasonal cut flowers from Grey Gables Farm",
+    alt: "Editorial photograph by Andrea Shirey",
     focalX: 50,
     focalY: 50,
   },
   about: {
     imageUrl: "/images/garden_row.jpg",
-    alt: "Cutting garden at Grey Gables Farm",
+    alt: "Photograph by Andrea Shirey",
     focalX: 50,
     focalY: 50,
   },
 };
+
+const selectedWorkImages = galleryImages.slice(0, 2);
+const featuredGalleryImages = galleryImages.slice(2, 5);
 
 type HomePageContentProps = {
   heroFrame?: HeroFrame;
@@ -51,19 +53,16 @@ export function HomePageContent({
   copy,
 }: HomePageContentProps) {
   const heroHome = copy?.heroHome ?? {
-    title: "Seasonal Flowers from Central Virginia",
-    subtitle: "Weekly harvests and limited seasonal availability.",
-    primaryCta: { label: "Current Availability", href: "/available-now" },
+    title: heroHomeDefaults.title,
+    subtitle: heroHomeDefaults.subtitle,
+    primaryCta: heroHomeDefaults.primaryCta,
   };
   const homeAbout = copy?.homeAbout ?? [
-    "Grey Gables Farm is a Central Virginia flower farm growing seasonal cut flowers for markets, events, and everyday use.",
-    "We focus on varieties selected for seasonality, color, and vase life.",
+    "Photographs made slowly — attention to light, distance, and the ordinary.",
   ];
   const homeSections = copy?.homeSections ?? {
-    availability: {
-      title: "Current availability",
-      description: "Seasonal harvests — updated weekly.",
-    },
+    selectedWork: { title: "Selected work", description: "" },
+    featuredGallery: { title: "From the archive", description: "" },
   };
   const homeCta = copy?.homeCta;
   const multiHero = heroSlides.length > 1;
@@ -77,6 +76,7 @@ export function HomePageContent({
         title={heroHome.title}
         subtitle={heroHome.subtitle}
         primaryCta={heroHome.primaryCta}
+        secondaryCta={heroHomeDefaults.secondaryCta}
         showSlideControls={multiHero}
         slideIntervalMs={HOME_HERO_SLIDE_MS}
         fadeMs={HOME_HERO_FADE_MS}
@@ -84,20 +84,22 @@ export function HomePageContent({
 
       <Section
         density="compact"
-        title={homeSections.availability.title}
-        description={homeSections.availability.description}
+        title={homeSections.selectedWork.title}
+        description={homeSections.selectedWork.description || undefined}
       >
-        <Suspense
-          fallback={
-            <div className="grid gap-8 sm:grid-cols-2" aria-hidden>
-              {[1, 2].map((n) => (
-                <div key={n} className="aspect-[4/3] bg-parchment" />
-              ))}
-            </div>
-          }
-        >
-          <AvailableNowSection showHeading={false} limit={2} />
-        </Suspense>
+        <GalleryGrid
+          images={selectedWorkImages}
+          density="compact"
+          priorityCount={2}
+        />
+        <p className="mt-8 text-sm">
+          <Link
+            href="/gallery"
+            className="text-bark underline underline-offset-4 decoration-parchment hover:text-salmon-dark"
+          >
+            View all work
+          </Link>
+        </p>
       </Section>
 
       <Section density="compact" className="!pt-0">
@@ -105,7 +107,7 @@ export function HomePageContent({
           {homeAbout.map((paragraph) => (
             <p
               key={paragraph.slice(0, 24)}
-              className="type-page-body leading-relaxed"
+              className="type-page-body leading-relaxed text-stone"
             >
               {paragraph}
             </p>
@@ -115,7 +117,7 @@ export function HomePageContent({
               href="/about"
               className="text-bark underline underline-offset-4 decoration-parchment hover:text-salmon-dark"
             >
-              About the farm
+              About
             </Link>
           </p>
         </div>
@@ -134,13 +136,20 @@ export function HomePageContent({
             ),
           }}
           sizes="100vw"
-          unoptimized={
-            siteMedia.home_feature.imageUrl.startsWith("http")
-          }
+          unoptimized={siteMedia.home_feature.imageUrl.startsWith("http")}
         />
       </section>
 
-      <FarmCtaStrip homeCta={homeCta} />
+      <Section
+        density="compact"
+        title={homeSections.featuredGallery.title}
+        description={homeSections.featuredGallery.description || undefined}
+        className="!pt-10"
+      >
+        <GalleryGrid images={featuredGalleryImages} density="compact" />
+      </Section>
+
+      <HomeContactCta homeCta={homeCta} />
     </>
   );
 }

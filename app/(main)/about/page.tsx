@@ -6,13 +6,12 @@ import { site } from "@/lib/content";
 import { focalObjectPosition } from "@/lib/site-cms/focal";
 import { getPublicSiteConfig } from "@/lib/site-cms/queries";
 import { getSiteMediaSlots } from "@/lib/site-media/queries";
+import { inquiryCtas } from "@/lib/inquiry/copy";
 import { pageMetadata } from "@/lib/metadata";
-
-export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = pageMetadata({
   title: "About",
-  description: `Seasonal cut flowers in ${site.locationRegion}.`,
+  description: `About ${site.brand} — editorial photography.`,
   path: "/about",
 });
 
@@ -26,31 +25,32 @@ export default async function AboutPage() {
 
   return (
     <Section density="compact" className="pt-20 md:pt-28">
-      <div className="grid gap-10 lg:grid-cols-[minmax(0,22rem)_1fr] lg:gap-16 lg:items-start">
+      <div className="grid gap-10 lg:grid-cols-[minmax(0,22rem)_1fr] lg:items-start lg:gap-16">
         <div>
-          <h1 className="type-page-title leading-tight md:text-4xl">
-            About
-          </h1>
+          <h1 className="type-page-title leading-tight md:text-4xl">About</h1>
           <div className="mt-6 space-y-4">
             {homeAbout.map((paragraph) => (
-              <p key={paragraph.slice(0, 24)} className="type-page-body leading-relaxed">
+              <p
+                key={paragraph.slice(0, 24)}
+                className="type-page-body leading-relaxed text-stone"
+              >
                 {paragraph}
               </p>
             ))}
           </div>
-          <p className="mt-6 text-sm text-stone">
+          <p className="mt-8 text-sm">
             <Link
-              href="/contact"
+              href={inquiryCtas.primary.href}
               className="text-bark underline underline-offset-4 decoration-parchment hover:text-salmon-dark"
             >
-              Contact the farm
+              {inquiryCtas.secondary.label}
             </Link>
             {" · "}
             <Link
-              href="/available-now"
+              href="/gallery"
               className="text-bark underline underline-offset-4 decoration-parchment hover:text-salmon-dark"
             >
-              Current availability
+              View work
             </Link>
           </p>
         </div>

@@ -7,10 +7,10 @@ import { site } from "@/lib/content";
 const supabaseReady = Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL);
 
 const subjectLabels: Record<string, string> = {
-  flowers: "Flower inquiry",
-  event: "Event inquiry",
-  wedding: "Event inquiry",
-  general: "General question",
+  commission: "Commission",
+  editorial: "Editorial",
+  print: "Print",
+  general: "General inquiry",
 };
 
 type FormStatus = "idle" | "loading" | "success" | "error";
@@ -18,7 +18,8 @@ type FormStatus = "idle" | "loading" | "success" | "error";
 export function ContactForm() {
   const searchParams = useSearchParams();
   const rawSubject = searchParams.get("subject") ?? "general";
-  const subjectKey = rawSubject === "wedding" ? "event" : rawSubject;
+  const subjectKey =
+    rawSubject in subjectLabels ? rawSubject : "general";
   const defaultSubject = subjectLabels[subjectKey] ?? subjectLabels.general;
 
   const [status, setStatus] = useState<FormStatus>("idle");
@@ -75,11 +76,11 @@ export function ContactForm() {
       }
 
       setStatus("success");
-      setMessage("Thanks — we received your message and will reply within 2–3 business days.");
+      setMessage("Thanks — your message was received. I'll reply within a few days.");
       form.reset();
     } catch {
       setStatus("error");
-      setMessage("Something went wrong. Please try again or email us directly.");
+      setMessage("Something went wrong. Please try again or email directly.");
     }
   }
 
@@ -89,7 +90,7 @@ export function ContactForm() {
     <form onSubmit={handleSubmit} className="card p-6 md:p-8">
       <p className="mb-6 text-sm text-stone">
         {supabaseReady
-          ? "We reply within a few business days."
+          ? "Replies within a few days."
           : "Opens your email app with your message pre-filled."}
       </p>
 
@@ -146,9 +147,10 @@ export function ContactForm() {
             disabled={disabled}
             className="input mt-1"
           >
-            <option value="flowers">Flower inquiry</option>
-            <option value="event">Event</option>
-            <option value="general">General question</option>
+            <option value="commission">Commission</option>
+            <option value="editorial">Editorial</option>
+            <option value="print">Print</option>
+            <option value="general">General inquiry</option>
           </select>
         </div>
         <div>
@@ -161,7 +163,7 @@ export function ContactForm() {
             rows={5}
             required
             disabled={disabled}
-            placeholder={`Tell us about your ${defaultSubject.toLowerCase()}...`}
+            placeholder="Your message…"
             className="input mt-1 resize-y"
           />
         </div>

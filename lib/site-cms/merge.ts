@@ -35,18 +35,25 @@ export function mergeSiteCopy(
       ? overrides.homeAbout
       : [...homeAbout],
     homeSections: {
-      availability: {
+      selectedWork: {
         title:
-          overrides.homeSections?.availability?.title ??
-          homeSections.availability.title,
+          overrides.homeSections?.selectedWork?.title ??
+          homeSections.selectedWork.title,
         description:
-          overrides.homeSections?.availability?.description ??
-          homeSections.availability.description,
+          overrides.homeSections?.selectedWork?.description ??
+          homeSections.selectedWork.description,
+      },
+      featuredGallery: {
+        title:
+          overrides.homeSections?.featuredGallery?.title ??
+          homeSections.featuredGallery.title,
+        description:
+          overrides.homeSections?.featuredGallery?.description ??
+          homeSections.featuredGallery.description,
       },
     },
     homeCta: {
       note: overrides.homeCta?.note ?? homeCta.note,
-      rooted: overrides.homeCta?.rooted ?? homeCta.rooted,
       contact: overrides.homeCta?.contact ?? homeCta.contact,
     },
     announcement: {

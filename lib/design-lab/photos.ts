@@ -1,24 +1,23 @@
-import { currentAvailability, site } from "@/lib/content";
+import { galleryImages, site } from "@/lib/content";
 
-/** Real farm photos — synced with lib/content.ts */
+/** Portfolio placeholders for design lab previews */
 export const labPhotos = {
   hero: {
     src: site.heroImage,
     alt: site.heroImageAlt,
   },
-  bouquet: {
-    src: currentAvailability[0].image,
-    alt: currentAvailability[0].imageAlt,
+  feature: {
+    src: galleryImages[1]?.src ?? site.heroImage,
+    alt: galleryImages[1]?.alt ?? site.heroImageAlt,
   },
-  gardenRow: {
-    src: "/images/garden_row.jpg",
-    alt: "Cutting garden rows at Grey Gables Farm",
+  landscape: {
+    src: galleryImages[2]?.src ?? "/images/garden_row.jpg",
+    alt: galleryImages[2]?.alt ?? "Photograph by Andrea Shirey",
   },
 } as const;
 
-/** Home gallery strip: hero, bouquet, garden row */
 export const labHomeGallery = [
   labPhotos.hero,
-  labPhotos.bouquet,
-  labPhotos.gardenRow,
+  labPhotos.feature,
+  labPhotos.landscape,
 ] as const;

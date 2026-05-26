@@ -1,32 +1,26 @@
-import Image from "next/image";
 import type { GalleryImage } from "@/lib/content";
+import {
+  MasonryGallery,
+  type MasonryGalleryDensity,
+} from "@/components/gallery/MasonryGallery";
 
 type GalleryGridProps = {
   images: GalleryImage[];
+  priorityCount?: number;
+  density?: MasonryGalleryDensity;
 };
 
-export function GalleryGrid({ images }: GalleryGridProps) {
+/** Editorial masonry gallery — preserves natural image proportions */
+export function GalleryGrid({
+  images,
+  priorityCount = 0,
+  density = "full",
+}: GalleryGridProps) {
   return (
-    <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-      {images.map((image) => (
-        <figure key={image.id}>
-          <div className="image-frame relative aspect-[4/5]">
-            {/* PHOTO: Replace src with real farm gallery image */}
-            <Image
-              src={image.src}
-              alt={image.alt}
-              fill
-              className="object-cover"
-              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-            />
-          </div>
-          {image.caption && (
-            <figcaption className="mt-2 text-sm text-stone">
-              {image.caption}
-            </figcaption>
-          )}
-        </figure>
-      ))}
-    </div>
+    <MasonryGallery
+      images={images}
+      priorityCount={priorityCount}
+      density={density}
+    />
   );
 }

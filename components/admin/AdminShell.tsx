@@ -4,12 +4,10 @@ import Link from "next/link";
 
 const links = [
   { href: "/admin", label: "Dashboard" },
-  { href: "/admin/availability", label: "Today" },
-  { href: "/admin/products", label: "Products" },
   { href: "/admin/media", label: "Media" },
   { href: "/admin/social", label: "Social" },
   { href: "/admin/site", label: "Site editor" },
-  { href: "/available-now", label: "View site" },
+  { href: "/gallery", label: "View gallery" },
 ];
 
 export function AdminShell({ children }: { children: React.ReactNode }) {
@@ -22,7 +20,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
     <div className="min-h-screen bg-cream text-bark">
       <header className="border-b border-parchment bg-white">
         <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-4 py-3">
-          <p className="text-sm font-medium">Farm manage</p>
+          <p className="text-sm font-medium">Andrea Shirey admin</p>
           <nav className="flex flex-wrap gap-3 text-sm">
             {links.map((link) => (
               <Link

@@ -49,7 +49,7 @@ export default function AdminLoginPage() {
         <p className="text-xs font-medium uppercase tracking-[0.15em] text-stone">
           {site.name}
         </p>
-        <h1 className="mt-2 font-serif text-2xl text-bark">Farm manage</h1>
+        <h1 className="mt-2 font-serif text-2xl text-bark">Site manage</h1>
         <p className="mt-2 text-sm text-stone">Enter your admin password.</p>
 
         <label htmlFor="password" className="sr-only">

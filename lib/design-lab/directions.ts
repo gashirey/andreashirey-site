@@ -160,19 +160,18 @@ export const designDirections: DesignDirection[] = [
 ];
 
 export const labCopy = {
-  farmName: "Grey Gables Farm",
-  location: "Louisa, Virginia",
-  locationShort: "Central Virginia",
-  tagline: "Seasonal flowers, grown with care",
+  farmName: "Andrea Shirey",
+  location: "Virginia",
+  locationShort: "Virginia",
+  tagline: "Editorial photography",
   product: {
-    name: "Mixed Seasonal Bouquet",
-    status: "Available this week",
-    description:
-      "Hand-tied stems gathered at peak — for the table, the porch, or someone you love.",
+    name: "Selected work",
+    status: "Portfolio",
+    description: "Observational images in light and place.",
   },
   quote: {
-    text: "The bouquets felt like they had just been carried in from the garden — unhurried, fragrant, and completely ours.",
-    attribution: "Sarah M., Louisa County",
+    text: "Quiet attention to the ordinary — distance, weather, and what remains in frame.",
+    attribution: "Editorial note",
   },
 };
 

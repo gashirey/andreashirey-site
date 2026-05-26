@@ -2,16 +2,14 @@ import Link from "next/link";
 import { DesignLabNav } from "@/components/design-lab/DesignLabNav";
 import { HeroSlider } from "@/components/HeroSlider";
 import { heroSlides, site } from "@/lib/content";
-import { getRootedFarmersHref } from "@/lib/links";
-
 const cta = {
   primary: {
-    label: "View Current Availability",
-    href: getRootedFarmersHref(),
+    label: "View work",
+    href: "/gallery",
   },
   secondary: {
-    label: "Inquire About Flowers",
-    href: "/contact?subject=flowers",
+    label: "Contact",
+    href: "/contact",
   },
 } as const;
 

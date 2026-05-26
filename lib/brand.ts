@@ -1,12 +1,11 @@
 /**
- * Brand palette — light salmon / blush with meadow sage for Grey Gables Farm.
+ * Brand palette — restrained editorial tones for Andrea Shirey Photography.
  * Tune hex values here; site + design lab read from these where shared.
  */
 export const brand = {
   cream: "#f9f8f6",
   parchment: "#ebe8e4",
   salmon: "#e4b8ae",
-  /** Direction C — primary button fill */
   salmonButton: "#e0b5aa",
   salmonButtonHover: "#d4a69a",
   salmonDark: "#d4a69a",

@@ -1,6 +1,6 @@
-# Grey Gables Farm
+# Andrea Shirey Photography
 
-MVP marketing site for [greygablesfarm.com](https://greygablesfarm.com) — brand, story, gallery, and inquiries. Built with Next.js, TypeScript, and Tailwind CSS.
+Editorial photography portfolio — built with Next.js, TypeScript, and Tailwind CSS.
 
 ## Local development
 
@@ -9,36 +9,32 @@ npm install
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
+Open [http://127.0.0.1:3000](http://127.0.0.1:3000).
 
 ## Editing content
 
 | What | Where |
 |------|--------|
 | Site name, tagline, email, nav | `lib/content.ts` |
-| Flower availability listings | `lib/content.ts` → `currentAvailability` |
 | Gallery images | `lib/content.ts` → `galleryImages` |
-| Rooted Farmers / Shopify URLs | `lib/links.ts` |
+| Homepage copy | `lib/content.ts` → `heroHome`, `homeAbout`, `homeSections` |
 
-Replace placeholder images in `public/images/placeholders/` with real photos (keep filenames or update paths in `lib/content.ts`).
+Replace placeholder images in `public/images/` with portfolio work (update paths in `lib/content.ts`).
 
-## Mailing & SMS lists (Supabase)
+## Contacts (Supabase)
 
-Email and text sign-ups in the footer write to Supabase (`mailing_list`, `sms_list` tables).
-
-Setup: see [supabase/README.md](supabase/README.md) and copy `.env.example` → `.env.local`.
+Inquiries from the contact form can write to Supabase. See [supabase/README.md](supabase/README.md) and copy `.env.example` → `.env.local`.
 
 ## Deploy to Vercel
 
-1. Push this repo to GitHub.
+1. Push to [github.com/gashirey/andreashirey-site](https://github.com/gashirey/andreashirey-site).
 2. Import the project in [Vercel](https://vercel.com).
-3. When ready, point DNS from WordPress.com to Vercel (see Vercel domain docs).
+3. Add environment variables from `.env.example`.
+4. Point `andreashirey.com` (or preview domain) when ready to go live.
 
 ## Pages
 
 - `/` — Home
+- `/gallery` — Work
 - `/about` — About
-- `/flowers` — Flowers & availability
-- `/gallery` — Gallery
-- `/weddings` — Weddings & events
 - `/contact` — Contact

@@ -5,7 +5,7 @@ import Link from "next/link";
 import type { DesignDirection } from "@/lib/design-lab/directions";
 import { designDirections, labCopy } from "@/lib/design-lab/directions";
 import { labPhotos } from "@/lib/design-lab/photos";
-import { currentAvailability } from "@/lib/content";
+import { galleryImages } from "@/lib/content";
 
 type DirectionHomePreviewProps = {
   direction: DesignDirection;
@@ -13,7 +13,7 @@ type DirectionHomePreviewProps = {
 
 export function DirectionHomePreview({ direction }: DirectionHomePreviewProps) {
   const d = direction;
-  const featured = currentAvailability.slice(0, 2);
+  const featured = galleryImages.slice(0, 2);
 
   const style = {
     "--lab-bg": d.colors.bg,
@@ -71,7 +71,7 @@ export function DirectionHomePreview({ direction }: DirectionHomePreviewProps) {
       <HomeSection eyebrow="Welcome" title="Flowers grown slowly, shared seasonally">
         <div className="grid items-center gap-10 lg:grid-cols-2">
           <div className="relative aspect-[4/5] overflow-hidden" style={{ background: d.colors.border }}>
-            <Image src={labPhotos.bouquet.src} alt={labPhotos.bouquet.alt} fill className="object-cover" sizes="50vw" />
+            <Image src={labPhotos.feature.src} alt={labPhotos.feature.alt} fill className="object-cover" sizes="50vw" />
           </div>
           <div className="space-y-5" style={{ color: d.colors.muted }}>
             <p className="leading-relaxed">
@@ -88,11 +88,7 @@ export function DirectionHomePreview({ direction }: DirectionHomePreviewProps) {
         </div>
       </HomeSection>
 
-      <HomeSection
-        eyebrow="This week"
-        title="What's in bloom"
-        surface
-      >
+      <HomeSection eyebrow="Work" title="Selected photographs" surface>
         <div className="grid gap-6 md:grid-cols-2">
           {featured.map((item) => (
             <article
@@ -102,33 +98,27 @@ export function DirectionHomePreview({ direction }: DirectionHomePreviewProps) {
             >
               <div className="relative aspect-[4/3]">
                 <Image
-                  src={item.image}
-                  alt={item.imageAlt}
+                  src={item.src}
+                  alt={item.alt}
                   fill
                   className="object-cover"
                   sizes="50vw"
                 />
               </div>
-              <div className="border-t p-4" style={{ borderColor: d.colors.border }}>
-                <span
-                  className="inline-block px-2 py-0.5 text-xs"
-                  style={{ background: d.colors.chip, color: d.colors.chipText }}
+              {item.caption ? (
+                <p
+                  className="border-t p-4 text-sm"
+                  style={{ borderColor: d.colors.border, color: d.colors.muted }}
                 >
-                  {item.status === "available" ? "Available now" : item.status}
-                </span>
-                <h3
-                  className="mt-2 text-xl"
-                  style={{ fontFamily: d.serifVar, color: d.colors.text }}
-                >
-                  {item.name}
-                </h3>
-              </div>
+                  {item.caption}
+                </p>
+              ) : null}
             </article>
           ))}
         </div>
         <div className="mt-8 flex flex-wrap gap-3">
           <a href="#" className="lab-btn-primary" onClick={(e) => e.preventDefault()}>
-            View current availability
+            View work
           </a>
           <a href="#" className="lab-btn-outline" onClick={(e) => e.preventDefault()}>
             Inquire about flowers

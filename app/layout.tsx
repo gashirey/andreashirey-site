@@ -17,15 +17,15 @@ const karla = Karla({
 
 export const metadata: Metadata = {
   title: {
-    default: site.name,
-    template: `%s | ${site.name}`,
+    default: site.brand,
+    template: `%s | ${site.brand}`,
   },
   description: site.description,
   metadataBase: new URL(`https://${site.domain}`),
   openGraph: {
-    title: site.name,
+    title: site.brand,
     description: site.description,
-    siteName: site.name,
+    siteName: site.brand,
     locale: "en_US",
     type: "website",
   },
