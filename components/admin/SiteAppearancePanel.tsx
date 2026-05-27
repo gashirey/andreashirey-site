@@ -3,6 +3,11 @@
 import { useCallback, useEffect, useState } from "react";
 import { designDirections } from "@/lib/design-lab/directions";
 import { AdminNotice } from "@/components/admin/AdminNotice";
+import {
+  HOME_HERO_SLIDE_INTERVAL_MAX_MS,
+  HOME_HERO_SLIDE_INTERVAL_MIN_MS,
+  clampHeroSlideIntervalMs,
+} from "@/lib/site-cms/hero-slider";
 import type { SiteColorOverrides, SiteSettingsRow } from "@/lib/site-cms/types";
 
 const COLOR_FIELDS: { key: keyof SiteColorOverrides; label: string }[] = [
@@ -14,6 +19,11 @@ const COLOR_FIELDS: { key: keyof SiteColorOverrides; label: string }[] = [
   { key: "green", label: "Garden green" },
   { key: "border", label: "Borders" },
 ];
+
+function formatSeconds(ms: number): string {
+  const seconds = ms / 1000;
+  return Number.isInteger(seconds) ? String(seconds) : seconds.toFixed(1);
+}
 
 export function SiteAppearancePanel() {
   const [settings, setSettings] = useState<SiteSettingsRow | null>(null);
@@ -70,6 +80,7 @@ export function SiteAppearancePanel() {
   }
 
   const direction = designDirections.find((d) => d.id === settings.direction_id);
+  const heroSlideIntervalSeconds = settings.hero_slide_interval_ms / 1000;
 
   return (
     <div className="space-y-8">
@@ -174,6 +185,9 @@ export function SiteAppearancePanel() {
 
       <section className="border border-parchment bg-white p-5">
         <h2 className="font-serif text-lg text-bark">Homepage hero layout</h2>
+        <p className="mt-1 max-w-xl text-sm text-stone">
+          Adjust the hero photo presentation and how quickly the slideshow moves.
+        </p>
         <div className="mt-4 grid gap-4 sm:grid-cols-2 max-w-xl">
           <label className="text-sm">
             <span className="font-medium text-bark">Layout</span>
@@ -210,6 +224,36 @@ export function SiteAppearancePanel() {
             </select>
           </label>
         </div>
+        <label className="mt-5 block max-w-xl text-sm">
+          <span className="font-medium text-bark">Slide speed</span>
+          <span className="mt-1 block text-xs text-stone">
+            Each hero photo stays up for{" "}
+            <strong className="font-medium text-bark">
+              {formatSeconds(settings.hero_slide_interval_ms)} seconds
+            </strong>
+            . Lower is faster.
+          </span>
+          <input
+            type="range"
+            className="mt-3 w-full"
+            min={HOME_HERO_SLIDE_INTERVAL_MIN_MS / 1000}
+            max={HOME_HERO_SLIDE_INTERVAL_MAX_MS / 1000}
+            step="0.5"
+            value={heroSlideIntervalSeconds}
+            onChange={(e) =>
+              setSettings({
+                ...settings,
+                hero_slide_interval_ms: clampHeroSlideIntervalMs(
+                  Number(e.target.value) * 1000,
+                ),
+              })
+            }
+          />
+          <span className="mt-1 flex justify-between text-xs text-stone">
+            <span>{HOME_HERO_SLIDE_INTERVAL_MIN_MS / 1000}s</span>
+            <span>{HOME_HERO_SLIDE_INTERVAL_MAX_MS / 1000}s</span>
+          </span>
+        </label>
         <button
           type="button"
           className="btn btn-primary mt-4 text-sm"
@@ -218,10 +262,11 @@ export function SiteAppearancePanel() {
             void save({
               hero_layout: settings.hero_layout,
               hero_frame: settings.hero_frame,
+              hero_slide_interval_ms: settings.hero_slide_interval_ms,
             })
           }
         >
-          Save hero layout
+          Save hero settings
         </button>
       </section>
     </div>

@@ -3,7 +3,6 @@ import Link from "next/link";
 import {
   HeroSlider,
   HOME_HERO_FADE_MS,
-  HOME_HERO_SLIDE_MS,
   type HeroSlide,
 } from "@/components/HeroSlider";
 import { Section } from "@/components/Section";
@@ -11,6 +10,7 @@ import { GalleryGrid } from "@/components/GalleryGrid";
 import { HomeContactCta } from "@/components/home/HomeContactCta";
 import { galleryImages, heroHome as heroHomeDefaults, heroHomeSlide } from "@/lib/content";
 import type { HeroFrame } from "@/lib/content";
+import { HOME_HERO_SLIDE_INTERVAL_DEFAULT_MS } from "@/lib/site-cms/hero-slider";
 import { focalObjectPosition } from "@/lib/site-cms/focal";
 import type { ResolvedSiteCopy } from "@/lib/site-cms/types";
 import type { SiteMediaSlotKey, SiteMediaView } from "@/lib/site-media/slots";
@@ -42,6 +42,7 @@ type HomePageContentProps = {
   heroLayout?: HeroLayout;
   siteMedia?: SiteMediaMap;
   heroSlides?: readonly HeroSlide[];
+  heroSlideIntervalMs?: number;
   copy?: ResolvedSiteCopy;
 };
 
@@ -50,6 +51,7 @@ export function HomePageContent({
   heroLayout = "immersive",
   siteMedia = STATIC_SITE_MEDIA,
   heroSlides = [{ src: STATIC_SITE_MEDIA.hero.imageUrl, alt: STATIC_SITE_MEDIA.hero.alt }],
+  heroSlideIntervalMs = HOME_HERO_SLIDE_INTERVAL_DEFAULT_MS,
   copy,
 }: HomePageContentProps) {
   const heroHome = copy?.heroHome ?? {
@@ -78,7 +80,7 @@ export function HomePageContent({
         primaryCta={heroHome.primaryCta}
         secondaryCta={heroHomeDefaults.secondaryCta}
         showSlideControls={multiHero}
-        slideIntervalMs={HOME_HERO_SLIDE_MS}
+        slideIntervalMs={heroSlideIntervalMs}
         fadeMs={HOME_HERO_FADE_MS}
       />
 

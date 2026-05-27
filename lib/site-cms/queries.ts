@@ -2,6 +2,7 @@ import { createServiceClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { nav } from "@/lib/content";
 import { DEFAULT_SITE_SETTINGS } from "./defaults";
+import { clampHeroSlideIntervalMs } from "./hero-slider";
 import { mergeNavItems, mergeSiteCopy } from "./merge";
 import { buildResolvedTypography } from "./typography";
 import { buildSiteThemeStyle } from "./theme";
@@ -22,6 +23,9 @@ function parseSettingsRow(raw: Record<string, unknown>): SiteSettingsRow {
     hero_layout:
       (raw.hero_layout as SiteSettingsRow["hero_layout"]) ?? "immersive",
     hero_frame: (raw.hero_frame as SiteSettingsRow["hero_frame"]) ?? "bleed",
+    hero_slide_interval_ms: clampHeroSlideIntervalMs(
+      raw.hero_slide_interval_ms,
+    ),
     color_overrides: (raw.color_overrides as SiteColorOverrides) ?? {},
     content_overrides: (raw.content_overrides as SiteContentOverrides) ?? {},
     typography_overrides:
@@ -85,6 +89,7 @@ export async function getPublicSiteConfig(): Promise<PublicSiteConfig> {
       directionId: settings.direction_id,
       heroLayout: settings.hero_layout,
       heroFrame: settings.hero_frame,
+      heroSlideIntervalMs: settings.hero_slide_interval_ms,
     },
     copy: mergeSiteCopy(settings.content_overrides),
     nav: mergeNavItems(navRows),
@@ -109,6 +114,7 @@ export async function getResolvedSiteTheme(): Promise<{
       directionId: settings.direction_id,
       heroLayout: settings.hero_layout,
       heroFrame: settings.hero_frame,
+      heroSlideIntervalMs: settings.hero_slide_interval_ms,
     },
     themeStyle: { ...colorStyle, ...typographyVars },
     googleFontsUrl,

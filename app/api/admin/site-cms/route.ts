@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/admin/require";
 import { createServiceClient } from "@/lib/supabase/server";
 import { isValidDirectionId } from "@/lib/design-lab/directions";
+import { clampHeroSlideIntervalMs } from "@/lib/site-cms/hero-slider";
 import { getSiteNavItemsRaw, getSiteSettingsRow } from "@/lib/site-cms/queries";
 import type {
   SiteColorOverrides,
@@ -39,6 +40,7 @@ export async function PATCH(request: Request) {
     direction_id: string;
     hero_layout: string;
     hero_frame: string;
+    hero_slide_interval_ms: number;
     color_overrides: SiteColorOverrides;
     content_overrides: SiteContentOverrides;
     typography_overrides: TypographyOverrides;
@@ -68,6 +70,17 @@ export async function PATCH(request: Request) {
     next.hero_frame = body.hero_frame as SiteSettingsRow["hero_frame"];
   }
 
+  if (body.hero_slide_interval_ms != null) {
+    const value = Number(body.hero_slide_interval_ms);
+    if (!Number.isFinite(value)) {
+      return NextResponse.json(
+        { error: "Invalid hero_slide_interval_ms." },
+        { status: 400 },
+      );
+    }
+    next.hero_slide_interval_ms = clampHeroSlideIntervalMs(value);
+  }
+
   if (body.color_overrides != null) {
     next.color_overrides = body.color_overrides;
   }
@@ -88,6 +101,7 @@ export async function PATCH(request: Request) {
       direction_id: next.direction_id,
       hero_layout: next.hero_layout,
       hero_frame: next.hero_frame,
+      hero_slide_interval_ms: next.hero_slide_interval_ms,
       color_overrides: next.color_overrides,
       content_overrides: next.content_overrides,
       typography_overrides: next.typography_overrides,
@@ -98,8 +112,8 @@ export async function PATCH(request: Request) {
 
   if (error) {
     const hint =
-      error.code === "PGRST205"
-        ? " Run migrations 012_site_cms.sql and 013_site_typography.sql in Supabase."
+      error.code === "PGRST205" || error.code === "PGRST204"
+        ? " Run migrations 012_site_cms.sql, 013_site_typography.sql, and 014_hero_slider_speed.sql in Supabase."
         : "";
     return NextResponse.json(
       { error: `${error.message}${hint}` },

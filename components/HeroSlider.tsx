@@ -10,8 +10,7 @@ import type { HeroLayout } from "@/lib/snapshots/types";
 const DEFAULT_SLIDE_MS = 9000;
 const DEFAULT_FADE_MS = 2000;
 
-/** Slow crossfade for homepage hero carousel */
-export const HOME_HERO_SLIDE_MS = 14_000;
+/** Homepage crossfade duration; interval is controlled through site settings. */
 export const HOME_HERO_FADE_MS = 2_800;
 
 export type HeroSlide = {

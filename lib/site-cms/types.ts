@@ -90,6 +90,7 @@ export type SiteSettingsRow = {
   direction_id: DesignDirectionId;
   hero_layout: HeroLayout;
   hero_frame: HeroFrame;
+  hero_slide_interval_ms: number;
   color_overrides: SiteColorOverrides;
   content_overrides: SiteContentOverrides;
   typography_overrides: TypographyOverrides;
@@ -139,6 +140,7 @@ export type ResolvedSiteTheme = {
   directionId: DesignDirectionId;
   heroLayout: HeroLayout;
   heroFrame: HeroFrame;
+  heroSlideIntervalMs: number;
 };
 
 export type PublicSiteConfig = {
