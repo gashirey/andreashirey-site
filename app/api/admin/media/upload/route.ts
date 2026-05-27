@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/admin/require";
 import { uploadImageToStorage } from "@/lib/admin/storage-upload";
+import { PORTFOLIO_GALLERY_STORAGE_PREFIX } from "@/lib/gallery/queries";
 import { createServiceClient } from "@/lib/supabase/server";
 
 export const maxDuration = 60;
@@ -41,7 +42,7 @@ export async function POST(request: Request) {
   }
 
   const supabase = createServiceClient();
-  let shootPrefix = "library/unsorted";
+  let shootPrefix = `${PORTFOLIO_GALLERY_STORAGE_PREFIX}/unsorted`;
 
   if (typeof shootId === "string" && shootId) {
     const { data: shoot } = await supabase
@@ -59,7 +60,7 @@ export async function POST(request: Request) {
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/^-|-$/g, "")
       .slice(0, 40);
-    shootPrefix = `library/${slug || shoot.id}`;
+    shootPrefix = `${PORTFOLIO_GALLERY_STORAGE_PREFIX}/${slug || shoot.id}`;
   }
 
   const uploaded: {

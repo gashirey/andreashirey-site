@@ -18,6 +18,7 @@ import { resolve, join, relative } from "node:path";
 const IMAGE_EXT = new Set([".jpg", ".jpeg", ".png", ".webp", ".gif"]);
 const BUCKET = "product-photos";
 const CONCURRENCY = 4;
+const PORTFOLIO_GALLERY_STORAGE_PREFIX = "andrea-gallery";
 
 function loadEnvLocal() {
   const path = resolve(process.cwd(), ".env.local");
@@ -137,7 +138,7 @@ if (!files.length) {
   process.exit(1);
 }
 
-const prefix = `library/${flags.shoot}`;
+const prefix = `${PORTFOLIO_GALLERY_STORAGE_PREFIX}/${flags.shoot}`;
 console.log(`Uploading ${files.length} files → ${BUCKET}/${prefix}/ …\n`);
 
 const { data: shoot, error: shootError } = await supabase

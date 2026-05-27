@@ -3,8 +3,11 @@ import { galleryImages as fallbackGalleryImages } from "@/lib/content";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { createServiceClient } from "@/lib/supabase/server";
 
+export const PORTFOLIO_GALLERY_STORAGE_PREFIX = "andrea-gallery";
+
 type MediaAssetRow = {
   id: string;
+  storage_path: string;
   public_url: string;
   filename: string;
   alt_text: string | null;
@@ -16,7 +19,8 @@ export async function getPortfolioGalleryImages(): Promise<GalleryImage[]> {
   const supabase = createServiceClient();
   const { data, error } = await supabase
     .from("media_assets")
-    .select("id, public_url, filename, alt_text")
+    .select("id, storage_path, public_url, filename, alt_text")
+    .like("storage_path", `${PORTFOLIO_GALLERY_STORAGE_PREFIX}/%`)
     .order("created_at", { ascending: false })
     .limit(500);
 
@@ -35,5 +39,5 @@ export async function getPortfolioGalleryImages(): Promise<GalleryImage[]> {
         asset.filename.replace(/\.[^.]+$/, "").replace(/[-_]+/g, " "),
     }));
 
-  return uploaded.length ? uploaded : fallbackGalleryImages;
+  return uploaded;
 }

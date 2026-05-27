@@ -365,8 +365,9 @@ export function MediaLibrary() {
       >
         <p className="font-medium text-bark">Drop images here</p>
         <p className="mt-1 text-sm text-stone">
-          Large files are optimized in your browser first, then uploaded to the
-          portfolio gallery. Saved at 2400px max edge as JPEG. GIFs upload as-is.
+          Large files are optimized in your browser first, then uploaded to a
+          fresh Andrea-only portfolio gallery. Saved at 2400px max edge as JPEG.
+          GIFs upload as-is.
         </p>
         <input
           ref={inputRef}

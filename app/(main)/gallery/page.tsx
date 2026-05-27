@@ -26,7 +26,15 @@ export default async function GalleryPage() {
             Selected photographs.
           </p>
         </header>
-        <GalleryGrid images={images} priorityCount={2} density="full" />
+        {images.length ? (
+          <GalleryGrid images={images} priorityCount={2} density="full" />
+        ) : (
+          <div className="border-y border-parchment py-16 md:py-20">
+            <p className="type-page-body max-w-md leading-relaxed text-stone">
+              New work is being prepared for this gallery.
+            </p>
+          </div>
+        )}
 
         <div className="mt-16 border-t border-parchment pt-12 md:mt-20">
           <p className="type-page-body max-w-md text-stone leading-relaxed">
