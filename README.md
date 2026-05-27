@@ -23,7 +23,7 @@ Replace placeholder images in `public/images/` with portfolio work (update paths
 
 ## Contacts (Supabase)
 
-Inquiries from the contact form can write to Supabase. See [supabase/README.md](supabase/README.md) and copy `.env.example` → `.env.local`.
+Inquiries, admin media, and editable site settings can write to Supabase. See [supabase/README.md](supabase/README.md), then copy `.env.example` → `.env.local`.
 
 ## Deploy to Vercel
 
