@@ -10,7 +10,14 @@ Use this when moving Andrea Shirey Photography to its own Supabase project inste
 
 ## 2. Run the required migrations
 
-For a clean Andrea project, run these files in **SQL Editor** in this exact order:
+For a clean Andrea project, the easiest option is to open
+`supabase/migrations/000_andrea_full_setup.sql`, copy the full file into
+Supabase **SQL Editor**, and run it once. The file combines the required app
+migrations below in dependency order and is safe to retry where the underlying
+statements support it.
+
+If you prefer to run the individual files instead, run these files in **SQL
+Editor** in this exact order:
 
 1. `supabase/migrations/002_unified_contacts.sql`
 2. `supabase/migrations/004_farm_inventory.sql`
