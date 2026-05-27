@@ -38,7 +38,7 @@ export default async function GalleryPage() {
 
         <div className="mt-16 border-t border-parchment pt-12 md:mt-20">
           <p className="type-page-body max-w-md text-stone leading-relaxed">
-            Interested in a commission? Andrea accepts a limited number of
+            Interested in a session? Andrea accepts a limited number of
             projects each season.
           </p>
           <Link

@@ -32,7 +32,7 @@ export const heroHome = {
   subtitle: "Editorial photography.",
   primaryCta: { label: "View work", href: "/gallery" },
   secondaryCta: {
-    label: "Inquire About a Commission",
+    label: "Inquire About a Session",
     href: "/inquire",
   },
 } as const;
@@ -70,8 +70,8 @@ export const homeSections = {
 } as const;
 
 export const homeCta = {
-  note: "Andrea accepts a limited number of commissions each season.",
-  contact: "Inquire About a Commission",
+  note: "Andrea accepts a limited number of sessions each season.",
+  contact: "Inquire About a Session",
 } as const;
 
 export type HeroFrame = "bleed" | "inset";

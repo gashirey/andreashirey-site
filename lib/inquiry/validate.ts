@@ -40,7 +40,7 @@ export function validateInquiry(
   else if (!EMAIL_RE.test(email)) fieldErrors.email = "Please enter a valid email.";
   if (!phone) fieldErrors.phone = "Please enter a phone number.";
   if (!commissionType || !commissionValues.has(commissionType as never))
-    fieldErrors.commissionType = "Please select a commission type.";
+    fieldErrors.commissionType = "Please select a session type.";
   if (!timeframe) fieldErrors.timeframe = "Please share your timeframe.";
   if (!location) fieldErrors.location = "Please share a location.";
   if (!vision) fieldErrors.vision = "Please tell us what you're hoping to create.";
@@ -82,7 +82,7 @@ export function validateInquiry(
 
 export function formatInquiryNotes(data: InquiryPayload): string {
   const lines = [
-    `Commission type: ${data.commissionType}`,
+    `Session type: ${data.commissionType}`,
     `Timeframe: ${data.timeframe}`,
     `Location: ${data.location}`,
     "",

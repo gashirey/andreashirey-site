@@ -1,5 +1,5 @@
 import type {
-  CommissionType,
+  SessionType,
   InvestmentComfort,
   PreferredContact,
 } from "./types";
@@ -9,7 +9,7 @@ export type SelectOption<T extends string = string> = {
   label: string;
 };
 
-export const commissionTypeOptions: SelectOption<CommissionType>[] = [
+export const commissionTypeOptions: SelectOption<SessionType>[] = [
   { value: "wedding", label: "Wedding" },
   { value: "portrait", label: "Portrait" },
   { value: "family", label: "Family" },
@@ -25,7 +25,7 @@ export const investmentComfortOptions: SelectOption<InvestmentComfort>[] = [
   },
   {
     value: "ready",
-    label: "I'm ready to discuss a full commission",
+    label: "I'm ready to discuss a full session",
   },
 ];
 
@@ -49,7 +49,7 @@ export const inquiryFields = {
   fullName: { label: "Full name", required: true },
   email: { label: "Email", required: true },
   phone: { label: "Phone", required: true },
-  commissionType: { label: "Type of commission", required: true },
+  commissionType: { label: "Type of session", required: true },
   timeframe: { label: "Desired timeframe / date", required: true },
   location: { label: "Location", required: true },
   vision: { label: "Tell us what you're hoping to create", required: true },

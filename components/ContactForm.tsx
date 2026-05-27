@@ -7,7 +7,7 @@ import { site } from "@/lib/content";
 const supabaseReady = Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL);
 
 const subjectLabels: Record<string, string> = {
-  commission: "Commission",
+  commission: "Session",
   editorial: "Editorial",
   print: "Print",
   general: "General inquiry",
@@ -147,7 +147,7 @@ export function ContactForm() {
             disabled={disabled}
             className="input mt-1"
           >
-            <option value="commission">Commission</option>
+            <option value="commission">Session</option>
             <option value="editorial">Editorial</option>
             <option value="print">Print</option>
             <option value="general">General inquiry</option>

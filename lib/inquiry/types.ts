@@ -1,4 +1,4 @@
-export type CommissionType =
+export type SessionType =
   | "wedding"
   | "portrait"
   | "family"
@@ -16,7 +16,7 @@ export type InquiryPayload = {
   fullName: string;
   email: string;
   phone: string;
-  commissionType: CommissionType;
+  commissionType: SessionType;
   timeframe: string;
   location: string;
   vision: string;

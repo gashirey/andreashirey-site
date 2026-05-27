@@ -21,7 +21,7 @@ export default function ContactPage() {
         <div className="max-w-md">
           <h1 className="type-page-title leading-tight">Contact</h1>
           <p className="type-page-body mt-6 leading-relaxed text-stone">
-            For a full commission inquiry,{" "}
+            For a full session inquiry,{" "}
             <Link
               href={inquiryCtas.primary.href}
               className="text-bark underline underline-offset-4 decoration-parchment hover:text-salmon-dark"

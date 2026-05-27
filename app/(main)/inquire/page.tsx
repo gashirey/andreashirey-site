@@ -16,7 +16,7 @@ export default function InquirePage() {
   return (
     <Section density="compact" className="pt-20 md:pt-28">
       <header className="mb-8 max-w-md md:mb-10">
-        <p className="type-eyebrow tracking-wide">Select commissions</p>
+        <p className="type-eyebrow tracking-wide">Select sessions</p>
         <h1 className="type-page-title mt-2 leading-tight md:text-4xl">
           {inquiryCopy.pageTitle}
         </h1>

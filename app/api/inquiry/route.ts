@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 import { splitName, upsertContact } from "@/lib/contacts";
 import { formatInquiryNotes, validateInquiry } from "@/lib/inquiry/validate";
-import type { CommissionType } from "@/lib/inquiry/types";
+import type { SessionType } from "@/lib/inquiry/types";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 
-const COMMISSION_TAGS: Record<CommissionType, string[]> = {
+const SESSION_TAGS: Record<SessionType, string[]> = {
   wedding: ["wedding_inquiry", "photography"],
   portrait: ["photography"],
   family: ["photography"],
@@ -43,7 +43,7 @@ export async function POST(request: Request) {
   const data = validated.data;
   const notes = formatInquiryNotes(data);
   const activityDetail = JSON.stringify({
-    type: "commission_inquiry",
+    type: "session_inquiry",
     commissionType: data.commissionType,
     investmentComfort: data.investmentComfort,
     referralSource: data.referralSource,
@@ -76,7 +76,7 @@ export async function POST(request: Request) {
     source: data.source ? `inquiry:${data.source}` : "website_inquiry_form",
     customerType: data.commissionType,
     notes,
-    tags: COMMISSION_TAGS[data.commissionType],
+    tags: SESSION_TAGS[data.commissionType],
     activityType: "inquiry_received",
     activityDetail,
   });
