@@ -25,14 +25,6 @@ export function Footer() {
 
           <div className="md:col-span-3">
             <ul className="flex flex-col gap-2">
-              <li>
-                <Link
-                  href="/"
-                  className="type-footer-link transition-colors hover:text-salmon-dark"
-                >
-                  Home
-                </Link>
-              </li>
               {nav.map((item) => (
                 <li key={item.href}>
                   <Link

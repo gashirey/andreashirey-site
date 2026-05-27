@@ -43,7 +43,6 @@ export function Header() {
         </Link>
 
         <nav className="hidden items-center gap-5 md:flex" aria-label="Main">
-          <NavLink href="/" label="Home" />
           {nav.map((item) => (
             <NavLink key={item.href} href={item.href} label={item.label} />
           ))}
@@ -74,15 +73,6 @@ export function Header() {
           aria-label="Mobile"
         >
           <ul className="flex flex-col gap-3">
-            <li>
-              <Link
-                href="/"
-                className="type-nav block text-lg"
-                onClick={() => setMenuOpen(false)}
-              >
-                Home
-              </Link>
-            </li>
             {nav.map((item) => (
               <li key={item.href}>
                 <Link
