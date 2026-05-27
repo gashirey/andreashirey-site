@@ -18,22 +18,14 @@ export default async function GalleryPage() {
   const images = await getPortfolioGalleryImages();
 
   return (
-    <section className="bg-site-page pb-12 pt-20 md:pb-20 md:pt-28 lg:pb-24">
+    <section className="bg-site-page pb-12 pt-4 md:pb-16 md:pt-5">
       <div className="mx-auto max-w-[88rem] px-6 lg:px-12">
-        <header className="mb-12 max-w-md md:mb-16">
-          <h1 className="type-page-title leading-tight md:text-4xl">Work</h1>
-          <p className="type-page-body mt-4 text-stone leading-relaxed">
-            Selected photographs.
-          </p>
-        </header>
         {images.length ? (
           <GalleryGrid images={images} priorityCount={2} density="full" />
         ) : (
-          <div className="border-y border-parchment py-16 md:py-20">
-            <p className="type-page-body max-w-md leading-relaxed text-stone">
-              New work is being prepared for this gallery.
-            </p>
-          </div>
+          <p className="type-page-body max-w-md py-12 text-stone leading-relaxed">
+            New work is being prepared for this gallery.
+          </p>
         )}
 
         <div className="mt-16 border-t border-parchment pt-12 md:mt-20">
