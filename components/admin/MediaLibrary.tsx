@@ -13,6 +13,7 @@ import {
 } from "@/lib/admin/client-compress-image";
 import { readAdminUploadError } from "@/lib/admin/upload-response";
 import { AdminNotice } from "@/components/admin/AdminNotice";
+import { ClientGalleryShare } from "@/components/admin/ClientGalleryShare";
 import { SaveToPhotosButton } from "@/components/admin/SaveToPhotosButton";
 import { SiteSlotsOverview } from "@/components/admin/SiteSlotsOverview";
 import type { MediaAsset, MediaShoot } from "@/lib/media/types";
@@ -351,6 +352,12 @@ export function MediaLibrary() {
           </form>
         </div>
       </section>
+
+      <ClientGalleryShare
+        shootId={shootId}
+        shootName={shoots.find((shoot) => shoot.id === shootId)?.name ?? "Session"}
+        imageCount={assets.length}
+      />
 
       <section
         className={`border border-dashed p-8 text-center transition-colors ${
