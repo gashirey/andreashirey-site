@@ -9,6 +9,7 @@ export type ClientGallery = {
   is_published: boolean;
   expires_at: string | null;
   created_at: string;
+  has_password: boolean;
 };
 
 export type ClientGalleryView = {
@@ -17,3 +18,13 @@ export type ClientGalleryView = {
   shotOn: string | null;
   images: GalleryImage[];
 };
+
+export type ClientGalleryLockedView = {
+  gallery: ClientGallery;
+  shootName: string;
+};
+
+export type ClientGalleryPageState =
+  | { status: "not_found" }
+  | { status: "locked"; view: ClientGalleryLockedView }
+  | { status: "ready"; view: ClientGalleryView };

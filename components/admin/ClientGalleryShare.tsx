@@ -21,6 +21,8 @@ export function ClientGalleryShare({
 }: ClientGalleryShareProps) {
   const [galleries, setGalleries] = useState<ClientGalleryRow[]>([]);
   const [title, setTitle] = useState(shootName);
+  const [password, setPassword] = useState("");
+  const [passwordDrafts, setPasswordDrafts] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
@@ -60,6 +62,7 @@ export function ClientGalleryShare({
         shoot_id: shootId,
         title: title.trim() || shootName,
         is_published: true,
+        password: password.trim() || null,
       }),
     });
     const data = await res.json();
@@ -68,11 +71,12 @@ export function ClientGalleryShare({
     if (!res.ok) {
       setMessage(
         data.error ??
-          "Could not create gallery. Run migration 015 in Supabase.",
+          "Could not create gallery. Run migrations 015 and 016 in Supabase.",
       );
       return;
     }
 
+    setPassword("");
     await loadGalleries();
     setMessage("Client viewing link created.");
   }
@@ -98,6 +102,35 @@ export function ClientGalleryShare({
     );
   }
 
+  async function savePassword(gallery: ClientGalleryRow) {
+    const draft = passwordDrafts[gallery.id] ?? "";
+    const res = await fetch(`/api/admin/client-galleries/${gallery.id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        password: draft.trim() || null,
+      }),
+    });
+    const data = await res.json();
+
+    if (!res.ok) {
+      setMessage(data.error ?? "Could not update password.");
+      return;
+    }
+
+    setPasswordDrafts((current) => {
+      const next = { ...current };
+      delete next[gallery.id];
+      return next;
+    });
+    await loadGalleries();
+    setMessage(
+      data.gallery.has_password
+        ? "Gallery password saved."
+        : "Gallery password removed.",
+    );
+  }
+
   async function copyLink(url: string) {
     try {
       await navigator.clipboard.writeText(url);
@@ -111,8 +144,8 @@ export function ClientGalleryShare({
     <section className="border border-parchment bg-white p-5">
       <h2 className="font-serif text-lg text-bark">Client viewing</h2>
       <p className="mt-1 text-sm text-stone">
-        Share a private gallery link with your client. They can browse and view
-        photos full-size. Package selection comes next.
+        Share a private gallery link with your client. Add an optional password
+        for extra protection.
       </p>
 
       {!imageCount ? (
@@ -120,24 +153,37 @@ export function ClientGalleryShare({
           Upload images to this shoot before creating a client link.
         </p>
       ) : (
-        <form onSubmit={createGallery} className="mt-4 flex flex-wrap items-end gap-3">
-          <label className="text-sm">
-            Gallery title
-            <input
-              type="text"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              className="input mt-1 block min-w-[14rem]"
-              placeholder={shootName}
-            />
-          </label>
-          <button
-            type="submit"
-            disabled={loading || !shootId}
-            className="btn border-bark bg-bark text-cream disabled:opacity-50"
-          >
-            {loading ? "Creating…" : "Create client link"}
-          </button>
+        <form onSubmit={createGallery} className="mt-4 space-y-3">
+          <div className="flex flex-wrap items-end gap-3">
+            <label className="text-sm">
+              Gallery title
+              <input
+                type="text"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                className="input mt-1 block min-w-[14rem]"
+                placeholder={shootName}
+              />
+            </label>
+            <label className="text-sm">
+              Password (optional)
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="input mt-1 block min-w-[12rem]"
+                autoComplete="new-password"
+                placeholder="At least 4 characters"
+              />
+            </label>
+            <button
+              type="submit"
+              disabled={loading || !shootId}
+              className="btn border-bark bg-bark text-cream disabled:opacity-50"
+            >
+              {loading ? "Creating…" : "Create client link"}
+            </button>
+          </div>
         </form>
       )}
 
@@ -159,6 +205,8 @@ export function ClientGalleryShare({
                   <p className="font-medium text-bark">{gallery.title}</p>
                   <p className="mt-1 text-stone">
                     {gallery.is_published ? "Published" : "Unpublished"}
+                    {" · "}
+                    {gallery.has_password ? "Password protected" : "No password"}
                     {" · "}
                     {imageCount} photo{imageCount === 1 ? "" : "s"}
                   </p>
@@ -188,6 +236,37 @@ export function ClientGalleryShare({
                   </button>
                 </div>
               </div>
+
+              <div className="mt-3 flex flex-wrap items-end gap-2">
+                <label className="grow text-xs">
+                  {gallery.has_password ? "Change password" : "Set password"}
+                  <input
+                    type="password"
+                    value={passwordDrafts[gallery.id] ?? ""}
+                    onChange={(event) =>
+                      setPasswordDrafts((current) => ({
+                        ...current,
+                        [gallery.id]: event.target.value,
+                      }))
+                    }
+                    className="input mt-1 w-full min-w-[12rem]"
+                    autoComplete="new-password"
+                    placeholder={
+                      gallery.has_password
+                        ? "New password or leave blank to remove"
+                        : "At least 4 characters"
+                    }
+                  />
+                </label>
+                <button
+                  type="button"
+                  onClick={() => void savePassword(gallery)}
+                  className="btn border-parchment py-2 text-xs"
+                >
+                  Save password
+                </button>
+              </div>
+
               <p className="mt-2 break-all font-mono text-xs text-stone">
                 {gallery.share_url}
               </p>

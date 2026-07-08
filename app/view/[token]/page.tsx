@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
+import { ClientGalleryPasswordGate } from "@/components/client-gallery/ClientGalleryPasswordGate";
 import { ClientGalleryView } from "@/components/client-gallery/ClientGalleryView";
-import { getClientGalleryView } from "@/lib/client-gallery/queries";
+import { getClientGalleryPageState } from "@/lib/client-gallery/queries";
 import { pageMetadata } from "@/lib/metadata";
 
 export const dynamic = "force-dynamic";
@@ -11,9 +12,9 @@ type PageProps = {
 
 export async function generateMetadata({ params }: PageProps) {
   const { token } = await params;
-  const view = await getClientGalleryView(token);
+  const state = await getClientGalleryPageState(token);
 
-  if (!view) {
+  if (state.status === "not_found") {
     return pageMetadata({
       title: "Gallery unavailable",
       description: "This client gallery link is invalid or has expired.",
@@ -21,18 +22,31 @@ export async function generateMetadata({ params }: PageProps) {
     });
   }
 
+  const title = state.view.gallery.title;
+  const shootName = state.view.shootName;
+
   return pageMetadata({
-    title: view.gallery.title,
-    description: `Client gallery — ${view.shootName}.`,
+    title,
+    description: `Client gallery — ${shootName}.`,
     path: `/view/${token}`,
   });
 }
 
 export default async function ClientGalleryPage({ params }: PageProps) {
   const { token } = await params;
-  const view = await getClientGalleryView(token);
+  const state = await getClientGalleryPageState(token);
 
-  if (!view) notFound();
+  if (state.status === "not_found") notFound();
 
-  return <ClientGalleryView view={view} />;
+  if (state.status === "locked") {
+    return (
+      <ClientGalleryPasswordGate
+        token={token}
+        title={state.view.gallery.title}
+        shootName={state.view.shootName}
+      />
+    );
+  }
+
+  return <ClientGalleryView view={state.view} />;
 }
