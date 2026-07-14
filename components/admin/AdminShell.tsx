@@ -5,7 +5,7 @@ import Link from "next/link";
 const links = [
   { href: "/admin", label: "Dashboard" },
   { href: "/admin/contacts", label: "Contacts" },
-  { href: "/admin/media", label: "Media" },
+  { href: "/admin/media", label: "Gallery" },
   { href: "/admin/social", label: "Social" },
   { href: "/admin/site", label: "Site editor" },
   { href: "/gallery", label: "View gallery" },

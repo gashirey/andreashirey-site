@@ -24,9 +24,9 @@ export default function AdminDashboardPage() {
           href="/admin/media"
           className="border border-parchment bg-white p-5 hover:border-bark/30"
         >
-          <p className="font-medium text-bark">Upload gallery images</p>
+          <p className="font-medium text-bark">Work gallery & media</p>
           <p className="mt-1 text-sm text-stone">
-            Bulk upload a shoot; new images appear on the Work gallery.
+            See live gallery photos, upload a shoot, or remove images from /gallery.
           </p>
         </Link>
         <Link

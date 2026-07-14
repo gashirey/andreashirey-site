@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/admin/require";
+import { PORTFOLIO_GALLERY_STORAGE_PREFIX } from "@/lib/gallery/queries";
 import { createServiceClient } from "@/lib/supabase/server";
 
 export async function GET(request: Request) {
@@ -8,6 +9,7 @@ export async function GET(request: Request) {
 
   const { searchParams } = new URL(request.url);
   const shootId = searchParams.get("shoot_id");
+  const portfolioOnly = searchParams.get("portfolio") === "1";
 
   const supabase = createServiceClient();
   let query = supabase
@@ -18,6 +20,13 @@ export async function GET(request: Request) {
 
   if (shootId) {
     query = query.eq("shoot_id", shootId);
+  }
+
+  if (portfolioOnly) {
+    query = query.like(
+      "storage_path",
+      `${PORTFOLIO_GALLERY_STORAGE_PREFIX}/%`,
+    );
   }
 
   const { data, error } = await query;

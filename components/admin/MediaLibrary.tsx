@@ -10,6 +10,7 @@ import {
 import { readAdminUploadError } from "@/lib/admin/upload-response";
 import { AdminNotice } from "@/components/admin/AdminNotice";
 import { ClientGalleryShare } from "@/components/admin/ClientGalleryShare";
+import { PortfolioGalleryPanel } from "@/components/admin/PortfolioGalleryPanel";
 import { SaveToPhotosButton } from "@/components/admin/SaveToPhotosButton";
 import { SiteSlotsOverview } from "@/components/admin/SiteSlotsOverview";
 import type { MediaAsset, MediaShoot } from "@/lib/media/types";
@@ -38,8 +39,10 @@ export function MediaLibrary() {
     message: string;
   } | null>(null);
   const [slotsRefreshKey, setSlotsRefreshKey] = useState(0);
+  const [galleryRefreshKey, setGalleryRefreshKey] = useState(0);
   const [dragOver, setDragOver] = useState(false);
   const [assigningId, setAssigningId] = useState<string | null>(null);
+  const [removingId, setRemovingId] = useState<string | null>(null);
 
   function showNotice(type: "success" | "error", text: string) {
     setNotice({ type, message: text });
@@ -189,6 +192,7 @@ export function MediaLibrary() {
     setUploading(false);
     setUploadProgress("");
     await loadAssets(shootId);
+    setGalleryRefreshKey((k) => k + 1);
 
     if (allErrors.length) {
       showNotice(
@@ -198,7 +202,7 @@ export function MediaLibrary() {
     } else {
       showNotice(
         "success",
-        `Uploaded ${files.length} image(s). They now appear on the portfolio gallery.`,
+        `Uploaded ${files.length} image(s). They now appear on the Work gallery (/gallery).`,
       );
     }
   }
@@ -259,6 +263,33 @@ export function MediaLibrary() {
     }
   }
 
+  async function removeAsset(asset: MediaAsset) {
+    if (
+      !window.confirm(
+        `Remove “${asset.filename}” from the Work gallery? This deletes it from the library.`,
+      )
+    ) {
+      return;
+    }
+
+    setRemovingId(asset.id);
+    const res = await fetch(`/api/admin/media/assets/${asset.id}`, {
+      method: "DELETE",
+    });
+    setRemovingId(null);
+
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      showNotice("error", data.error ?? "Could not remove image.");
+      return;
+    }
+
+    showNotice("success", `Removed ${asset.filename} from the Work gallery.`);
+    await loadAssets(shootId);
+    setGalleryRefreshKey((k) => k + 1);
+    setSlotsRefreshKey((k) => k + 1);
+  }
+
   if (loading) {
     return <p className="text-sm text-stone">Loading library…</p>;
   }
@@ -292,15 +323,47 @@ export function MediaLibrary() {
       {notice?.type === "success" ? (
         <p className="text-sm">
           <a
-            href="/"
+            href="/gallery"
             target="_blank"
             rel="noopener noreferrer"
             className="font-medium text-salmon-dark underline underline-offset-2"
           >
-            View live site
+            View Work gallery
           </a>
         </p>
       ) : null}
+
+      <section className="border border-parchment bg-cream/40 p-5">
+        <h2 className="font-serif text-lg text-bark">How the Work gallery works</h2>
+        <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm text-stone">
+          <li>
+            <span className="text-bark">Add:</span> create or pick a shoot, then
+            drop/choose photos below — they go live on{" "}
+            <a href="/gallery" className="underline hover:text-bark">
+              /gallery
+            </a>{" "}
+            automatically.
+          </li>
+          <li>
+            <span className="text-bark">See what&apos;s live:</span> the{" "}
+            <strong className="font-medium text-bark">Work gallery</strong>{" "}
+            board lists every public gallery image.
+          </li>
+          <li>
+            <span className="text-bark">Remove:</span> click{" "}
+            <strong className="font-medium text-bark">Remove from gallery</strong>{" "}
+            on that board (or on an image in the shoot library).
+          </li>
+        </ol>
+      </section>
+
+      <PortfolioGalleryPanel
+        refreshKey={galleryRefreshKey}
+        onChanged={() => {
+          setSlotsRefreshKey((k) => k + 1);
+          if (shootId) void loadAssets(shootId);
+        }}
+      />
 
       <SiteSlotsOverview refreshKey={slotsRefreshKey} />
 
@@ -311,10 +374,10 @@ export function MediaLibrary() {
       ) : null}
 
       <section className="border border-parchment bg-white p-5">
-        <h2 className="font-serif text-lg text-bark">Shoot</h2>
+        <h2 className="font-serif text-lg text-bark">1. Choose a shoot</h2>
         <p className="mt-1 text-sm text-stone">
-          Group uploads (e.g. “May 2026 shoot”). Uploaded images appear on
-          the public Work gallery automatically.
+          Group uploads (e.g. “May 2026 shoot”). New uploads join this shoot and
+          the Work gallery.
         </p>
         <div className="mt-4 flex flex-wrap items-end gap-3">
           <label className="text-sm">
@@ -366,11 +429,10 @@ export function MediaLibrary() {
         onDragLeave={() => setDragOver(false)}
         onDrop={onDrop}
       >
-        <p className="font-medium text-bark">Drop images here</p>
+        <p className="font-medium text-bark">2. Add photos to the Work gallery</p>
         <p className="mt-1 text-sm text-stone">
-          Large files are optimized in your browser first, then uploaded to a
-          fresh Andrea-only portfolio gallery. Saved at 2400px max edge as JPEG.
-          GIFs upload as-is.
+          Drop images here (or choose files). They appear in the Work gallery
+          board above and on the public /gallery page.
         </p>
         <input
           ref={inputRef}
@@ -399,11 +461,11 @@ export function MediaLibrary() {
 
       <section>
         <h2 className="font-serif text-lg text-bark">
-          Library {assets.length ? `(${assets.length})` : ""}
+          3. This shoot {assets.length ? `(${assets.length})` : ""}
         </h2>
         <p className="mt-1 text-sm text-stone">
-          Uploads appear on the Work gallery automatically. Use the controls
-          below to feature a photo in the hero, homepage, about page, or social workflow.
+          Images in the active shoot. Remove to take them off the Work gallery,
+          or use &ldquo;Use on site&rdquo; for hero / About / Contact.
         </p>
 
         <p className="mt-2 text-sm text-stone">
@@ -443,6 +505,16 @@ export function MediaLibrary() {
                   >
                     Open
                   </a>
+                  <button
+                    type="button"
+                    disabled={removingId === asset.id}
+                    onClick={() => void removeAsset(asset)}
+                    className="btn border-parchment py-2 text-xs disabled:opacity-50"
+                  >
+                    {removingId === asset.id ? "…" : "Remove"}
+                  </button>
+                </div>
+                <div className="mt-2">
                   <SaveToPhotosButton
                     downloadUrl={`/api/admin/social/download?kind=media&id=${asset.id}`}
                     filename={asset.filename}

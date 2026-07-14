@@ -1,3 +1,4 @@
+import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/admin/require";
 import { uploadImageToStorage } from "@/lib/admin/storage-upload";
@@ -103,6 +104,8 @@ export async function POST(request: Request) {
       id: data.id,
     });
   }
+
+  revalidatePath("/gallery");
 
   return NextResponse.json({
     uploaded,
