@@ -420,11 +420,16 @@ create table if not exists public.media_assets (
   public_url text not null,
   filename text not null,
   alt_text text,
+  in_gallery boolean not null default false,
   created_at timestamptz not null default now()
 );
 
 create index if not exists media_assets_shoot_created_idx
   on public.media_assets (shoot_id, created_at desc);
+
+create index if not exists media_assets_in_gallery_created_idx
+  on public.media_assets (in_gallery, created_at desc)
+  where in_gallery = true;
 
 alter table public.media_shoots enable row level security;
 alter table public.media_assets enable row level security;
@@ -437,6 +442,16 @@ where not exists (select 1 from public.media_shoots limit 1);
 
 comment on table public.media_shoots is 'Photo shoot / upload session grouping';
 comment on table public.media_assets is 'Uploaded images in the media library';
+
+alter table public.media_assets
+  add column if not exists in_gallery boolean not null default false;
+
+create index if not exists media_assets_in_gallery_created_idx
+  on public.media_assets (in_gallery, created_at desc)
+  where in_gallery = true;
+
+comment on column public.media_assets.in_gallery is
+  'When true, asset appears on the public Work gallery (/gallery)';
 
 notify pgrst, 'reload schema';
 

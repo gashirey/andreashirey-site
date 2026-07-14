@@ -28,6 +28,7 @@ Editor** in this exact order:
 7. `supabase/migrations/012_site_cms.sql`
 8. `supabase/migrations/013_site_typography.sql`
 9. `supabase/migrations/014_hero_slider_speed.sql`
+10. `supabase/migrations/015_media_in_gallery.sql`
 
 This creates contacts, farm product availability, media library tables, CMS/navigation settings, hero slides, the `hero_slide_interval_ms` setting, and the public `product-photos` storage bucket.
 

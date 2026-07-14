@@ -89,6 +89,7 @@ export async function POST(request: Request) {
         public_url: result.imageUrl,
         filename: file.name,
         alt_text: alt,
+        in_gallery: false,
       })
       .select("id, public_url, filename")
       .single();

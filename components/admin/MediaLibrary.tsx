@@ -202,7 +202,7 @@ export function MediaLibrary() {
     } else {
       showNotice(
         "success",
-        `Uploaded ${files.length} image(s). They now appear on the Work gallery (/gallery).`,
+        `Uploaded ${files.length} image(s) to the library. Check the ones you want on /gallery.`,
       );
     }
   }
@@ -263,10 +263,33 @@ export function MediaLibrary() {
     }
   }
 
-  async function removeAsset(asset: MediaAsset) {
+  async function setInGallery(asset: MediaAsset, inGallery: boolean) {
+    setRemovingId(asset.id);
+    const res = await fetch(`/api/admin/media/assets/${asset.id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ in_gallery: inGallery }),
+    });
+    setRemovingId(null);
+
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      showNotice("error", data.error ?? "Could not update gallery selection.");
+      return;
+    }
+
+    const data = await res.json();
+    const next = data.asset as MediaAsset;
+    setAssets((prev) =>
+      prev.map((a) => (a.id === asset.id ? { ...a, ...next } : a)),
+    );
+    setGalleryRefreshKey((k) => k + 1);
+  }
+
+  async function deleteForever(asset: MediaAsset) {
     if (
       !window.confirm(
-        `Remove “${asset.filename}” from the Work gallery? This deletes it from the library.`,
+        `Permanently delete “${asset.filename}”? This cannot be undone. Prefer unchecking “In gallery” if you might use it later.`,
       )
     ) {
       return;
@@ -280,11 +303,11 @@ export function MediaLibrary() {
 
     if (!res.ok) {
       const data = await res.json().catch(() => ({}));
-      showNotice("error", data.error ?? "Could not remove image.");
+      showNotice("error", data.error ?? "Could not delete image.");
       return;
     }
 
-    showNotice("success", `Removed ${asset.filename} from the Work gallery.`);
+    showNotice("success", `Deleted ${asset.filename}.`);
     await loadAssets(shootId);
     setGalleryRefreshKey((k) => k + 1);
     setSlotsRefreshKey((k) => k + 1);
@@ -337,22 +360,21 @@ export function MediaLibrary() {
         <h2 className="font-serif text-lg text-bark">How the Work gallery works</h2>
         <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm text-stone">
           <li>
-            <span className="text-bark">Add:</span> create or pick a shoot, then
-            drop/choose photos below — they go live on{" "}
+            <span className="text-bark">Upload</span> photos into a shoot
+            (they stay in your library; they do{" "}
+            <em className="not-italic text-bark">not</em> go public
+            automatically).
+          </li>
+          <li>
+            <span className="text-bark">Select</span> which ones appear on{" "}
             <a href="/gallery" className="underline hover:text-bark">
               /gallery
             </a>{" "}
-            automatically.
+            with the checkbox in the upper right of each thumbnail.
           </li>
           <li>
-            <span className="text-bark">See what&apos;s live:</span> the{" "}
-            <strong className="font-medium text-bark">Work gallery</strong>{" "}
-            board lists every public gallery image.
-          </li>
-          <li>
-            <span className="text-bark">Remove:</span> click{" "}
-            <strong className="font-medium text-bark">Remove from gallery</strong>{" "}
-            on that board (or on an image in the shoot library).
+            <span className="text-bark">Uncheck</span> to hide from the gallery
+            without deleting — check again anytime to restore.
           </li>
         </ol>
       </section>
@@ -429,10 +451,10 @@ export function MediaLibrary() {
         onDragLeave={() => setDragOver(false)}
         onDrop={onDrop}
       >
-        <p className="font-medium text-bark">2. Add photos to the Work gallery</p>
+        <p className="font-medium text-bark">2. Upload to the library</p>
         <p className="mt-1 text-sm text-stone">
-          Drop images here (or choose files). They appear in the Work gallery
-          board above and on the public /gallery page.
+          Drop images here. They stay private to your library until you check
+          them for the Work gallery above.
         </p>
         <input
           ref={inputRef}
@@ -464,8 +486,9 @@ export function MediaLibrary() {
           3. This shoot {assets.length ? `(${assets.length})` : ""}
         </h2>
         <p className="mt-1 text-sm text-stone">
-          Images in the active shoot. Remove to take them off the Work gallery,
-          or use &ldquo;Use on site&rdquo; for hero / About / Contact.
+          Images in the active shoot. Use the gallery checkbox above for public
+          selection, or toggle here. Delete forever only when you no longer need
+          the file.
         </p>
 
         <p className="mt-2 text-sm text-stone">
@@ -483,8 +506,22 @@ export function MediaLibrary() {
             {assets.map((asset) => (
               <li
                 key={asset.id}
-                className="border border-parchment bg-white p-2 sm:p-3"
+                className={`relative border bg-white p-2 sm:p-3 ${
+                  asset.in_gallery ? "border-bark" : "border-parchment"
+                }`}
               >
+                <label className="absolute right-3 top-3 z-10 flex h-7 w-7 cursor-pointer items-center justify-center border border-parchment bg-white">
+                  <span className="sr-only">In Work gallery</span>
+                  <input
+                    type="checkbox"
+                    className="h-4 w-4 accent-bark"
+                    checked={Boolean(asset.in_gallery)}
+                    disabled={removingId === asset.id}
+                    onChange={(e) =>
+                      void setInGallery(asset, e.target.checked)
+                    }
+                  />
+                </label>
                 <div className="relative aspect-square overflow-hidden bg-parchment sm:aspect-[4/3]">
                   <Image
                     src={asset.public_url}
@@ -496,6 +533,9 @@ export function MediaLibrary() {
                   />
                 </div>
                 <p className="mt-2 truncate text-xs text-stone">{asset.filename}</p>
+                <p className="text-[10px] text-stone">
+                  {asset.in_gallery ? "In gallery" : "Library only"}
+                </p>
                 <div className="mt-2 grid grid-cols-2 gap-1">
                   <a
                     href={asset.public_url}
@@ -508,10 +548,10 @@ export function MediaLibrary() {
                   <button
                     type="button"
                     disabled={removingId === asset.id}
-                    onClick={() => void removeAsset(asset)}
-                    className="btn border-parchment py-2 text-xs disabled:opacity-50"
+                    onClick={() => void deleteForever(asset)}
+                    className="btn border-parchment py-2 text-xs text-stone disabled:opacity-50"
                   >
-                    {removingId === asset.id ? "…" : "Remove"}
+                    Delete
                   </button>
                 </div>
                 <div className="mt-2">

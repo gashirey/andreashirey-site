@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/admin/require";
-import { PORTFOLIO_GALLERY_STORAGE_PREFIX } from "@/lib/gallery/queries";
 import { createServiceClient } from "@/lib/supabase/server";
 
 export async function GET(request: Request) {
@@ -9,7 +8,7 @@ export async function GET(request: Request) {
 
   const { searchParams } = new URL(request.url);
   const shootId = searchParams.get("shoot_id");
-  const portfolioOnly = searchParams.get("portfolio") === "1";
+  const inGallery = searchParams.get("in_gallery");
 
   const supabase = createServiceClient();
   let query = supabase
@@ -22,17 +21,23 @@ export async function GET(request: Request) {
     query = query.eq("shoot_id", shootId);
   }
 
-  if (portfolioOnly) {
-    query = query.like(
-      "storage_path",
-      `${PORTFOLIO_GALLERY_STORAGE_PREFIX}/%`,
-    );
+  if (inGallery === "1") {
+    query = query.eq("in_gallery", true);
+  } else if (inGallery === "0") {
+    query = query.eq("in_gallery", false);
   }
 
   const { data, error } = await query;
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 400 });
+    const hint =
+      error.message?.includes("in_gallery") || error.code === "PGRST204"
+        ? " Run migration 015_media_in_gallery.sql in Supabase."
+        : "";
+    return NextResponse.json(
+      { error: `${error.message}${hint}` },
+      { status: 400 },
+    );
   }
 
   return NextResponse.json({ assets: data ?? [] });

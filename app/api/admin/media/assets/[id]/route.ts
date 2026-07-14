@@ -7,6 +7,47 @@ const BUCKET = "product-photos";
 
 type Props = { params: Promise<{ id: string }> };
 
+export async function PATCH(request: Request, { params }: Props) {
+  const denied = await requireAdmin(request);
+  if (denied) return denied;
+
+  const { id } = await params;
+  const body = (await request.json()) as {
+    in_gallery?: boolean;
+    alt_text?: string | null;
+  };
+
+  const patch: Record<string, unknown> = {};
+  if (typeof body.in_gallery === "boolean") patch.in_gallery = body.in_gallery;
+  if (body.alt_text !== undefined) {
+    patch.alt_text = body.alt_text?.trim() || null;
+  }
+
+  if (!Object.keys(patch).length) {
+    return NextResponse.json({ error: "No fields to update." }, { status: 400 });
+  }
+
+  const supabase = createServiceClient();
+  const { data, error } = await supabase
+    .from("media_assets")
+    .update(patch)
+    .eq("id", id)
+    .select("*")
+    .single();
+
+  if (error) {
+    const hint =
+      error.message?.includes("in_gallery") || error.code === "PGRST204"
+        ? " Run migration 015_media_in_gallery.sql in Supabase."
+        : "";
+    return NextResponse.json({ error: `${error.message}${hint}` }, { status: 400 });
+  }
+
+  revalidatePath("/gallery");
+
+  return NextResponse.json({ asset: data });
+}
+
 export async function DELETE(request: Request, { params }: Props) {
   const denied = await requireAdmin(request);
   if (denied) return denied;
@@ -36,7 +77,6 @@ export async function DELETE(request: Request, { params }: Props) {
       .remove([asset.storage_path]);
     if (storageError) {
       console.error("[media asset DELETE storage]", storageError);
-      // Still remove the DB row so it leaves the gallery even if storage delete fails.
     }
   }
 

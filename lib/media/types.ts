@@ -12,5 +12,6 @@ export type MediaAsset = {
   public_url: string;
   filename: string;
   alt_text: string | null;
+  in_gallery: boolean;
   created_at: string;
 };
