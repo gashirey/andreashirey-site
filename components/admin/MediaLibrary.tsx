@@ -2,10 +2,7 @@
 
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
-import {
-  SITE_MEDIA_SLOT_LABELS,
-  type SiteMediaSlotKey,
-} from "@/lib/site-media/slots";
+import { type SiteMediaSlotKey } from "@/lib/site-media/slots";
 import {
   compressImageBeforeUpload,
   formatBytes,
