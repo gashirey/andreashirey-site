@@ -94,6 +94,12 @@ export const announcement = {
   message: "",
 } as const;
 
+export const contactPage = {
+  title: "Contact",
+  intro:
+    "This form is for brief notes. For a full session inquiry, begin with Inquire. Prefer to understand the process first? Explore Sessions.",
+} as const;
+
 export const subscribe = {
   heading: "Updates",
   description: "Occasional notes when new work is published.",

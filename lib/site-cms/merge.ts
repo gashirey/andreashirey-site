@@ -1,6 +1,7 @@
 import {
   aboutPage,
   announcement,
+  contactPage,
   heroHome,
   homeAbout,
   homeCta,
@@ -45,6 +46,10 @@ export function mergeSiteCopy(
       eyebrow: overrides.aboutPage?.eyebrow ?? aboutPage.eyebrow,
       title: overrides.aboutPage?.title ?? aboutPage.title,
       paragraphs: aboutParagraphs,
+    },
+    contactPage: {
+      title: overrides.contactPage?.title ?? contactPage.title,
+      intro: overrides.contactPage?.intro ?? contactPage.intro,
     },
     homeSections: {
       selectedWork: {

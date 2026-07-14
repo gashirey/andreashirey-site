@@ -29,6 +29,12 @@ const STATIC_SITE_MEDIA: SiteMediaMap = {
     focalX: 50,
     focalY: 50,
   },
+  contact: {
+    imageUrl: "",
+    alt: "",
+    focalX: 50,
+    focalY: 50,
+  },
 };
 
 type HomePageContentProps = {

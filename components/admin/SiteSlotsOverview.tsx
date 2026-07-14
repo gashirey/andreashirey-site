@@ -98,7 +98,7 @@ export function SiteSlotsOverview({ refreshKey = 0 }: SiteSlotsOverviewProps) {
   }
 
   const byKey = new Map(slots.map((s) => [s.slot_key, s]));
-  const managedSlots: SiteMediaSlotKey[] = ["about"];
+  const managedSlots: SiteMediaSlotKey[] = ["about", "contact"];
   const legacySlots = SITE_MEDIA_SLOTS.filter((k) => !managedSlots.includes(k));
 
   return (

@@ -34,6 +34,10 @@ export type SiteContentOverrides = {
     title?: string;
     paragraphs?: string[];
   };
+  contactPage?: {
+    title?: string;
+    intro?: string;
+  };
   homeSections?: {
     selectedWork?: {
       title?: string;
@@ -131,6 +135,10 @@ export type ResolvedSiteCopy = {
     eyebrow: string;
     title: string;
     paragraphs: string[];
+  };
+  contactPage: {
+    title: string;
+    intro: string;
   };
   homeSections: {
     selectedWork: { title: string; description: string };

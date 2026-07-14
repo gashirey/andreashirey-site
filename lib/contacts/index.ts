@@ -1,4 +1,5 @@
 export { upsertContact } from "./upsert";
+export { listContacts } from "./list";
 export type {
   ContactRow,
   ContactTag,

@@ -26,6 +26,10 @@ const LOCAL_FALLBACKS: Record<
     image_url: "",
     alt_text: "",
   },
+  contact: {
+    image_url: "",
+    alt_text: "",
+  },
 };
 
 function emptySlot(key: SiteMediaSlotKey): SiteMediaView {

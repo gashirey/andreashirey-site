@@ -23,6 +23,7 @@ const SLOT_ASPECT: Partial<Record<SiteMediaSlotKey, string>> = {
   hero: "aspect-[16/10]",
   home_feature: "aspect-[16/10] sm:aspect-[5/4]",
   about: "aspect-[4/5]",
+  contact: "aspect-[4/5]",
 };
 
 function isRemoteSrc(url: string): boolean {
@@ -190,15 +191,15 @@ export function SiteMediaEditor() {
   }
 
   const byKey = new Map(slots.map((s) => [s.slot_key, s]));
-  const editableSlots: SiteMediaSlotKey[] = ["about"];
+  const editableSlots: SiteMediaSlotKey[] = ["about", "contact"];
 
   return (
     <div className="space-y-10">
       {message && <p className="text-sm text-bark">{message}</p>}
 
       <p className="text-sm text-stone max-w-xl">
-        Manage the About page photo here (or clear it from the media library
-        overview). Homepage hero images are the{" "}
+        Manage About and Contact photos here (or clear them from the media
+        library overview). Homepage hero images are the{" "}
         <a href="/admin/media" className="underline hover:text-bark">
           media library
         </a>{" "}
@@ -210,6 +211,7 @@ export function SiteMediaEditor() {
         const imageUrl = slot?.image_url?.trim() ?? "";
         const alt = slot?.alt_text ?? "";
         const focal = focalDraft[slotKey] ?? { x: 50, y: 50 };
+        const pagePath = slotKey === "contact" ? "/contact" : "/about";
 
         return (
           <section
@@ -221,7 +223,7 @@ export function SiteMediaEditor() {
                 <h2 className="font-serif text-lg text-bark">
                   {SITE_MEDIA_SLOT_LABELS[slotKey]}
                 </h2>
-                <p className="mt-1 text-xs text-stone">Shown on /about</p>
+                <p className="mt-1 text-xs text-stone">Shown on {pagePath}</p>
               </div>
               {imageUrl ? (
                 <button
@@ -236,7 +238,7 @@ export function SiteMediaEditor() {
 
             <label className="mt-4 block text-sm">
               <span className="font-medium text-bark">
-                {imageUrl ? "Replace image" : "Upload image"}
+                {imageUrl ? "Replace image" : "Upload image (optional)"}
               </span>
               <input
                 type="file"
@@ -284,8 +286,8 @@ export function SiteMediaEditor() {
               />
             ) : (
               <p className="mt-4 text-sm text-stone">
-                No photo right now — About shows text only until you upload or
-                assign one from the media library.
+                No photo right now — the page shows text only until you upload
+                or assign one from the media library.
               </p>
             )}
           </section>

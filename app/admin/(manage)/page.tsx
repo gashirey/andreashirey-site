@@ -12,6 +12,15 @@ export default function AdminDashboardPage() {
 
       <div className="grid gap-4 sm:grid-cols-2">
         <Link
+          href="/admin/contacts"
+          className="border border-parchment bg-white p-5 hover:border-bark/30"
+        >
+          <p className="font-medium text-bark">Contacts</p>
+          <p className="mt-1 text-sm text-stone">
+            All contact and inquire form submissions from the database.
+          </p>
+        </Link>
+        <Link
           href="/admin/media"
           className="border border-parchment bg-white p-5 hover:border-bark/30"
         >

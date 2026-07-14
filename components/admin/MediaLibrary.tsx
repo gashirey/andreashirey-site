@@ -478,6 +478,9 @@ export function MediaLibrary() {
                     <optgroup label="Site">
                       <option value="hero_slide">Add to hero slideshow</option>
                       <option value="slot:about">Set as About page photo</option>
+                      <option value="slot:contact">
+                        Set as Contact page photo
+                      </option>
                     </optgroup>
                     <optgroup label="Products">
                       {products.map((p) => (

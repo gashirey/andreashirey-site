@@ -16,6 +16,8 @@ export function SiteContentPanel() {
     aboutEyebrow: "",
     aboutTitle: "",
     aboutParagraphs: "",
+    contactTitle: "",
+    contactIntro: "",
     selectedWorkTitle: "",
     selectedWorkDescription: "",
     featuredGalleryTitle: "",
@@ -44,6 +46,8 @@ export function SiteContentPanel() {
       aboutEyebrow: merged.aboutPage.eyebrow,
       aboutTitle: merged.aboutPage.title,
       aboutParagraphs: merged.aboutPage.paragraphs.join("\n\n"),
+      contactTitle: merged.contactPage.title,
+      contactIntro: merged.contactPage.intro,
       selectedWorkTitle: merged.homeSections.selectedWork.title,
       selectedWorkDescription: merged.homeSections.selectedWork.description,
       featuredGalleryTitle: merged.homeSections.featuredGallery.title,
@@ -99,6 +103,10 @@ export function SiteContentPanel() {
               .map((p) => p.trim())
               .filter(Boolean)
           : undefined,
+      },
+      contactPage: {
+        title: draft.contactTitle.trim() || undefined,
+        intro: draft.contactIntro.trim() || undefined,
       },
       homeSections: {
         selectedWork: {
@@ -282,6 +290,40 @@ export function SiteContentPanel() {
             }
           />
         </label>
+      </section>
+
+      <section className="border border-parchment bg-white p-5">
+        <h2 className="font-serif text-lg text-bark">Contact page</h2>
+        <p className="mt-1 text-sm text-stone">
+          Messaging for{" "}
+          <a href="/contact" className="underline hover:text-bark">
+            /contact
+          </a>
+          . Optional photo under Images & framing or Media.
+        </p>
+        <div className="mt-4 grid gap-4 max-w-xl">
+          <label className="text-sm">
+            Title
+            <input
+              className="input mt-1 w-full"
+              value={draft.contactTitle}
+              onChange={(e) =>
+                setDraft({ ...draft, contactTitle: e.target.value })
+              }
+            />
+          </label>
+          <label className="text-sm">
+            Intro
+            <textarea
+              className="input mt-1 w-full"
+              rows={4}
+              value={draft.contactIntro}
+              onChange={(e) =>
+                setDraft({ ...draft, contactIntro: e.target.value })
+              }
+            />
+          </label>
+        </div>
       </section>
 
       <section className="border border-parchment bg-white p-5">
