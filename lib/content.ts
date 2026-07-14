@@ -10,7 +10,7 @@ export const site = {
   domain: "andreashirey.com",
   tagline: "Editorial photography",
   description: "Observational work in light, place, and quiet detail.",
-  email: "hello@andreashirey.com",
+  email: "andrea@andreashirey.com",
   address: {
     street: "",
     city: "",

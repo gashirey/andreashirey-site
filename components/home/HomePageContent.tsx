@@ -1,15 +1,11 @@
-import Link from "next/link";
 import {
   HeroSlider,
   HOME_HERO_FADE_MS,
   type HeroSlide,
 } from "@/components/HeroSlider";
-import { Section } from "@/components/Section";
-import { HomeContactCta } from "@/components/home/HomeContactCta";
 import {
   heroHome as heroHomeDefaults,
   heroHomeSlide,
-  homeAbout as homeAboutDefaults,
 } from "@/lib/content";
 import type { HeroFrame } from "@/lib/content";
 import { HOME_HERO_SLIDE_INTERVAL_DEFAULT_MS } from "@/lib/site-cms/hero-slider";
@@ -44,6 +40,7 @@ type HomePageContentProps = {
   copy?: ResolvedSiteCopy;
 };
 
+/** Homepage body: hero slideshow only (site header/footer come from the layout). */
 export function HomePageContent({
   heroFrame = "bleed",
   heroLayout = "immersive",
@@ -57,54 +54,20 @@ export function HomePageContent({
     subtitle: heroHomeDefaults.subtitle,
     primaryCta: heroHomeDefaults.primaryCta,
   };
-  const homeAbout = copy?.homeAbout ?? [...homeAboutDefaults];
-  const homeCta = copy?.homeCta;
   const multiHero = heroSlides.length > 1;
 
   return (
-    <>
-      <HeroSlider
-        slides={heroSlides}
-        frame={heroFrame}
-        layout={heroLayout}
-        title={heroHome.title}
-        subtitle={heroHome.subtitle}
-        primaryCta={heroHome.primaryCta}
-        secondaryCta={heroHomeDefaults.secondaryCta}
-        showSlideControls={multiHero}
-        slideIntervalMs={heroSlideIntervalMs}
-        fadeMs={HOME_HERO_FADE_MS}
-      />
-
-      <Section density="compact">
-        <div className="max-w-lg space-y-4">
-          {homeAbout.map((paragraph) => (
-            <p
-              key={paragraph.slice(0, 24)}
-              className="type-page-body leading-relaxed text-stone"
-            >
-              {paragraph}
-            </p>
-          ))}
-          <p className="pt-2 text-sm">
-            <Link
-              href="/about"
-              className="text-bark underline underline-offset-4 decoration-parchment hover:text-salmon-dark"
-            >
-              About
-            </Link>
-            {" · "}
-            <Link
-              href="/sessions"
-              className="text-bark underline underline-offset-4 decoration-parchment hover:text-salmon-dark"
-            >
-              Sessions
-            </Link>
-          </p>
-        </div>
-      </Section>
-
-      <HomeContactCta homeCta={homeCta} />
-    </>
+    <HeroSlider
+      slides={heroSlides}
+      frame={heroFrame}
+      layout={heroLayout}
+      title={heroHome.title}
+      subtitle={heroHome.subtitle}
+      primaryCta={heroHome.primaryCta}
+      secondaryCta={heroHomeDefaults.secondaryCta}
+      showSlideControls={multiHero}
+      slideIntervalMs={heroSlideIntervalMs}
+      fadeMs={HOME_HERO_FADE_MS}
+    />
   );
 }
