@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import {
   HeroSlider,
@@ -6,17 +5,14 @@ import {
   type HeroSlide,
 } from "@/components/HeroSlider";
 import { Section } from "@/components/Section";
-import { GalleryGrid } from "@/components/GalleryGrid";
 import { HomeContactCta } from "@/components/home/HomeContactCta";
 import {
-  galleryImages,
   heroHome as heroHomeDefaults,
   heroHomeSlide,
   homeAbout as homeAboutDefaults,
 } from "@/lib/content";
 import type { HeroFrame } from "@/lib/content";
 import { HOME_HERO_SLIDE_INTERVAL_DEFAULT_MS } from "@/lib/site-cms/hero-slider";
-import { focalObjectPosition } from "@/lib/site-cms/focal";
 import type { ResolvedSiteCopy } from "@/lib/site-cms/types";
 import type { SiteMediaSlotKey, SiteMediaView } from "@/lib/site-media/slots";
 import type { HeroLayout } from "@/lib/snapshots/types";
@@ -39,9 +35,6 @@ const STATIC_SITE_MEDIA: SiteMediaMap = {
   },
 };
 
-const selectedWorkImages = galleryImages.slice(0, 2);
-const featuredGalleryImages = galleryImages.slice(2, 5);
-
 type HomePageContentProps = {
   heroFrame?: HeroFrame;
   heroLayout?: HeroLayout;
@@ -54,8 +47,8 @@ type HomePageContentProps = {
 export function HomePageContent({
   heroFrame = "bleed",
   heroLayout = "immersive",
-  siteMedia = STATIC_SITE_MEDIA,
-  heroSlides = [{ src: STATIC_SITE_MEDIA.hero.imageUrl, alt: STATIC_SITE_MEDIA.hero.alt }],
+  siteMedia: _siteMedia = STATIC_SITE_MEDIA,
+  heroSlides = [],
   heroSlideIntervalMs = HOME_HERO_SLIDE_INTERVAL_DEFAULT_MS,
   copy,
 }: HomePageContentProps) {
@@ -65,10 +58,6 @@ export function HomePageContent({
     primaryCta: heroHomeDefaults.primaryCta,
   };
   const homeAbout = copy?.homeAbout ?? [...homeAboutDefaults];
-  const homeSections = copy?.homeSections ?? {
-    selectedWork: { title: "Selected work", description: "" },
-    featuredGallery: { title: "From the archive", description: "" },
-  };
   const homeCta = copy?.homeCta;
   const multiHero = heroSlides.length > 1;
 
@@ -87,27 +76,7 @@ export function HomePageContent({
         fadeMs={HOME_HERO_FADE_MS}
       />
 
-      <Section
-        density="compact"
-        title={homeSections.selectedWork.title}
-        description={homeSections.selectedWork.description || undefined}
-      >
-        <GalleryGrid
-          images={selectedWorkImages}
-          density="compact"
-          priorityCount={2}
-        />
-        <p className="mt-8 text-sm">
-          <Link
-            href="/gallery"
-            className="text-bark underline underline-offset-4 decoration-parchment hover:text-salmon-dark"
-          >
-            View all work
-          </Link>
-        </p>
-      </Section>
-
-      <Section density="compact" className="!pt-0">
+      <Section density="compact">
         <div className="max-w-lg space-y-4">
           {homeAbout.map((paragraph) => (
             <p
@@ -133,32 +102,6 @@ export function HomePageContent({
             </Link>
           </p>
         </div>
-      </Section>
-
-      <section className="relative aspect-[5/4] w-full bg-parchment sm:aspect-[16/10]">
-        <Image
-          src={siteMedia.home_feature.imageUrl}
-          alt={siteMedia.home_feature.alt}
-          fill
-          className="object-cover"
-          style={{
-            objectPosition: focalObjectPosition(
-              siteMedia.home_feature.focalX,
-              siteMedia.home_feature.focalY,
-            ),
-          }}
-          sizes="100vw"
-          unoptimized={siteMedia.home_feature.imageUrl.startsWith("http")}
-        />
-      </section>
-
-      <Section
-        density="compact"
-        title={homeSections.featuredGallery.title}
-        description={homeSections.featuredGallery.description || undefined}
-        className="!pt-10"
-      >
-        <GalleryGrid images={featuredGalleryImages} density="compact" />
       </Section>
 
       <HomeContactCta homeCta={homeCta} />
