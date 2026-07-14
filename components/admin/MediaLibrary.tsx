@@ -4,7 +4,6 @@ import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
   SITE_MEDIA_SLOT_LABELS,
-  SITE_MEDIA_SLOTS,
   type SiteMediaSlotKey,
 } from "@/lib/site-media/slots";
 import {
