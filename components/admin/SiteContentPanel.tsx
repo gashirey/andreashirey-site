@@ -13,6 +13,8 @@ export function SiteContentPanel() {
     heroSubtitle: "",
     heroCtaLabel: "",
     heroCtaHref: "",
+    aboutEyebrow: "",
+    aboutTitle: "",
     aboutParagraphs: "",
     selectedWorkTitle: "",
     selectedWorkDescription: "",
@@ -39,7 +41,9 @@ export function SiteContentPanel() {
       heroSubtitle: merged.heroHome.subtitle,
       heroCtaLabel: merged.heroHome.primaryCta.label,
       heroCtaHref: merged.heroHome.primaryCta.href,
-      aboutParagraphs: merged.homeAbout.join("\n\n"),
+      aboutEyebrow: merged.aboutPage.eyebrow,
+      aboutTitle: merged.aboutPage.title,
+      aboutParagraphs: merged.aboutPage.paragraphs.join("\n\n"),
       selectedWorkTitle: merged.homeSections.selectedWork.title,
       selectedWorkDescription: merged.homeSections.selectedWork.description,
       featuredGalleryTitle: merged.homeSections.featuredGallery.title,
@@ -86,6 +90,16 @@ export function SiteContentPanel() {
       homeAbout: draft.aboutParagraphs.trim()
         ? draft.aboutParagraphs.split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean)
         : undefined,
+      aboutPage: {
+        eyebrow: draft.aboutEyebrow.trim() || undefined,
+        title: draft.aboutTitle.trim() || undefined,
+        paragraphs: draft.aboutParagraphs.trim()
+          ? draft.aboutParagraphs
+              .split(/\n\s*\n/)
+              .map((p) => p.trim())
+              .filter(Boolean)
+          : undefined,
+      },
       homeSections: {
         selectedWork: {
           title: draft.selectedWorkTitle.trim() || undefined,
@@ -226,18 +240,55 @@ export function SiteContentPanel() {
       </section>
 
       <section className="border border-parchment bg-white p-5">
-        <h2 className="font-serif text-lg text-bark">Homepage & about copy</h2>
+        <h2 className="font-serif text-lg text-bark">About page</h2>
+        <p className="mt-1 text-sm text-stone">
+          Copy for{" "}
+          <a href="/about" className="underline hover:text-bark">
+            /about
+          </a>
+          . Manage the photo under Images & framing or Media → Currently on the
+          site.
+        </p>
+        <div className="mt-4 grid gap-4 max-w-xl">
+          <label className="text-sm">
+            Eyebrow
+            <input
+              className="input mt-1 w-full"
+              value={draft.aboutEyebrow}
+              onChange={(e) =>
+                setDraft({ ...draft, aboutEyebrow: e.target.value })
+              }
+            />
+          </label>
+          <label className="text-sm">
+            Title
+            <input
+              className="input mt-1 w-full"
+              value={draft.aboutTitle}
+              onChange={(e) =>
+                setDraft({ ...draft, aboutTitle: e.target.value })
+              }
+            />
+          </label>
+        </div>
         <label className="mt-4 block text-sm">
-          About paragraphs (blank line between paragraphs)
+          Paragraphs (blank line between paragraphs)
           <textarea
             className="input mt-1 w-full max-w-2xl"
-            rows={6}
+            rows={8}
             value={draft.aboutParagraphs}
             onChange={(e) =>
               setDraft({ ...draft, aboutParagraphs: e.target.value })
             }
           />
         </label>
+      </section>
+
+      <section className="border border-parchment bg-white p-5">
+        <h2 className="font-serif text-lg text-bark">Legacy homepage sections</h2>
+        <p className="mt-1 text-xs text-stone">
+          Unused on the current homepage; kept for older content overrides.
+        </p>
         <div className="mt-4 grid gap-4 max-w-xl">
           <label className="text-sm">
             Selected work section title

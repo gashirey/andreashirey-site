@@ -481,13 +481,7 @@ export function MediaLibrary() {
                     <option value="">Choose…</option>
                     <optgroup label="Site">
                       <option value="hero_slide">Add to hero slideshow</option>
-                      {SITE_MEDIA_SLOTS.map((key) => (
-                        <option key={key} value={`slot:${key}`}>
-                          {key === "hero"
-                            ? "Homepage hero (single fallback)"
-                            : SITE_MEDIA_SLOT_LABELS[key]}
-                        </option>
-                      ))}
+                      <option value="slot:about">Set as About page photo</option>
                     </optgroup>
                     <optgroup label="Products">
                       {products.map((p) => (

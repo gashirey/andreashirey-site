@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
 import { FocalPointControl } from "@/components/admin/FocalPointControl";
 import { compressImageBeforeUpload } from "@/lib/admin/client-compress-image";
@@ -8,7 +7,6 @@ import { readAdminUploadError } from "@/lib/admin/upload-response";
 import { clampFocal } from "@/lib/site-cms/focal";
 import {
   SITE_MEDIA_SLOT_LABELS,
-  SITE_MEDIA_SLOTS,
   type SiteMediaSlot,
   type SiteMediaSlotKey,
 } from "@/lib/site-media/slots";
@@ -170,25 +168,46 @@ export function SiteMediaEditor() {
     await load();
   }
 
+  async function clearSlot(slotKey: SiteMediaSlotKey) {
+    if (
+      !window.confirm(
+        `Remove the current image from “${SITE_MEDIA_SLOT_LABELS[slotKey]}”?`,
+      )
+    ) {
+      return;
+    }
+    setMessage("Removing…");
+    const res = await fetch(
+      `/api/admin/site-media?slot_key=${encodeURIComponent(slotKey)}`,
+      { method: "DELETE" },
+    );
+    if (!res.ok) {
+      setMessage("Could not remove image.");
+      return;
+    }
+    setMessage(`Removed ${SITE_MEDIA_SLOT_LABELS[slotKey]}.`);
+    await load();
+  }
+
   const byKey = new Map(slots.map((s) => [s.slot_key, s]));
+  const editableSlots: SiteMediaSlotKey[] = ["about"];
 
   return (
     <div className="space-y-10">
       {message && <p className="text-sm text-bark">{message}</p>}
 
       <p className="text-sm text-stone max-w-xl">
-        Upload replacements here, then adjust framing so crops look right in each
-        layout. The homepage hero is the{" "}
+        Manage the About page photo here (or clear it from the media library
+        overview). Homepage hero images are the{" "}
         <a href="/admin/media" className="underline hover:text-bark">
           media library
         </a>{" "}
-        slideshow (not the legacy hero slot below). Clear all slides there when
-        you want a clean start.
+        slideshow.
       </p>
 
-      {SITE_MEDIA_SLOTS.map((slotKey) => {
+      {editableSlots.map((slotKey) => {
         const slot = byKey.get(slotKey);
-        const imageUrl = slot?.image_url ?? "";
+        const imageUrl = slot?.image_url?.trim() ?? "";
         const alt = slot?.alt_text ?? "";
         const focal = focalDraft[slotKey] ?? { x: 50, y: 50 };
 
@@ -197,13 +216,28 @@ export function SiteMediaEditor() {
             key={slotKey}
             className="border border-parchment bg-white p-5"
           >
-            <h2 className="font-serif text-lg text-bark">
-              {SITE_MEDIA_SLOT_LABELS[slotKey]}
-            </h2>
-            <p className="mt-1 text-xs text-stone">Slot: {slotKey}</p>
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <h2 className="font-serif text-lg text-bark">
+                  {SITE_MEDIA_SLOT_LABELS[slotKey]}
+                </h2>
+                <p className="mt-1 text-xs text-stone">Shown on /about</p>
+              </div>
+              {imageUrl ? (
+                <button
+                  type="button"
+                  onClick={() => void clearSlot(slotKey)}
+                  className="btn border-parchment bg-white text-bark hover:border-bark"
+                >
+                  Remove photo
+                </button>
+              ) : null}
+            </div>
 
             <label className="mt-4 block text-sm">
-              <span className="font-medium text-bark">Replace image</span>
+              <span className="font-medium text-bark">
+                {imageUrl ? "Replace image" : "Upload image"}
+              </span>
               <input
                 type="file"
                 accept="image/jpeg,image/png,image/webp,image/gif"
@@ -248,7 +282,12 @@ export function SiteMediaEditor() {
                 }
                 onSave={() => void saveSlotFocal(slotKey)}
               />
-            ) : null}
+            ) : (
+              <p className="mt-4 text-sm text-stone">
+                No photo right now — About shows text only until you upload or
+                assign one from the media library.
+              </p>
+            )}
           </section>
         );
       })}

@@ -29,6 +29,11 @@ export type SiteContentOverrides = {
     primaryCtaHref?: string;
   };
   homeAbout?: string[];
+  aboutPage?: {
+    eyebrow?: string;
+    title?: string;
+    paragraphs?: string[];
+  };
   homeSections?: {
     selectedWork?: {
       title?: string;
@@ -122,6 +127,11 @@ export type ResolvedSiteCopy = {
     primaryCta: { label: string; href: string };
   };
   homeAbout: string[];
+  aboutPage: {
+    eyebrow: string;
+    title: string;
+    paragraphs: string[];
+  };
   homeSections: {
     selectedWork: { title: string; description: string };
     featuredGallery: { title: string; description: string };

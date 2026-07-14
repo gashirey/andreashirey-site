@@ -1,4 +1,5 @@
 import {
+  aboutPage,
   announcement,
   heroHome,
   homeAbout,
@@ -17,6 +18,12 @@ import type {
 export function mergeSiteCopy(
   overrides: SiteContentOverrides = {},
 ): ResolvedSiteCopy {
+  const aboutParagraphs = overrides.aboutPage?.paragraphs?.length
+    ? overrides.aboutPage.paragraphs
+    : overrides.homeAbout?.length
+      ? overrides.homeAbout
+      : [...aboutPage.paragraphs];
+
   return {
     site: {
       tagline: overrides.site?.tagline ?? site.tagline,
@@ -34,6 +41,11 @@ export function mergeSiteCopy(
     homeAbout: overrides.homeAbout?.length
       ? overrides.homeAbout
       : [...homeAbout],
+    aboutPage: {
+      eyebrow: overrides.aboutPage?.eyebrow ?? aboutPage.eyebrow,
+      title: overrides.aboutPage?.title ?? aboutPage.title,
+      paragraphs: aboutParagraphs,
+    },
     homeSections: {
       selectedWork: {
         title:

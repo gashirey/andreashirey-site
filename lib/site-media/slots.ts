@@ -4,8 +4,8 @@ export const SITE_MEDIA_SLOTS = ["hero", "home_feature", "about"] as const;
 export type SiteMediaSlotKey = (typeof SITE_MEDIA_SLOTS)[number];
 
 export const SITE_MEDIA_SLOT_LABELS: Record<SiteMediaSlotKey, string> = {
-  hero: "Homepage hero (unused — use slideshow)",
-  home_feature: "Homepage full-width photo",
+  hero: "Legacy homepage hero (unused — use slideshow)",
+  home_feature: "Homepage full-width photo (unused)",
   about: "About page photo",
 };
 
@@ -19,6 +19,7 @@ export type SiteMediaSlot = {
 };
 
 export type SiteMediaView = {
+  /** Empty string when no image is assigned (About can render without a photo). */
   imageUrl: string;
   alt: string;
   focalX: number;

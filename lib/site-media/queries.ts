@@ -9,7 +9,8 @@ import {
   type SiteMediaView,
 } from "./slots";
 
-const FALLBACKS: Record<
+/** Local-only placeholders when Supabase is not configured. */
+const LOCAL_FALLBACKS: Record<
   SiteMediaSlotKey,
   { image_url: string; alt_text: string }
 > = {
@@ -18,35 +19,49 @@ const FALLBACKS: Record<
     alt_text: site.heroImageAlt,
   },
   home_feature: {
-    image_url: "/images/bb.jpg",
-    alt_text: "Seasonal cut flowers from Grey Gables Farm",
+    image_url: "",
+    alt_text: "",
   },
   about: {
-    image_url: "/images/garden_row.jpg",
-    alt_text: "Cutting garden at Grey Gables Farm",
+    image_url: "",
+    alt_text: "",
   },
 };
+
+function emptySlot(key: SiteMediaSlotKey): SiteMediaView {
+  return {
+    imageUrl: "",
+    alt: "",
+    focalX: 50,
+    focalY: 50,
+  };
+}
 
 export async function getSiteMediaSlots(): Promise<
   Record<SiteMediaSlotKey, SiteMediaView>
 > {
   const out = {} as Record<SiteMediaSlotKey, SiteMediaView>;
 
-  for (const key of SITE_MEDIA_SLOTS) {
-    out[key] = {
-      imageUrl: FALLBACKS[key].image_url,
-      alt: FALLBACKS[key].alt_text,
-      focalX: 50,
-      focalY: 50,
-    };
+  if (!isSupabaseConfigured()) {
+    for (const key of SITE_MEDIA_SLOTS) {
+      out[key] = {
+        imageUrl: LOCAL_FALLBACKS[key].image_url,
+        alt: LOCAL_FALLBACKS[key].alt_text,
+        focalX: 50,
+        focalY: 50,
+      };
+    }
+    return out;
   }
 
-  if (!isSupabaseConfigured()) return out;
+  for (const key of SITE_MEDIA_SLOTS) {
+    out[key] = emptySlot(key);
+  }
 
   const supabase = createServiceClient();
   const { data, error } = await supabase
     .from("site_media_slots")
-    .select("slot_key, image_url, alt_text");
+    .select("slot_key, image_url, alt_text, focal_x, focal_y");
 
   if (error) {
     console.error("[getSiteMediaSlots]", error);
@@ -56,10 +71,11 @@ export async function getSiteMediaSlots(): Promise<
   for (const row of (data ?? []) as SiteMediaSlot[]) {
     const key = row.slot_key as SiteMediaSlotKey;
     if (!SITE_MEDIA_SLOTS.includes(key)) continue;
-    if (!row.image_url) continue;
+    const url = row.image_url?.trim() ?? "";
+    if (!url) continue;
     out[key] = {
-      imageUrl: row.image_url,
-      alt: row.alt_text ?? FALLBACKS[key].alt_text,
+      imageUrl: url,
+      alt: row.alt_text?.trim() || site.brand,
       focalX: clampFocal(row.focal_x),
       focalY: clampFocal(row.focal_y),
     };
@@ -72,8 +88,8 @@ export async function getSiteMediaSlotsRaw(): Promise<SiteMediaSlot[]> {
   if (!isSupabaseConfigured()) {
     return SITE_MEDIA_SLOTS.map((slot_key) => ({
       slot_key,
-      image_url: FALLBACKS[slot_key].image_url,
-      alt_text: FALLBACKS[slot_key].alt_text,
+      image_url: LOCAL_FALLBACKS[slot_key].image_url,
+      alt_text: LOCAL_FALLBACKS[slot_key].alt_text,
       focal_x: 50,
       focal_y: 50,
       updated_at: new Date().toISOString(),
@@ -90,8 +106,8 @@ export async function getSiteMediaSlotsRaw(): Promise<SiteMediaSlot[]> {
     console.error("[getSiteMediaSlotsRaw]", error);
     return SITE_MEDIA_SLOTS.map((slot_key) => ({
       slot_key,
-      image_url: FALLBACKS[slot_key].image_url,
-      alt_text: FALLBACKS[slot_key].alt_text,
+      image_url: "",
+      alt_text: null,
       focal_x: 50,
       focal_y: 50,
       updated_at: new Date().toISOString(),
@@ -104,15 +120,16 @@ export async function getSiteMediaSlotsRaw(): Promise<SiteMediaSlot[]> {
 
   return SITE_MEDIA_SLOTS.map((slot_key) => {
     const row = byKey.get(slot_key);
-    return (
-      row ?? {
+    if (!row) {
+      return {
         slot_key,
-        image_url: FALLBACKS[slot_key].image_url,
-        alt_text: FALLBACKS[slot_key].alt_text,
+        image_url: "",
+        alt_text: null,
         focal_x: 50,
         focal_y: 50,
         updated_at: new Date().toISOString(),
-      }
-    );
+      };
+    }
+    return row;
   });
 }

@@ -73,3 +73,30 @@ export async function PATCH(request: Request) {
 
   return NextResponse.json({ slot: data });
 }
+
+/** Clear a placement image so the public page no longer shows that photo. */
+export async function DELETE(request: Request) {
+  const denied = await requireAdmin(request);
+  if (denied) return denied;
+
+  const { searchParams } = new URL(request.url);
+  const slotKey = searchParams.get("slot_key") as SiteMediaSlotKey | null;
+  if (!slotKey || !SITE_MEDIA_SLOTS.includes(slotKey)) {
+    return NextResponse.json({ error: "Invalid slot_key." }, { status: 400 });
+  }
+
+  const supabase = createServiceClient();
+  const { error } = await supabase
+    .from("site_media_slots")
+    .delete()
+    .eq("slot_key", slotKey);
+
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 400 });
+  }
+
+  revalidatePath("/");
+  revalidatePath("/about");
+
+  return NextResponse.json({ ok: true, slot_key: slotKey });
+}
