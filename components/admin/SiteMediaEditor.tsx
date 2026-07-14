@@ -178,11 +178,12 @@ export function SiteMediaEditor() {
 
       <p className="text-sm text-stone max-w-xl">
         Upload replacements here, then adjust framing so crops look right in each
-        layout. Hero slideshow images are assigned from the{" "}
+        layout. The homepage hero is the{" "}
         <a href="/admin/media" className="underline hover:text-bark">
           media library
-        </a>
-        .
+        </a>{" "}
+        slideshow (not the legacy hero slot below). Clear all slides there when
+        you want a clean start.
       </p>
 
       {SITE_MEDIA_SLOTS.map((slotKey) => {

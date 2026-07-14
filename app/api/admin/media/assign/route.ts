@@ -103,7 +103,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       message:
-        "Added to hero slideshow. Add one more image for a slow crossfade on the homepage.",
+        "Added to hero slideshow. Add at least two images for a crossfade on the homepage.",
       slide,
     });
   }

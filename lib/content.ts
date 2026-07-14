@@ -29,11 +29,11 @@ export const site = {
 
 export const heroHome = {
   title: "Andrea Shirey",
-  subtitle: "Editorial photography.",
-  primaryCta: { label: "View work", href: "/gallery" },
+  subtitle: "Editorial photography for considered sessions.",
+  primaryCta: { label: "Inquire About a Session", href: "/inquire" },
   secondaryCta: {
-    label: "Inquire About a Session",
-    href: "/inquire",
+    label: "View work",
+    href: "/gallery",
   },
 } as const;
 
@@ -55,8 +55,18 @@ export const heroSlides = [
 ] as const;
 
 export const homeAbout = [
-  "Photographs made slowly — attention to light, distance, and the ordinary.",
+  "Photographs made slowly — attention to light, distance, and the ordinary. Andrea works with a limited number of clients each season so every session can be planned with care.",
 ] as const;
+
+export const aboutPage = {
+  eyebrow: "Virginia",
+  title: "About",
+  paragraphs: [
+    "Andrea Shirey makes editorial photographs with patience for light, place, and the quiet details that give a moment its weight.",
+    "Her work favors observation over staging — natural light, unhurried pacing, and images that feel true long after the day has passed. Sessions are intentionally limited so each client experience can be personal and fully considered.",
+    "Based in Virginia, Andrea photographs weddings, portraits, families, and branding work for clients who value craft, atmosphere, and a calm creative process.",
+  ],
+} as const;
 
 export const homeSections = {
   selectedWork: {
@@ -70,7 +80,7 @@ export const homeSections = {
 } as const;
 
 export const homeCta = {
-  note: "Andrea accepts a limited number of sessions each season.",
+  note: "Andrea accepts a limited number of sessions each season. Begin with an inquiry to see if the timing and vision align.",
   contact: "Inquire About a Session",
 } as const;
 
@@ -109,6 +119,7 @@ export const social = {
 
 export const nav = [
   { label: "Work", href: "/gallery" },
+  { label: "Sessions", href: "/sessions" },
   { label: "About", href: "/about" },
   { label: "Inquire", href: "/inquire" },
 ] as const;

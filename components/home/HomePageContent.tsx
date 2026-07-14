@@ -8,7 +8,12 @@ import {
 import { Section } from "@/components/Section";
 import { GalleryGrid } from "@/components/GalleryGrid";
 import { HomeContactCta } from "@/components/home/HomeContactCta";
-import { galleryImages, heroHome as heroHomeDefaults, heroHomeSlide } from "@/lib/content";
+import {
+  galleryImages,
+  heroHome as heroHomeDefaults,
+  heroHomeSlide,
+  homeAbout as homeAboutDefaults,
+} from "@/lib/content";
 import type { HeroFrame } from "@/lib/content";
 import { HOME_HERO_SLIDE_INTERVAL_DEFAULT_MS } from "@/lib/site-cms/hero-slider";
 import { focalObjectPosition } from "@/lib/site-cms/focal";
@@ -59,9 +64,7 @@ export function HomePageContent({
     subtitle: heroHomeDefaults.subtitle,
     primaryCta: heroHomeDefaults.primaryCta,
   };
-  const homeAbout = copy?.homeAbout ?? [
-    "Photographs made slowly — attention to light, distance, and the ordinary.",
-  ];
+  const homeAbout = copy?.homeAbout ?? [...homeAboutDefaults];
   const homeSections = copy?.homeSections ?? {
     selectedWork: { title: "Selected work", description: "" },
     featuredGallery: { title: "From the archive", description: "" },
@@ -120,6 +123,13 @@ export function HomePageContent({
               className="text-bark underline underline-offset-4 decoration-parchment hover:text-salmon-dark"
             >
               About
+            </Link>
+            {" · "}
+            <Link
+              href="/sessions"
+              className="text-bark underline underline-offset-4 decoration-parchment hover:text-salmon-dark"
+            >
+              Sessions
             </Link>
           </p>
         </div>

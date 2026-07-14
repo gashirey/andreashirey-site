@@ -58,3 +58,26 @@ export async function POST(request: Request) {
 
   return NextResponse.json({ slide: data });
 }
+
+export async function DELETE(request: Request) {
+  const denied = await requireAdmin(request);
+  if (denied) return denied;
+
+  const supabase = createServiceClient();
+  const { error } = await supabase
+    .from("site_hero_slides")
+    .delete()
+    .neq("id", "00000000-0000-0000-0000-000000000000");
+
+  if (error) {
+    const hint =
+      error.code === "PGRST205"
+        ? " Run migration 010_site_hero_slides.sql in Supabase."
+        : "";
+    return NextResponse.json({ error: `${error.message}${hint}` }, { status: 400 });
+  }
+
+  revalidatePath("/");
+
+  return NextResponse.json({ ok: true });
+}

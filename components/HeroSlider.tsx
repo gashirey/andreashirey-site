@@ -58,6 +58,7 @@ export function HeroSlider({
   }, []);
 
   const advance = useCallback(() => {
+    if (slides.length <= 1) return;
     setIndex((i) => (i + 1) % slides.length);
   }, [slides.length]);
 
@@ -67,15 +68,23 @@ export function HeroSlider({
     return () => window.clearInterval(id);
   }, [advance, reducedMotion, slides.length, slideIntervalMs]);
 
+  useEffect(() => {
+    if (index >= slides.length) setIndex(0);
+  }, [index, slides.length]);
+
   const inset = frame === "inset";
   const immersive = layout === "immersive";
   const minHeight = immersive
     ? "min-h-[100svh]"
     : "min-h-[72vh] md:min-h-[78vh]";
+  const hasSlides = slides.length > 0;
+  const textOnPhoto = hasSlides;
 
   const imageRegion = (
     <div
-      className={`relative ${minHeight} ${inset ? "overflow-hidden border border-site-border" : "overflow-hidden"}`}
+      className={`relative ${minHeight} ${
+        hasSlides ? "bg-bark" : "bg-cream"
+      } ${inset ? "overflow-hidden border border-site-border" : "overflow-hidden"}`}
     >
       {slides.map((slide, i) => (
         <div
@@ -98,15 +107,23 @@ export function HeroSlider({
           />
         </div>
       ))}
-      <div className="hero-scrim" aria-hidden />
+      {hasSlides ? <div className="hero-scrim" aria-hidden /> : null}
       <div
         className={`relative flex ${minHeight} flex-col justify-end px-6 pb-12 pt-8 lg:px-10 ${immersive ? "md:pb-20" : "lg:pb-16"}`}
       >
-        <h1 className="type-hero-title max-w-2xl leading-[1.1]">
+        <h1
+          className={`type-hero-title max-w-2xl leading-[1.1] ${
+            textOnPhoto ? "" : "!text-bark"
+          }`}
+        >
           {title}
         </h1>
         {subtitle && (
-          <p className="type-hero-subtitle mt-4 max-w-md md:text-lg">
+          <p
+            className={`type-hero-subtitle mt-4 max-w-md md:text-lg ${
+              textOnPhoto ? "" : "!text-stone"
+            }`}
+          >
             {subtitle}
           </p>
         )}
@@ -121,7 +138,11 @@ export function HeroSlider({
               <Button
                 href={secondaryCta.href}
                 variant="outline"
-                className="border-white/50 text-white hover:border-white hover:bg-white/10 hover:text-white"
+                className={
+                  textOnPhoto
+                    ? "border-white/50 text-white hover:border-white hover:bg-white/10 hover:text-white"
+                    : undefined
+                }
               >
                 {secondaryCta.label}
               </Button>
@@ -138,7 +159,7 @@ export function HeroSlider({
         >
           {slides.map((slide, i) => (
             <button
-              key={slide.src}
+              key={slide.id ?? slide.src}
               type="button"
               role="tab"
               aria-selected={i === index}

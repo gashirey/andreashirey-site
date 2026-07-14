@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Suspense } from "react";
 import { Section } from "@/components/Section";
 import { InquiryForm } from "@/components/inquiry/InquiryForm";
@@ -15,13 +16,21 @@ export const metadata: Metadata = pageMetadata({
 export default function InquirePage() {
   return (
     <Section density="compact" className="pt-20 md:pt-28">
-      <header className="mb-8 max-w-md md:mb-10">
+      <header className="mb-8 max-w-lg md:mb-10">
         <p className="type-eyebrow tracking-wide">Select sessions</p>
         <h1 className="type-page-title mt-2 leading-tight md:text-4xl">
           {inquiryCopy.pageTitle}
         </h1>
         <p className="type-page-body mt-4 text-stone leading-relaxed">
           Limited availability · {site.locationRegion}
+        </p>
+        <p className="mt-4 text-sm">
+          <Link
+            href="/sessions"
+            className="text-bark underline underline-offset-4 decoration-parchment hover:text-salmon-dark"
+          >
+            Read about the experience
+          </Link>
         </p>
       </header>
 

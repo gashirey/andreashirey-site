@@ -31,14 +31,23 @@ export default async function GalleryPage() {
         <div className="mt-16 border-t border-parchment pt-12 md:mt-20">
           <p className="type-page-body max-w-md text-stone leading-relaxed">
             Interested in a session? Andrea accepts a limited number of
-            projects each season.
+            projects each season — each one planned with care from inquiry
+            through private gallery delivery.
           </p>
-          <Link
-            href={inquiryCtas.primary.href}
-            className="btn mt-6 inline-flex border-salmon-dark bg-salmon-dark text-white hover:bg-salmon"
-          >
-            {inquiryCtas.primary.label}
-          </Link>
+          <div className="mt-6 flex flex-wrap items-center gap-4">
+            <Link
+              href={inquiryCtas.primary.href}
+              className="btn inline-flex border-salmon-dark bg-salmon-dark text-white hover:bg-salmon"
+            >
+              {inquiryCtas.primary.label}
+            </Link>
+            <Link
+              href="/sessions"
+              className="text-sm text-bark underline underline-offset-4 decoration-parchment hover:text-salmon-dark"
+            >
+              How sessions work
+            </Link>
+          </div>
         </div>
       </div>
     </section>

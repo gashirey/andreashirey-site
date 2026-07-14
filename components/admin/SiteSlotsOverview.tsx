@@ -60,6 +60,7 @@ export function SiteSlotsOverview({ refreshKey = 0 }: SiteSlotsOverviewProps) {
   const [slots, setSlots] = useState<SiteMediaSlot[]>([]);
   const [heroSlides, setHeroSlides] = useState<HeroSlideRow[]>([]);
   const [loadError, setLoadError] = useState("");
+  const [clearingHero, setClearingHero] = useState(false);
 
   const load = useCallback(async () => {
     const [slotsRes, slidesRes] = await Promise.all([
@@ -88,6 +89,21 @@ export function SiteSlotsOverview({ refreshKey = 0 }: SiteSlotsOverviewProps) {
 
   async function removeHeroSlide(id: string) {
     const res = await fetch(`/api/admin/hero-slides/${id}`, { method: "DELETE" });
+    if (res.ok) await load();
+  }
+
+  async function clearAllHeroSlides() {
+    if (
+      !window.confirm(
+        "Remove every image from the homepage hero slideshow? The homepage will show text only until you add new slides.",
+      )
+    ) {
+      return;
+    }
+
+    setClearingHero(true);
+    const res = await fetch("/api/admin/hero-slides", { method: "DELETE" });
+    setClearingHero(false);
     if (res.ok) await load();
   }
 
@@ -120,14 +136,29 @@ export function SiteSlotsOverview({ refreshKey = 0 }: SiteSlotsOverviewProps) {
           </div>
 
           <div className="mt-6 border-t border-parchment pt-5">
-            <p className="text-xs font-medium text-bark">
-              Hero slideshow ({heroSlides.length} image
-              {heroSlides.length === 1 ? "" : "s"})
-            </p>
-            <p className="mt-1 text-xs text-stone">
-              Add 2+ via &ldquo;Add to hero slideshow&rdquo; for a slow crossfade on
-              the homepage. With 0–1 slides, the single homepage hero above is used.
-            </p>
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <p className="text-xs font-medium text-bark">
+                  Hero slideshow ({heroSlides.length} image
+                  {heroSlides.length === 1 ? "" : "s"})
+                </p>
+                <p className="mt-1 text-xs text-stone max-w-md">
+                  This is the homepage hero. Add images via &ldquo;Add to hero
+                  slideshow&rdquo; below. Two or more slides crossfade; zero
+                  slides shows a text-only hero.
+                </p>
+              </div>
+              {heroSlides.length > 0 ? (
+                <button
+                  type="button"
+                  disabled={clearingHero}
+                  onClick={() => void clearAllHeroSlides()}
+                  className="btn shrink-0 border-parchment bg-white text-bark hover:border-bark disabled:opacity-50"
+                >
+                  {clearingHero ? "Clearing…" : "Clear all hero images"}
+                </button>
+              ) : null}
+            </div>
             {heroSlides.length > 0 ? (
               <ul className="mt-3 flex flex-wrap gap-2">
                 {heroSlides.map((slide) => (

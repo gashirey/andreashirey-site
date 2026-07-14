@@ -46,18 +46,19 @@ export async function getHeroSlides(): Promise<HeroSlideView[]> {
   return rows.map((row) => ({
     id: row.id,
     src: row.image_url,
-    alt: row.alt_text ?? "Grey Gables Farm",
+    alt: row.alt_text ?? site.brand,
     focalX: clampFocal(row.focal_x),
     focalY: clampFocal(row.focal_y),
   }));
 }
 
-/** Slides for homepage: carousel if 2+, else fallback single hero slot. */
+/**
+ * Homepage hero is driven only by `site_hero_slides`.
+ * Empty list = text-only hero (no leftover single-slot / static image).
+ * When Supabase is not configured, `getHeroSlides` still returns the local fallback.
+ */
 export async function resolveHomeHeroSlides(
-  fallbackHero: HeroSlideView,
+  _fallbackHero?: HeroSlideView,
 ): Promise<HeroSlideView[]> {
-  const slides = await getHeroSlides();
-  if (slides.length >= 2) return slides;
-  if (slides.length === 1) return slides;
-  return [fallbackHero];
+  return getHeroSlides();
 }

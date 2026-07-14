@@ -2,34 +2,32 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { Section } from "@/components/Section";
-import { site } from "@/lib/content";
+import { aboutPage, site } from "@/lib/content";
 import { focalObjectPosition } from "@/lib/site-cms/focal";
-import { getPublicSiteConfig } from "@/lib/site-cms/queries";
 import { getSiteMediaSlots } from "@/lib/site-media/queries";
 import { inquiryCtas } from "@/lib/inquiry/copy";
 import { pageMetadata } from "@/lib/metadata";
 
 export const metadata: Metadata = pageMetadata({
   title: "About",
-  description: `About ${site.brand} — editorial photography.`,
+  description: `About ${site.brand} — editorial photography in ${site.locationRegion}.`,
   path: "/about",
 });
 
 export default async function AboutPage() {
-  const [siteMedia, config] = await Promise.all([
-    getSiteMediaSlots(),
-    getPublicSiteConfig(),
-  ]);
+  const siteMedia = await getSiteMediaSlots();
   const about = siteMedia.about;
-  const homeAbout = config.copy.homeAbout;
 
   return (
     <Section density="compact" className="pt-20 md:pt-28">
       <div className="grid gap-10 lg:grid-cols-[minmax(0,22rem)_1fr] lg:items-start lg:gap-16">
         <div>
-          <h1 className="type-page-title leading-tight md:text-4xl">About</h1>
+          <p className="type-eyebrow tracking-wide">{aboutPage.eyebrow}</p>
+          <h1 className="type-page-title mt-2 leading-tight md:text-4xl">
+            {aboutPage.title}
+          </h1>
           <div className="mt-6 space-y-4">
-            {homeAbout.map((paragraph) => (
+            {aboutPage.paragraphs.map((paragraph) => (
               <p
                 key={paragraph.slice(0, 24)}
                 className="type-page-body leading-relaxed text-stone"
@@ -38,21 +36,26 @@ export default async function AboutPage() {
               </p>
             ))}
           </div>
-          <p className="mt-8 text-sm">
+          <div className="mt-8 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
             <Link
               href={inquiryCtas.primary.href}
-              className="text-bark underline underline-offset-4 decoration-parchment hover:text-salmon-dark"
+              className="btn border-salmon-dark bg-salmon-dark text-white hover:bg-salmon"
             >
               {inquiryCtas.secondary.label}
             </Link>
-            {" · "}
+            <Link
+              href="/sessions"
+              className="text-bark underline underline-offset-4 decoration-parchment hover:text-salmon-dark"
+            >
+              The experience
+            </Link>
             <Link
               href="/gallery"
               className="text-bark underline underline-offset-4 decoration-parchment hover:text-salmon-dark"
             >
               View work
             </Link>
-          </p>
+          </div>
         </div>
         <div className="relative aspect-[4/5] min-h-[320px] w-full bg-parchment lg:aspect-[3/4]">
           <Image

@@ -28,6 +28,13 @@ export default function ContactPage() {
             >
               begin here
             </Link>
+            . Prefer to understand the process first?{" "}
+            <Link
+              href="/sessions"
+              className="text-bark underline underline-offset-4 decoration-parchment hover:text-salmon-dark"
+            >
+              Explore sessions
+            </Link>
             . This form is for brief notes.
           </p>
           <dl className="mt-8 space-y-4 text-sm">

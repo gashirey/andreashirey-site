@@ -10,12 +10,7 @@ export default async function HomePage() {
     getSiteMediaSlots(),
     getPublicSiteConfig(),
   ]);
-  const heroSlides = await resolveHomeHeroSlides({
-    src: siteMedia.hero.imageUrl,
-    alt: siteMedia.hero.alt,
-    focalX: siteMedia.hero.focalX,
-    focalY: siteMedia.hero.focalY,
-  });
+  const heroSlides = await resolveHomeHeroSlides();
 
   return (
     <HomePageContent
