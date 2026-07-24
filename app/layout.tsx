@@ -1,6 +1,13 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import { Fraunces, Karla } from "next/font/google";
 import { site } from "@/lib/content";
+import {
+  faviconMetadata,
+  isLocalHost,
+  resolveRequestHost,
+  withLocalTitle,
+} from "@/lib/local-dev";
 import "./globals.css";
 
 const fraunces = Fraunces({
@@ -15,21 +22,30 @@ const karla = Karla({
   weight: ["400", "500", "600"],
 });
 
-export const metadata: Metadata = {
-  title: {
-    default: site.brand,
-    template: `%s | ${site.brand}`,
-  },
-  description: site.description,
-  metadataBase: new URL(`https://${site.domain}`),
-  openGraph: {
-    title: site.brand,
+export async function generateMetadata(): Promise<Metadata> {
+  const host = resolveRequestHost(await headers());
+  const local = isLocalHost(host);
+
+  return {
+    title: withLocalTitle(
+      {
+        default: site.brand,
+        template: `%s | ${site.brand}`,
+      },
+      local,
+    ),
     description: site.description,
-    siteName: site.brand,
-    locale: "en_US",
-    type: "website",
-  },
-};
+    metadataBase: new URL(`https://${site.domain}`),
+    ...faviconMetadata(local),
+    openGraph: {
+      title: local ? `[local] ${site.brand}` : site.brand,
+      description: site.description,
+      siteName: site.brand,
+      locale: "en_US",
+      type: "website",
+    },
+  };
+}
 
 export default function RootLayout({
   children,
