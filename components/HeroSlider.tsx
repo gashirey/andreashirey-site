@@ -29,6 +29,7 @@ type HeroSliderProps = {
   layout?: HeroLayout;
   primaryCta?: { label: string; href: string };
   secondaryCta?: { label: string; href: string };
+  quietCta?: { label: string; href: string };
   showSlideControls?: boolean;
   slideIntervalMs?: number;
   fadeMs?: number;
@@ -42,6 +43,7 @@ export function HeroSlider({
   layout = "standard",
   primaryCta,
   secondaryCta,
+  quietCta,
   showSlideControls = true,
   slideIntervalMs = DEFAULT_SLIDE_MS,
   fadeMs = DEFAULT_FADE_MS,
@@ -127,8 +129,8 @@ export function HeroSlider({
             {subtitle}
           </p>
         )}
-        {(primaryCta || secondaryCta) && (
-          <div className="mt-8 flex flex-wrap gap-3">
+        {(primaryCta || secondaryCta || quietCta) && (
+          <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3">
             {primaryCta && (
               <Button href={primaryCta.href} variant="primary" className="type-button">
                 {primaryCta.label}
@@ -147,6 +149,19 @@ export function HeroSlider({
                 {secondaryCta.label}
               </Button>
             )}
+            {quietCta ? (
+              <Button
+                href={quietCta.href}
+                variant="outline"
+                className={
+                  textOnPhoto
+                    ? "border-white/50 text-white hover:border-white hover:bg-white/10 hover:text-white"
+                    : undefined
+                }
+              >
+                {quietCta.label}
+              </Button>
+            ) : null}
           </div>
         )}
       </div>

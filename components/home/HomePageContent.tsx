@@ -71,6 +71,7 @@ export function HomePageContent({
       subtitle={heroHome.subtitle}
       primaryCta={heroHome.primaryCta}
       secondaryCta={heroHomeDefaults.secondaryCta}
+      quietCta={{ label: "Client login", href: "/view" }}
       showSlideControls={multiHero}
       slideIntervalMs={heroSlideIntervalMs}
       fadeMs={HOME_HERO_FADE_MS}
