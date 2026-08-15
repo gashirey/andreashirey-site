@@ -14,7 +14,11 @@ type ClientGalleryItemProps = {
   index: number;
   priority?: boolean;
   sizes: string;
-  onClick: () => void;
+  selected: boolean;
+  selectionEnabled: boolean;
+  selectionNumber?: number | null;
+  onOpen: () => void;
+  onToggleSelect: () => void;
 };
 
 export function ClientGalleryItem({
@@ -22,7 +26,11 @@ export function ClientGalleryItem({
   index,
   priority = false,
   sizes,
-  onClick,
+  selected,
+  selectionEnabled,
+  selectionNumber,
+  onOpen,
+  onToggleSelect,
 }: ClientGalleryItemProps) {
   const ref = useRef<HTMLElement>(null);
   const [revealed, setRevealed] = useState(false);
@@ -62,43 +70,65 @@ export function ClientGalleryItem({
       style={{ "--reveal-delay": staggerDelay } as CSSProperties}
       role="listitem"
     >
-      <button
-        type="button"
-        onClick={onClick}
-        className="group block w-full cursor-zoom-in text-left"
-        aria-label={`View ${image.alt}`}
-      >
-        <div className="masonry-gallery__frame">
-          {image.width && image.height ? (
-            <Image
-              src={image.src}
-              alt={image.alt}
-              width={image.width}
-              height={image.height}
-              sizes={sizes}
-              priority={priority}
-              loading={priority ? undefined : "lazy"}
-              decoding="async"
-              className="masonry-gallery__image"
-              unoptimized={image.src.startsWith("http")}
-            />
-          ) : (
-            <img
-              src={image.src}
-              alt={image.alt}
-              loading={priority ? "eager" : "lazy"}
-              decoding="async"
-              fetchPriority={priority ? "high" : "auto"}
-              className="masonry-gallery__image"
-            />
-          )}
-        </div>
-        {image.caption ? (
-          <figcaption className="masonry-gallery__caption group-hover:text-bark">
-            {image.caption}
-          </figcaption>
+      <div className="relative">
+        <button
+          type="button"
+          onClick={onOpen}
+          className="group block w-full cursor-zoom-in text-left"
+          aria-label={`View ${image.alt}`}
+        >
+          <div
+            className={`masonry-gallery__frame ${
+              selected ? "ring-2 ring-bark ring-offset-2 ring-offset-cream" : ""
+            }`}
+          >
+            {image.width && image.height ? (
+              <Image
+                src={image.src}
+                alt={image.alt}
+                width={image.width}
+                height={image.height}
+                sizes={sizes}
+                priority={priority}
+                loading={priority ? undefined : "lazy"}
+                decoding="async"
+                className="masonry-gallery__image"
+                unoptimized={image.src.startsWith("http")}
+              />
+            ) : (
+              <img
+                src={image.src}
+                alt={image.alt}
+                loading={priority ? "eager" : "lazy"}
+                decoding="async"
+                fetchPriority={priority ? "high" : "auto"}
+                className="masonry-gallery__image"
+              />
+            )}
+          </div>
+        </button>
+
+        {selectionEnabled ? (
+          <button
+            type="button"
+            onClick={onToggleSelect}
+            className={`absolute left-2 top-2 rounded-sm border px-2 py-1 text-xs font-medium ${
+              selected
+                ? "border-bark bg-bark text-cream"
+                : "border-parchment bg-white/95 text-bark"
+            }`}
+            aria-pressed={selected}
+            aria-label={
+              selected ? `Remove ${image.alt} from order` : `Add ${image.alt} to order`
+            }
+          >
+            {selected && selectionNumber ? selectionNumber : selected ? "✓" : "+"}
+          </button>
         ) : null}
-      </button>
+      </div>
+      {image.caption ? (
+        <figcaption className="masonry-gallery__caption">{image.caption}</figcaption>
+      ) : null}
     </figure>
   );
 }

@@ -185,3 +185,45 @@ export async function listClientGalleriesForShoot(
     toClientGallery({ ...row, media_shoots: null }),
   );
 }
+
+export type ClientGalleryAdminRow = ClientGallery & {
+  shoot_name: string | null;
+};
+
+export async function listAllClientGalleries(): Promise<ClientGalleryAdminRow[]> {
+  if (!isSupabaseConfigured()) return [];
+
+  const supabase = createServiceClient();
+  const { data, error } = await supabase
+    .from("client_galleries")
+    .select(
+      "id, shoot_id, contact_id, title, share_token, is_published, expires_at, created_at, password_hash, media_shoots (name)",
+    )
+    .order("created_at", { ascending: false })
+    .limit(200);
+
+  if (error) {
+    console.error("[listAllClientGalleries]", error);
+    return [];
+  }
+
+  return ((data ?? []) as Array<
+    Omit<ClientGalleryRow, "media_shoots"> & {
+      media_shoots:
+        | { name: string }
+        | { name: string }[]
+        | null;
+    }
+  >).map((row) => {
+    const shoot =
+      row.media_shoots == null
+        ? null
+        : Array.isArray(row.media_shoots)
+          ? row.media_shoots[0] ?? null
+          : row.media_shoots;
+    return {
+      ...toClientGallery({ ...row, media_shoots: null }),
+      shoot_name: shoot?.name ?? null,
+    };
+  });
+}

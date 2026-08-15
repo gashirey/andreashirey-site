@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/admin/require";
 import { hashGalleryPassword } from "@/lib/client-gallery/auth";
-import { listClientGalleriesForShoot } from "@/lib/client-gallery/queries";
+import {
+  listAllClientGalleries,
+  listClientGalleriesForShoot,
+} from "@/lib/client-gallery/queries";
 import { clientGalleryPath, createShareToken } from "@/lib/client-gallery/token";
 import { createServiceClient } from "@/lib/supabase/server";
 
@@ -22,7 +25,10 @@ function validatePassword(value: string | null | undefined): string | null {
 }
 
 function serializeGallery(
-  gallery: Awaited<ReturnType<typeof listClientGalleriesForShoot>>[number],
+  gallery: {
+    share_token: string;
+    [key: string]: unknown;
+  },
   origin: string,
 ) {
   const sharePath = clientGalleryPath(gallery.share_token);
@@ -39,16 +45,16 @@ export async function GET(request: Request) {
 
   const { searchParams } = new URL(request.url);
   const shootId = searchParams.get("shoot_id")?.trim();
+  const origin = new URL(request.url).origin;
 
   if (!shootId) {
-    return NextResponse.json(
-      { error: "shoot_id query parameter is required." },
-      { status: 400 },
-    );
+    const galleries = await listAllClientGalleries();
+    return NextResponse.json({
+      galleries: galleries.map((gallery) => serializeGallery(gallery, origin)),
+    });
   }
 
   const galleries = await listClientGalleriesForShoot(shootId);
-  const origin = new URL(request.url).origin;
 
   return NextResponse.json({
     galleries: galleries.map((gallery) => serializeGallery(gallery, origin)),

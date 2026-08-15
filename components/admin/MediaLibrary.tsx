@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { type SiteMediaSlotKey } from "@/lib/site-media/slots";
 import {
   compressImageBeforeUpload,
@@ -9,11 +9,13 @@ import {
 } from "@/lib/admin/client-compress-image";
 import { readAdminUploadError } from "@/lib/admin/upload-response";
 import { AdminNotice } from "@/components/admin/AdminNotice";
+import { ClientGalleriesOverview } from "@/components/admin/ClientGalleriesOverview";
 import { ClientGalleryShare } from "@/components/admin/ClientGalleryShare";
 import { PortfolioGalleryPanel } from "@/components/admin/PortfolioGalleryPanel";
 import { SaveToPhotosButton } from "@/components/admin/SaveToPhotosButton";
 import { SiteSlotsOverview } from "@/components/admin/SiteSlotsOverview";
-import type { MediaAsset, MediaShoot } from "@/lib/media/types";
+import type { MediaAsset } from "@/lib/media/types";
+import type { MediaShootSummary } from "@/lib/media/shoot-summary";
 import type { FarmProduct } from "@/lib/inventory/types";
 
 function isRemoteSrc(url: string): boolean {
@@ -22,9 +24,19 @@ function isRemoteSrc(url: string): boolean {
 
 const BATCH_SIZE = 8;
 
+const TABS = [
+  { id: "shoots", label: "Shoots" },
+  { id: "clients", label: "Client galleries" },
+  { id: "work", label: "Work gallery" },
+  { id: "site", label: "Site images" },
+] as const;
+
+type TabId = (typeof TABS)[number]["id"];
+
 export function MediaLibrary() {
   const inputRef = useRef<HTMLInputElement>(null);
-  const [shoots, setShoots] = useState<MediaShoot[]>([]);
+  const [tab, setTab] = useState<TabId>("shoots");
+  const [shoots, setShoots] = useState<MediaShootSummary[]>([]);
   const [shootId, setShootId] = useState<string>("");
   const [newShootName, setNewShootName] = useState("");
   const [assets, setAssets] = useState<MediaAsset[]>([]);
@@ -43,6 +55,9 @@ export function MediaLibrary() {
   const [dragOver, setDragOver] = useState(false);
   const [assigningId, setAssigningId] = useState<string | null>(null);
   const [removingId, setRemovingId] = useState<string | null>(null);
+  const [assetFilter, setAssetFilter] = useState<"all" | "gallery" | "library">(
+    "all",
+  );
 
   function showNotice(type: "success" | "error", text: string) {
     setNotice({ type, message: text });
@@ -55,10 +70,12 @@ export function MediaLibrary() {
     const res = await fetch("/api/admin/media/shoots");
     const data = await res.json();
     if (!res.ok) {
-      setSetupError(data.error ?? "Could not load shoots. Run migration 008 in Supabase.");
+      setSetupError(
+        data.error ?? "Could not load shoots. Run migration 008 in Supabase.",
+      );
       return false;
     }
-    const list = (data.shoots ?? []) as MediaShoot[];
+    const list = (data.shoots ?? []) as MediaShootSummary[];
     setShoots(list);
     setShootId((prev) => prev || list[0]?.id || "");
     setSetupError("");
@@ -97,6 +114,29 @@ export function MediaLibrary() {
     if (shootId) void loadAssets(shootId);
   }, [shootId, loadAssets]);
 
+  const activeShoot = useMemo(
+    () => shoots.find((shoot) => shoot.id === shootId) ?? null,
+    [shoots, shootId],
+  );
+
+  const visibleAssets = useMemo(() => {
+    if (assetFilter === "gallery") return assets.filter((a) => a.in_gallery);
+    if (assetFilter === "library") return assets.filter((a) => !a.in_gallery);
+    return assets;
+  }, [assets, assetFilter]);
+
+  const totals = useMemo(() => {
+    return shoots.reduce(
+      (acc, shoot) => {
+        acc.photos += shoot.asset_count;
+        acc.work += shoot.in_gallery_count;
+        acc.clients += shoot.client_gallery_count;
+        return acc;
+      },
+      { photos: 0, work: 0, clients: 0 },
+    );
+  }, [shoots]);
+
   async function createShoot(e: React.FormEvent) {
     e.preventDefault();
     const name = newShootName.trim();
@@ -116,6 +156,7 @@ export function MediaLibrary() {
     setNewShootName("");
     await loadShoots();
     setShootId(data.shoot.id);
+    setTab("shoots");
     setMessage(`Created shoot “${name}”.`);
   }
 
@@ -183,7 +224,10 @@ export function MediaLibrary() {
       }
 
       const data = await res.json();
-      const batchErrors = (data.errors ?? []) as { filename: string; error: string }[];
+      const batchErrors = (data.errors ?? []) as {
+        filename: string;
+        error: string;
+      }[];
       for (const err of batchErrors) {
         allErrors.push(`${err.filename}: ${err.error}`);
       }
@@ -192,6 +236,7 @@ export function MediaLibrary() {
     setUploading(false);
     setUploadProgress("");
     await loadAssets(shootId);
+    await loadShoots();
     setGalleryRefreshKey((k) => k + 1);
 
     if (allErrors.length) {
@@ -202,7 +247,7 @@ export function MediaLibrary() {
     } else {
       showNotice(
         "success",
-        `Uploaded ${files.length} image(s) to the library. Check the ones you want on /gallery.`,
+        `Uploaded ${files.length} image(s) to “${activeShoot?.name ?? "this shoot"}”.`,
       );
     }
   }
@@ -246,8 +291,7 @@ export function MediaLibrary() {
       });
       const data = (await res.json()) as { message?: string; error?: string };
       if (res.ok) {
-        const text = data.message ?? "Site updated.";
-        showNotice("success", text);
+        showNotice("success", data.message ?? "Site updated.");
         setSlotsRefreshKey((k) => k + 1);
       } else {
         showNotice(
@@ -284,6 +328,7 @@ export function MediaLibrary() {
       prev.map((a) => (a.id === asset.id ? { ...a, ...next } : a)),
     );
     setGalleryRefreshKey((k) => k + 1);
+    void loadShoots();
   }
 
   async function deleteForever(asset: MediaAsset) {
@@ -309,8 +354,15 @@ export function MediaLibrary() {
 
     showNotice("success", `Deleted ${asset.filename}.`);
     await loadAssets(shootId);
+    await loadShoots();
     setGalleryRefreshKey((k) => k + 1);
     setSlotsRefreshKey((k) => k + 1);
+  }
+
+  function openShoot(id: string) {
+    setShootId(id);
+    setTab("shoots");
+    setMessage("");
   }
 
   if (loading) {
@@ -325,16 +377,14 @@ export function MediaLibrary() {
         <p className="mt-3 text-stone">
           In Supabase SQL Editor, run{" "}
           <code className="text-bark">supabase/migrations/008_media_library.sql</code>
-          {". "}
-          If you use site slots, also run{" "}
-          <code className="text-bark">007_site_media_slots.sql</code>.
+          .
         </p>
       </div>
     );
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       {notice ? (
         <AdminNotice
           type={notice.type}
@@ -343,271 +393,402 @@ export function MediaLibrary() {
         />
       ) : null}
 
-      {notice?.type === "success" ? (
-        <p className="text-sm">
-          <a
-            href="/gallery"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-medium text-salmon-dark underline underline-offset-2"
+      <div className="grid gap-3 sm:grid-cols-3">
+        <div className="border border-parchment bg-white px-4 py-3">
+          <p className="text-xs uppercase tracking-[0.12em] text-stone">
+            Shoots
+          </p>
+          <p className="mt-1 font-serif text-2xl text-bark">{shoots.length}</p>
+          <p className="text-xs text-stone">{totals.photos} photos total</p>
+        </div>
+        <div className="border border-parchment bg-white px-4 py-3">
+          <p className="text-xs uppercase tracking-[0.12em] text-stone">
+            Work gallery
+          </p>
+          <p className="mt-1 font-serif text-2xl text-bark">{totals.work}</p>
+          <p className="text-xs text-stone">photos on /gallery</p>
+        </div>
+        <div className="border border-parchment bg-white px-4 py-3">
+          <p className="text-xs uppercase tracking-[0.12em] text-stone">
+            Client galleries
+          </p>
+          <p className="mt-1 font-serif text-2xl text-bark">{totals.clients}</p>
+          <p className="text-xs text-stone">share links created</p>
+        </div>
+      </div>
+
+      <nav
+        className="flex flex-wrap gap-2 border-b border-parchment"
+        aria-label="Media sections"
+      >
+        {TABS.map((item) => (
+          <button
+            key={item.id}
+            type="button"
+            onClick={() => setTab(item.id)}
+            className={`border-b-2 px-3 py-2 text-sm transition-colors ${
+              tab === item.id
+                ? "border-bark font-medium text-bark"
+                : "border-transparent text-stone hover:text-bark"
+            }`}
           >
-            View Work gallery
-          </a>
-        </p>
-      ) : null}
+            {item.label}
+          </button>
+        ))}
+      </nav>
 
-      <section className="border border-parchment bg-cream/40 p-5">
-        <h2 className="font-serif text-lg text-bark">How the Work gallery works</h2>
-        <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm text-stone">
-          <li>
-            <span className="text-bark">Upload</span> photos into a shoot
-            (they stay in your library; they do{" "}
-            <em className="not-italic text-bark">not</em> go public
-            automatically).
-          </li>
-          <li>
-            <span className="text-bark">Select</span> which ones appear on{" "}
-            <a href="/gallery" className="underline hover:text-bark">
-              /gallery
-            </a>{" "}
-            with the checkbox in the upper right of each thumbnail.
-          </li>
-          <li>
-            <span className="text-bark">Uncheck</span> to hide from the gallery
-            without deleting — check again anytime to restore.
-          </li>
-        </ol>
-      </section>
-
-      <PortfolioGalleryPanel
-        refreshKey={galleryRefreshKey}
-        onChanged={() => {
-          setSlotsRefreshKey((k) => k + 1);
-          if (shootId) void loadAssets(shootId);
-        }}
-      />
-
-      <SiteSlotsOverview refreshKey={slotsRefreshKey} />
-
-      {message && !notice ? (
+      {message ? (
         <p className="text-sm text-stone" role="status">
           {message}
         </p>
       ) : null}
 
-      <section className="border border-parchment bg-white p-5">
-        <h2 className="font-serif text-lg text-bark">1. Choose a shoot</h2>
-        <p className="mt-1 text-sm text-stone">
-          Group uploads (e.g. “May 2026 shoot”). New uploads join this shoot and
-          the Work gallery.
-        </p>
-        <div className="mt-4 flex flex-wrap items-end gap-3">
-          <label className="text-sm">
-            Active shoot
-            <select
-              value={shootId}
-              onChange={(e) => setShootId(e.target.value)}
-              className="input mt-1 block min-w-[12rem]"
-            >
-              {shoots.map((s) => (
-                <option key={s.id} value={s.id}>
-                  {s.name}
-                </option>
-              ))}
-            </select>
-          </label>
-          <form onSubmit={createShoot} className="flex flex-wrap items-end gap-2">
-            <label className="text-sm">
-              New shoot
-              <input
-                type="text"
-                value={newShootName}
-                onChange={(e) => setNewShootName(e.target.value)}
-                placeholder="May 2026"
-                className="input mt-1 block w-40"
-              />
-            </label>
-            <button type="submit" className="btn border-bark bg-bark text-cream">
-              Add
-            </button>
-          </form>
+      {tab === "clients" ? (
+        <ClientGalleriesOverview onOpenShoot={openShoot} />
+      ) : null}
+
+      {tab === "work" ? (
+        <div className="space-y-4">
+          <p className="max-w-2xl text-sm text-stone">
+            Choose which library photos appear on the public Work gallery.
+            Uploads stay private until you check them here or on a shoot.
+          </p>
+          <PortfolioGalleryPanel
+            refreshKey={galleryRefreshKey}
+            onChanged={() => {
+              setSlotsRefreshKey((k) => k + 1);
+              if (shootId) void loadAssets(shootId);
+              void loadShoots();
+            }}
+          />
         </div>
-      </section>
+      ) : null}
 
-      <ClientGalleryShare
-        shootId={shootId}
-        shootName={shoots.find((shoot) => shoot.id === shootId)?.name ?? "Session"}
-        imageCount={assets.length}
-      />
+      {tab === "site" ? (
+        <div className="space-y-4">
+          <p className="max-w-2xl text-sm text-stone">
+            Homepage, About, and Contact placements. Assign images from a shoot
+            under Shoots → Use on site.
+          </p>
+          <SiteSlotsOverview refreshKey={slotsRefreshKey} />
+        </div>
+      ) : null}
 
-      <section
-        className={`border border-dashed p-8 text-center transition-colors ${
-          dragOver ? "border-salmon bg-salmon-light/30" : "border-parchment bg-white"
-        }`}
-        onDragOver={(e) => {
-          e.preventDefault();
-          setDragOver(true);
-        }}
-        onDragLeave={() => setDragOver(false)}
-        onDrop={onDrop}
-      >
-        <p className="font-medium text-bark">2. Upload to the library</p>
-        <p className="mt-1 text-sm text-stone">
-          Drop images here. They stay private to your library until you check
-          them for the Work gallery above.
-        </p>
-        <input
-          ref={inputRef}
-          type="file"
-          accept="image/jpeg,image/png,image/webp,image/gif"
-          multiple
-          className="sr-only"
-          disabled={uploading}
-          onChange={(e) => {
-            if (e.target.files?.length) void uploadFiles(e.target.files);
-            e.target.value = "";
-          }}
-        />
-        <button
-          type="button"
-          disabled={uploading || !shootId}
-          onClick={() => inputRef.current?.click()}
-          className="btn mt-4 border-bark bg-bark text-cream disabled:opacity-50"
-        >
-          {uploading ? "Uploading…" : "Choose files"}
-        </button>
-        {uploadProgress && (
-          <p className="mt-3 text-sm text-stone">{uploadProgress}</p>
-        )}
-      </section>
+      {tab === "shoots" ? (
+        <div className="grid gap-6 lg:grid-cols-[16rem_minmax(0,1fr)]">
+          <aside className="space-y-4">
+            <section className="border border-parchment bg-white p-4">
+              <h2 className="font-serif text-lg text-bark">Shoots</h2>
+              <p className="mt-1 text-xs text-stone">
+                Pick a shoot to upload, share with a client, or manage photos.
+              </p>
+              <form onSubmit={createShoot} className="mt-3 space-y-2">
+                <input
+                  type="text"
+                  value={newShootName}
+                  onChange={(e) => setNewShootName(e.target.value)}
+                  placeholder="New shoot name"
+                  className="input w-full text-sm"
+                />
+                <button
+                  type="submit"
+                  className="btn w-full border-bark bg-bark text-cream"
+                >
+                  Add shoot
+                </button>
+              </form>
+            </section>
 
-      <section>
-        <h2 className="font-serif text-lg text-bark">
-          3. This shoot {assets.length ? `(${assets.length})` : ""}
-        </h2>
-        <p className="mt-1 text-sm text-stone">
-          Images in the active shoot. Use the gallery checkbox above for public
-          selection, or toggle here. Delete forever only when you no longer need
-          the file.
-        </p>
+            <ul className="space-y-2">
+              {shoots.map((shoot) => {
+                const active = shoot.id === shootId;
+                return (
+                  <li key={shoot.id}>
+                    <button
+                      type="button"
+                      onClick={() => openShoot(shoot.id)}
+                      className={`w-full border px-3 py-3 text-left ${
+                        active
+                          ? "border-bark bg-bark text-cream"
+                          : "border-parchment bg-white text-bark hover:border-bark"
+                      }`}
+                    >
+                      <span className="block text-sm font-medium">
+                        {shoot.name}
+                      </span>
+                      <span
+                        className={`mt-1 block text-xs ${
+                          active ? "text-cream/80" : "text-stone"
+                        }`}
+                      >
+                        {shoot.asset_count} photo
+                        {shoot.asset_count === 1 ? "" : "s"}
+                        {" · "}
+                        {shoot.in_gallery_count} on Work
+                        {" · "}
+                        {shoot.client_gallery_count} client link
+                        {shoot.client_gallery_count === 1 ? "" : "s"}
+                      </span>
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          </aside>
 
-        <p className="mt-2 text-sm text-stone">
-          On your phone:{" "}
-          <a href="/admin/social" className="underline hover:text-bark">
-            Social
-          </a>{" "}
-          for Photos (share sheet) and captions.
-        </p>
-
-        {assets.length === 0 ? (
-          <p className="mt-6 text-sm text-stone">No images in this shoot yet.</p>
-        ) : (
-          <ul className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {assets.map((asset) => (
-              <li
-                key={asset.id}
-                className={`relative border bg-white p-2 sm:p-3 ${
-                  asset.in_gallery ? "border-bark" : "border-parchment"
-                }`}
-              >
-                <label className="absolute right-3 top-3 z-10 flex h-7 w-7 cursor-pointer items-center justify-center border border-parchment bg-white">
-                  <span className="sr-only">In Work gallery</span>
-                  <input
-                    type="checkbox"
-                    className="h-4 w-4 accent-bark"
-                    checked={Boolean(asset.in_gallery)}
-                    disabled={removingId === asset.id}
-                    onChange={(e) =>
-                      void setInGallery(asset, e.target.checked)
-                    }
-                  />
-                </label>
-                <div className="relative aspect-square overflow-hidden bg-parchment sm:aspect-[4/3]">
-                  <Image
-                    src={asset.public_url}
-                    alt={asset.alt_text ?? asset.filename}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 640px) 50vw, 240px"
-                    unoptimized={isRemoteSrc(asset.public_url)}
-                  />
-                </div>
-                <p className="mt-2 truncate text-xs text-stone">{asset.filename}</p>
-                <p className="text-[10px] text-stone">
-                  {asset.in_gallery ? "In gallery" : "Library only"}
+          <div className="space-y-6">
+            {activeShoot ? (
+              <div className="border border-parchment bg-white px-4 py-4">
+                <p className="text-xs uppercase tracking-[0.12em] text-stone">
+                  Active shoot
                 </p>
-                <div className="mt-2 grid grid-cols-2 gap-1">
-                  <a
-                    href={asset.public_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn border-parchment py-2 text-center text-xs"
-                  >
-                    Open
-                  </a>
-                  <button
-                    type="button"
-                    disabled={removingId === asset.id}
-                    onClick={() => void deleteForever(asset)}
-                    className="btn border-parchment py-2 text-xs text-stone disabled:opacity-50"
-                  >
-                    Delete
-                  </button>
+                <h2 className="mt-1 font-serif text-2xl text-bark">
+                  {activeShoot.name}
+                </h2>
+                <p className="mt-2 text-sm text-stone">
+                  {activeShoot.asset_count} photos in library
+                  {" · "}
+                  {activeShoot.in_gallery_count} on public Work gallery
+                  {" · "}
+                  {activeShoot.client_gallery_count} client gallery link
+                  {activeShoot.client_gallery_count === 1 ? "" : "s"}
+                </p>
+              </div>
+            ) : (
+              <p className="text-sm text-stone">
+                Create a shoot to start uploading.
+              </p>
+            )}
+
+            <ClientGalleryShare
+              shootId={shootId}
+              shootName={activeShoot?.name ?? "Session"}
+              imageCount={assets.length}
+            />
+
+            <section
+              className={`border border-dashed p-8 text-center transition-colors ${
+                dragOver
+                  ? "border-salmon bg-salmon-light/30"
+                  : "border-parchment bg-white"
+              }`}
+              onDragOver={(e) => {
+                e.preventDefault();
+                setDragOver(true);
+              }}
+              onDragLeave={() => setDragOver(false)}
+              onDrop={onDrop}
+            >
+              <p className="font-medium text-bark">Upload to this shoot</p>
+              <p className="mt-1 text-sm text-stone">
+                Photos stay in the library until you add them to the Work
+                gallery or share a client link.
+              </p>
+              <input
+                ref={inputRef}
+                type="file"
+                accept="image/jpeg,image/png,image/webp,image/gif"
+                multiple
+                className="sr-only"
+                disabled={uploading}
+                onChange={(e) => {
+                  if (e.target.files?.length) void uploadFiles(e.target.files);
+                  e.target.value = "";
+                }}
+              />
+              <button
+                type="button"
+                disabled={uploading || !shootId}
+                onClick={() => inputRef.current?.click()}
+                className="btn mt-4 border-bark bg-bark text-cream disabled:opacity-50"
+              >
+                {uploading ? "Uploading…" : "Choose files"}
+              </button>
+              {uploadProgress ? (
+                <p className="mt-3 text-sm text-stone">{uploadProgress}</p>
+              ) : null}
+            </section>
+
+            <section>
+              <div className="flex flex-wrap items-end justify-between gap-3">
+                <div>
+                  <h3 className="font-serif text-lg text-bark">
+                    Photos in this shoot
+                    {assets.length ? ` (${assets.length})` : ""}
+                  </h3>
+                  <p className="mt-1 text-sm text-stone">
+                    Check = on Work gallery. Client galleries include all photos
+                    in the shoot.
+                  </p>
                 </div>
-                <div className="mt-2">
-                  <SaveToPhotosButton
-                    downloadUrl={`/api/admin/social/download?kind=media&id=${asset.id}`}
-                    filename={asset.filename}
-                    onResult={(r) => {
-                      if (r.ok) setMessage(r.message);
-                      else if (r.message !== "Cancelled.") setMessage(r.message);
-                    }}
-                  />
+                <div className="flex flex-wrap gap-2 text-xs">
+                  {(
+                    [
+                      ["all", "All"],
+                      ["gallery", "On Work"],
+                      ["library", "Library only"],
+                    ] as const
+                  ).map(([id, label]) => (
+                    <button
+                      key={id}
+                      type="button"
+                      onClick={() => setAssetFilter(id)}
+                      className={`border px-3 py-1.5 ${
+                        assetFilter === id
+                          ? "border-bark bg-bark text-cream"
+                          : "border-parchment bg-white text-stone"
+                      }`}
+                    >
+                      {label}
+                    </button>
+                  ))}
                 </div>
-                <label className="mt-2 block text-xs">
-                  Use on site
-                  <select
-                    className="input mt-1 w-full text-base disabled:opacity-50 sm:text-xs"
-                    disabled={assigningId === asset.id}
-                    value=""
-                    onChange={(e) => {
-                      const v = e.target.value;
-                      if (!v || assigningId) return;
-                      if (v === "hero_slide") {
-                        void assign(asset.id, "hero_slide");
-                      } else if (v.startsWith("slot:")) {
-                        void assign(
-                          asset.id,
-                          "site_slot",
-                          v.slice("slot:".length) as SiteMediaSlotKey,
-                        );
-                      } else if (v.startsWith("product:")) {
-                        void assign(asset.id, "product", v.slice("product:".length));
-                      }
-                    }}
-                  >
-                    <option value="">Choose…</option>
-                    <optgroup label="Site">
-                      <option value="hero_slide">Add to hero slideshow</option>
-                      <option value="slot:about">Set as About page photo</option>
-                      <option value="slot:contact">
-                        Set as Contact page photo
-                      </option>
-                    </optgroup>
-                    <optgroup label="Products">
-                      {products.map((p) => (
-                        <option key={p.id} value={`product:${p.id}`}>
-                          {p.name}
-                        </option>
-                      ))}
-                    </optgroup>
-                  </select>
-                </label>
-              </li>
-            ))}
-          </ul>
-        )}
-      </section>
+              </div>
+
+              <p className="mt-2 text-sm text-stone">
+                Phone workflow:{" "}
+                <a href="/admin/social" className="underline hover:text-bark">
+                  Social
+                </a>
+                . Orders:{" "}
+                <a href="/admin/orders" className="underline hover:text-bark">
+                  Orders
+                </a>
+                .
+              </p>
+
+              {assets.length === 0 ? (
+                <p className="mt-6 text-sm text-stone">
+                  No images in this shoot yet.
+                </p>
+              ) : visibleAssets.length === 0 ? (
+                <p className="mt-6 text-sm text-stone">
+                  No photos match this filter.
+                </p>
+              ) : (
+                <ul className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                  {visibleAssets.map((asset) => (
+                    <li
+                      key={asset.id}
+                      className={`relative border bg-white p-2 sm:p-3 ${
+                        asset.in_gallery
+                          ? "border-bark"
+                          : "border-parchment"
+                      }`}
+                    >
+                      <label className="absolute right-3 top-3 z-10 flex h-7 w-7 cursor-pointer items-center justify-center border border-parchment bg-white">
+                        <span className="sr-only">In Work gallery</span>
+                        <input
+                          type="checkbox"
+                          className="h-4 w-4 accent-bark"
+                          checked={Boolean(asset.in_gallery)}
+                          disabled={removingId === asset.id}
+                          onChange={(e) =>
+                            void setInGallery(asset, e.target.checked)
+                          }
+                        />
+                      </label>
+                      <div className="relative aspect-square overflow-hidden bg-parchment sm:aspect-[4/3]">
+                        <Image
+                          src={asset.public_url}
+                          alt={asset.alt_text ?? asset.filename}
+                          fill
+                          className="object-cover"
+                          sizes="(max-width: 640px) 50vw, 240px"
+                          unoptimized={isRemoteSrc(asset.public_url)}
+                        />
+                      </div>
+                      <p className="mt-2 truncate text-xs text-stone">
+                        {asset.filename}
+                      </p>
+                      <p className="text-[10px] text-stone">
+                        {asset.in_gallery ? "In Work gallery" : "Library only"}
+                      </p>
+                      <div className="mt-2 grid grid-cols-2 gap-1">
+                        <a
+                          href={asset.public_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="btn border-parchment py-2 text-center text-xs"
+                        >
+                          Open
+                        </a>
+                        <button
+                          type="button"
+                          disabled={removingId === asset.id}
+                          onClick={() => void deleteForever(asset)}
+                          className="btn border-parchment py-2 text-xs text-stone disabled:opacity-50"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                      <div className="mt-2">
+                        <SaveToPhotosButton
+                          downloadUrl={`/api/admin/social/download?kind=media&id=${asset.id}`}
+                          filename={asset.filename}
+                          onResult={(r) => {
+                            if (r.ok) setMessage(r.message);
+                            else if (r.message !== "Cancelled.") {
+                              setMessage(r.message);
+                            }
+                          }}
+                        />
+                      </div>
+                      <label className="mt-2 block text-xs">
+                        Use on site
+                        <select
+                          className="input mt-1 w-full text-base disabled:opacity-50 sm:text-xs"
+                          disabled={assigningId === asset.id}
+                          value=""
+                          onChange={(e) => {
+                            const v = e.target.value;
+                            if (!v || assigningId) return;
+                            if (v === "hero_slide") {
+                              void assign(asset.id, "hero_slide");
+                            } else if (v.startsWith("slot:")) {
+                              void assign(
+                                asset.id,
+                                "site_slot",
+                                v.slice("slot:".length) as SiteMediaSlotKey,
+                              );
+                            } else if (v.startsWith("product:")) {
+                              void assign(
+                                asset.id,
+                                "product",
+                                v.slice("product:".length),
+                              );
+                            }
+                          }}
+                        >
+                          <option value="">Choose…</option>
+                          <optgroup label="Site">
+                            <option value="hero_slide">
+                              Add to hero slideshow
+                            </option>
+                            <option value="slot:about">
+                              Set as About page photo
+                            </option>
+                            <option value="slot:contact">
+                              Set as Contact page photo
+                            </option>
+                          </optgroup>
+                          <optgroup label="Products">
+                            {products.map((p) => (
+                              <option key={p.id} value={`product:${p.id}`}>
+                                {p.name}
+                              </option>
+                            ))}
+                          </optgroup>
+                        </select>
+                      </label>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </section>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }

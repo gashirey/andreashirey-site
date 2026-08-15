@@ -144,8 +144,8 @@ export function ClientGalleryShare({
     <section className="border border-parchment bg-white p-5">
       <h2 className="font-serif text-lg text-bark">Client viewing</h2>
       <p className="mt-1 text-sm text-stone">
-        Share a private gallery link with your client. Add an optional password
-        for extra protection.
+        Share a private gallery link with your client. They can choose a digital
+        package and select photos. Add an optional password for extra protection.
       </p>
 
       {!imageCount ? (

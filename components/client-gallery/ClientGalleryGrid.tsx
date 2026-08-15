@@ -6,14 +6,22 @@ import { ClientGalleryItem } from "./ClientGalleryItem";
 
 type ClientGalleryGridProps = {
   images: GalleryImage[];
-  onImageClick: (index: number) => void;
+  selectedIds: string[];
+  selectionEnabled: boolean;
+  onImageOpen: (index: number) => void;
+  onToggleSelect: (imageId: string) => void;
 };
 
 export function ClientGalleryGrid({
   images,
-  onImageClick,
+  selectedIds,
+  selectionEnabled,
+  onImageOpen,
+  onToggleSelect,
 }: ClientGalleryGridProps) {
   if (!images.length) return null;
+
+  const orderIndex = new Map(selectedIds.map((id, i) => [id, i + 1]));
 
   return (
     <div
@@ -28,7 +36,11 @@ export function ClientGalleryGrid({
           index={index}
           priority={index < 2}
           sizes="(max-width: 768px) 100vw, 50vw"
-          onClick={() => onImageClick(index)}
+          selected={orderIndex.has(image.id)}
+          selectionEnabled={selectionEnabled}
+          selectionNumber={orderIndex.get(image.id) ?? null}
+          onOpen={() => onImageOpen(index)}
+          onToggleSelect={() => onToggleSelect(image.id)}
         />
       ))}
     </div>
