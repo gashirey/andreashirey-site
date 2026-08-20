@@ -77,8 +77,8 @@ export async function verifyGalleryUnlockToken(
 
 export const CLIENT_GALLERY_COOKIE = "ggf_cg";
 
-export function clientGalleryCookiePath(shareToken: string): string {
-  return `/view/${shareToken}`;
+export function clientGalleryCookiePath(_shareToken: string): string {
+  return "/";
 }
 
 export async function isClientGalleryUnlocked(

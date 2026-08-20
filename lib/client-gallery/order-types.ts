@@ -1,6 +1,8 @@
 import type { DigitalPackageId } from "@/lib/client-gallery/packages";
 
 export type ClientGalleryOrderStatus =
+  | "pending_payment"
+  | "paid"
   | "submitted"
   | "confirmed"
   | "fulfilled"

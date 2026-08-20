@@ -8,6 +8,8 @@ type RouteContext = {
 };
 
 const STATUSES: ClientGalleryOrderStatus[] = [
+  "pending_payment",
+  "paid",
   "submitted",
   "confirmed",
   "fulfilled",
@@ -24,7 +26,7 @@ export async function PATCH(request: Request, context: RouteContext) {
 
   if (!status || !STATUSES.includes(status)) {
     return NextResponse.json(
-      { error: "status must be submitted, confirmed, fulfilled, or cancelled." },
+      { error: "status must be pending_payment, paid, submitted, confirmed, fulfilled, or cancelled." },
       { status: 400 },
     );
   }

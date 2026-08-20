@@ -12,6 +12,8 @@ type OrderRow = ClientGalleryOrder & {
 };
 
 const STATUS_OPTIONS: ClientGalleryOrderStatus[] = [
+  "pending_payment",
+  "paid",
   "submitted",
   "confirmed",
   "fulfilled",
@@ -66,7 +68,7 @@ export function ClientOrdersPanel() {
       <div>
         <h1 className="font-serif text-2xl text-bark">Client orders</h1>
         <p className="mt-2 text-sm text-stone">
-          Digital package selections submitted from client galleries.
+          Digital package orders. Paid means Stripe checkout completed.
         </p>
       </div>
 

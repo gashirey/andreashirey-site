@@ -36,7 +36,7 @@ export function ClientGalleryOrderForm({
     setLoading(true);
     setError("");
 
-    const res = await fetch(`/api/view/${token}/orders`, {
+    const res = await fetch(`/api/view/${encodeURIComponent(token)}/orders`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -51,7 +51,12 @@ export function ClientGalleryOrderForm({
     setLoading(false);
 
     if (!res.ok) {
-      setError(data.error ?? "Could not submit order.");
+      setError(data.error ?? "Could not start checkout.");
+      return;
+    }
+
+    if (typeof data.checkoutUrl === "string") {
+      window.location.href = data.checkoutUrl;
       return;
     }
 
@@ -126,8 +131,8 @@ export function ClientGalleryOrderForm({
           ) : null}
 
           <p className="text-sm text-stone leading-relaxed">
-            Submitting sends your selection to Andrea. She’ll confirm and share
-            payment details for your digital files.
+            Continue to Stripe to pay for your digital files. You’ll return here
+            when checkout is complete.
           </p>
 
           <button
@@ -135,7 +140,7 @@ export function ClientGalleryOrderForm({
             disabled={loading}
             className="btn w-full border-bark bg-bark text-cream disabled:opacity-50"
           >
-            {loading ? "Submitting…" : "Submit order"}
+            {loading ? "Starting checkout…" : "Continue to payment"}
           </button>
         </form>
       </div>
