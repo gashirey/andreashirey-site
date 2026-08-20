@@ -24,7 +24,7 @@ export const DIGITAL_PACKAGES: DigitalPackage[] = [
     id: "five",
     label: "Five favorites",
     photoCount: 5,
-    priceCents: 625_00,
+    priceCents: 300,
   },
   {
     id: "top12",
