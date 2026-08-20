@@ -144,8 +144,8 @@ export function ClientGalleryShare({
     <section className="border border-parchment bg-white p-5">
       <h2 className="font-serif text-lg text-bark">Client viewing</h2>
       <p className="mt-1 text-sm text-stone">
-        Share a private gallery link with your client. They can choose a digital
-        package and select photos. Add an optional password for extra protection.
+        Clients sign in from the homepage with this gallery name and password.
+        They can then choose a digital package and select photos.
       </p>
 
       {!imageCount ? (
@@ -166,7 +166,7 @@ export function ClientGalleryShare({
               />
             </label>
             <label className="text-sm">
-              Password (optional)
+              Password
               <input
                 type="password"
                 value={password}
@@ -174,6 +174,7 @@ export function ClientGalleryShare({
                 className="input mt-1 block min-w-[12rem]"
                 autoComplete="new-password"
                 placeholder="At least 4 characters"
+                required
               />
             </label>
             <button

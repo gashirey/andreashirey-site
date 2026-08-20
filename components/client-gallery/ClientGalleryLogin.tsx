@@ -1,24 +1,33 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { site } from "@/lib/content";
-import { parseGalleryAccessInput } from "@/lib/client-gallery/access";
 
 export function ClientGalleryLogin() {
-  const router = useRouter();
-  const [value, setValue] = useState("");
+  const [name, setName] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  function onSubmit(event: React.FormEvent) {
+  async function onSubmit(event: React.FormEvent) {
     event.preventDefault();
-    const token = parseGalleryAccessInput(value);
-    if (!token) {
-      setError("Enter the gallery link Andrea sent you.");
+    setLoading(true);
+    setError("");
+
+    const res = await fetch("/api/view/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, password }),
+    });
+    const data = (await res.json()) as { error?: string; share_path?: string };
+    setLoading(false);
+
+    if (!res.ok || !data.share_path) {
+      setError(data.error ?? "Could not open gallery.");
       return;
     }
-    setError("");
-    router.push(`/view/${token}`);
+
+    window.location.href = data.share_path;
   }
 
   return (
@@ -28,22 +37,30 @@ export function ClientGalleryLogin() {
       </p>
       <h1 className="type-page-title mt-4 text-bark">Client login</h1>
       <p className="type-page-body mt-3 text-stone leading-relaxed">
-        Paste the gallery link from your email. If the gallery is password
-        protected, you’ll be asked for that next.
+        Enter the gallery name and password Andrea sent you.
       </p>
 
       <form onSubmit={onSubmit} className="card mt-8 p-6">
         <label className="block text-sm text-bark">
-          Gallery link
+          Gallery name
           <input
             type="text"
-            value={value}
-            onChange={(event) => setValue(event.target.value)}
+            value={name}
+            onChange={(event) => setName(event.target.value)}
             className="input mt-2 w-full"
-            autoComplete="off"
-            autoCapitalize="off"
-            spellCheck={false}
-            placeholder="https://andreashirey.com/view/…"
+            autoComplete="username"
+            required
+          />
+        </label>
+
+        <label className="mt-4 block text-sm text-bark">
+          Password
+          <input
+            type="password"
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            className="input mt-2 w-full"
+            autoComplete="current-password"
             required
           />
         </label>
@@ -56,9 +73,10 @@ export function ClientGalleryLogin() {
 
         <button
           type="submit"
-          className="btn mt-6 w-full border-bark bg-bark text-cream"
+          disabled={loading || !name.trim() || !password.trim()}
+          className="btn mt-6 w-full border-bark bg-bark text-cream disabled:opacity-50"
         >
-          Open gallery
+          {loading ? "Checking…" : "View gallery"}
         </button>
       </form>
     </div>

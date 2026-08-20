@@ -162,6 +162,60 @@ export async function getClientGalleryForUnlock(
   };
 }
 
+function normalizeGalleryName(value: string): string {
+  return value.trim().replace(/\s+/g, " ").toLowerCase();
+}
+
+export async function findPublishedGalleriesByName(name: string): Promise<
+  Array<{ id: string; share_token: string; password_hash: string | null }>
+> {
+  const normalized = normalizeGalleryName(name);
+  if (!normalized || !isSupabaseConfigured()) return [];
+
+  const escaped = name
+    .trim()
+    .replace(/\\/g, "\\\\")
+    .replace(/%/g, "\\%")
+    .replace(/_/g, "\\_");
+
+  const supabase = createServiceClient();
+  const { data, error } = await supabase
+    .from("client_galleries")
+    .select("id, share_token, password_hash, title, is_published, expires_at")
+    .eq("is_published", true)
+    .ilike("title", escaped)
+    .limit(20);
+
+  if (error) {
+    console.error("[findPublishedGalleriesByName]", error);
+    return [];
+  }
+
+  const now = Date.now();
+
+  return ((data ?? []) as Array<{
+    id: string;
+    share_token: string;
+    password_hash: string | null;
+    title: string;
+    is_published: boolean;
+    expires_at: string | null;
+  }>)
+    .filter((row) => {
+      if (!row.is_published) return false;
+      if (normalizeGalleryName(row.title) !== normalized) return false;
+      if (row.expires_at && new Date(row.expires_at).getTime() <= now) {
+        return false;
+      }
+      return true;
+    })
+    .map((row) => ({
+      id: row.id,
+      share_token: row.share_token,
+      password_hash: row.password_hash,
+    }));
+}
+
 export async function listClientGalleriesForShoot(
   shootId: string,
 ): Promise<ClientGallery[]> {

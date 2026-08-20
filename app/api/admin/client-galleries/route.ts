@@ -83,6 +83,12 @@ export async function POST(request: Request) {
   if (!title) {
     return NextResponse.json({ error: "title is required." }, { status: 400 });
   }
+  if (!password) {
+    return NextResponse.json(
+      { error: "A password is required so clients can log in." },
+      { status: 400 },
+    );
+  }
 
   const passwordError = validatePassword(password);
   if (passwordError) {
