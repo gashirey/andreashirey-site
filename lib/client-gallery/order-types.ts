@@ -16,6 +16,7 @@ export type ClientGalleryOrder = {
   photo_count: number;
   price_cents: number;
   asset_ids: string[];
+  filenames: string[];
   client_name: string;
   client_email: string;
   notes: string | null;

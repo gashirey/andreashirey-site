@@ -19,7 +19,7 @@ export async function GET(request: Request) {
   let query = supabase
     .from("client_gallery_orders")
     .select(
-      "id, gallery_id, package_id, package_label, photo_count, price_cents, asset_ids, client_name, client_email, notes, status, created_at, updated_at, client_galleries (title, share_token)",
+      "id, gallery_id, package_id, package_label, photo_count, price_cents, asset_ids, filenames, client_name, client_email, notes, status, created_at, updated_at, client_galleries (title, share_token)",
     )
     .order("created_at", { ascending: false })
     .limit(100);
@@ -32,13 +32,50 @@ export async function GET(request: Request) {
     return NextResponse.json(
       {
         error:
-          error.message.includes("client_gallery_orders")
-            ? "Run migration 017_client_gallery_orders.sql in Supabase."
+          error.message.includes("client_gallery_orders") ||
+          error.message.includes("filenames")
+            ? "Run migrations 017–019 in Supabase."
             : error.message,
       },
       { status: 400 },
     );
   }
 
-  return NextResponse.json({ orders: data ?? [] });
+  const orders = (data ?? []) as Array<{
+    asset_ids: string[];
+    filenames?: string[] | null;
+    [key: string]: unknown;
+  }>;
+
+  const missingIds = [
+    ...new Set(
+      orders.flatMap((order) =>
+        order.filenames?.length ? [] : order.asset_ids ?? [],
+      ),
+    ),
+  ];
+
+  let namesById = new Map<string, string>();
+  if (missingIds.length) {
+    const { data: assets } = await supabase
+      .from("media_assets")
+      .select("id, filename")
+      .in("id", missingIds);
+    namesById = new Map(
+      ((assets ?? []) as { id: string; filename: string }[]).map((row) => [
+        row.id,
+        row.filename,
+      ]),
+    );
+  }
+
+  return NextResponse.json({
+    orders: orders.map((order) => ({
+      ...order,
+      filenames:
+        order.filenames?.length
+          ? order.filenames
+          : (order.asset_ids ?? []).map((id) => namesById.get(id) ?? id),
+    })),
+  });
 }

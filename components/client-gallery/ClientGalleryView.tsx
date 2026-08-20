@@ -52,7 +52,12 @@ export function ClientGalleryView({ view }: ClientGalleryViewProps) {
       return;
     }
 
-    setSelectedIds((current) => current.slice(0, next.photoCount ?? 0));
+    const limit = next.photoCount;
+    setSelectedIds((current) => {
+      if (current.length === 0) return current;
+      if (current.length > limit) return [];
+      return current;
+    });
   }
 
   function toggleSelect(imageId: string) {
@@ -104,8 +109,10 @@ export function ClientGalleryView({ view }: ClientGalleryViewProps) {
             <>
               {!submitted ? (
                 <p className="type-page-body mb-8 max-w-xl text-stone">
-                  Choose a digital package below, then select your photos. Tap a
-                  photo to view it larger, or use + to add it to your order.
+                  Choose a digital package below, then select your photos. Switching
+              from All of them to a smaller package clears the selection so you
+              can pick again. Tap a photo to view it larger, or use + to add it
+              to your order.
                 </p>
               ) : null}
               <ClientGalleryGrid

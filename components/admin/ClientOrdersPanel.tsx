@@ -108,6 +108,29 @@ export function ClientOrdersPanel() {
                   {order.notes ? (
                     <p className="mt-2 text-bark">Notes: {order.notes}</p>
                   ) : null}
+                  {order.filenames?.length ? (
+                    <div className="mt-3">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <p className="font-medium text-bark">Files</p>
+                        <button
+                          type="button"
+                          className="btn border-parchment py-1 text-xs"
+                          onClick={() =>
+                            void navigator.clipboard.writeText(
+                              order.filenames.join("\n"),
+                            )
+                          }
+                        >
+                          Copy names
+                        </button>
+                      </div>
+                      <ul className="mt-2 max-h-40 overflow-auto font-mono text-xs text-stone">
+                        {order.filenames.map((name) => (
+                          <li key={name}>{name}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  ) : null}
                 </div>
                 <label className="text-xs text-stone">
                   Status

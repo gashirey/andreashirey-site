@@ -61,13 +61,22 @@ function isGalleryAccessible(gallery: ClientGallery): boolean {
   return new Date(gallery.expires_at).getTime() > Date.now();
 }
 
+function compareFilenames(a: string, b: string): number {
+  return a.localeCompare(b, undefined, {
+    numeric: true,
+    sensitivity: "base",
+  });
+}
+
 function assetToGalleryImage(asset: MediaAssetRow): GalleryImage {
+  const filename = asset.filename.trim() || "photo";
   return {
     id: asset.id,
     src: asset.public_url,
     alt:
       asset.alt_text?.trim() ||
-      asset.filename.replace(/\.[^.]+$/, "").replace(/[-_]+/g, " "),
+      filename.replace(/\.[^.]+$/, "").replace(/[-_]+/g, " "),
+    caption: filename,
   };
 }
 
@@ -77,7 +86,7 @@ async function fetchGalleryImages(shootId: string): Promise<GalleryImage[]> {
     .from("media_assets")
     .select("id, public_url, filename, alt_text")
     .eq("shoot_id", shootId)
-    .order("created_at", { ascending: true });
+    .order("filename", { ascending: true });
 
   if (assetsError) {
     console.error("[fetchGalleryImages]", assetsError);
@@ -86,6 +95,7 @@ async function fetchGalleryImages(shootId: string): Promise<GalleryImage[]> {
 
   return ((assets ?? []) as MediaAssetRow[])
     .filter((asset) => asset.public_url)
+    .sort((a, b) => compareFilenames(a.filename, b.filename))
     .map(assetToGalleryImage);
 }
 

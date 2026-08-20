@@ -35,6 +35,7 @@ export function ClientGalleryItem({
   const ref = useRef<HTMLElement>(null);
   const [revealed, setRevealed] = useState(false);
   const staggerDelay = staggerDelayForIndex(index);
+  const label = image.caption || image.alt;
 
   useEffect(() => {
     const el = ref.current;
@@ -66,7 +67,7 @@ export function ClientGalleryItem({
   return (
     <figure
       ref={ref}
-      className={`masonry-gallery__item ${revealed ? "is-revealed" : ""}`}
+      className={`client-gallery-grid__item ${revealed ? "is-revealed" : ""}`}
       style={{ "--reveal-delay": staggerDelay } as CSSProperties}
       role="listitem"
     >
@@ -75,10 +76,10 @@ export function ClientGalleryItem({
           type="button"
           onClick={onOpen}
           className="group block w-full cursor-zoom-in text-left"
-          aria-label={`View ${image.alt}`}
+          aria-label={`View ${label}`}
         >
           <div
-            className={`masonry-gallery__frame ${
+            className={`client-gallery-grid__frame ${
               selected ? "ring-2 ring-bark ring-offset-2 ring-offset-cream" : ""
             }`}
           >
@@ -92,7 +93,7 @@ export function ClientGalleryItem({
                 priority={priority}
                 loading={priority ? undefined : "lazy"}
                 decoding="async"
-                className="masonry-gallery__image"
+                className="client-gallery-grid__image"
                 unoptimized={image.src.startsWith("http")}
               />
             ) : (
@@ -102,7 +103,7 @@ export function ClientGalleryItem({
                 loading={priority ? "eager" : "lazy"}
                 decoding="async"
                 fetchPriority={priority ? "high" : "auto"}
-                className="masonry-gallery__image"
+                className="client-gallery-grid__image"
               />
             )}
           </div>
@@ -119,16 +120,16 @@ export function ClientGalleryItem({
             }`}
             aria-pressed={selected}
             aria-label={
-              selected ? `Remove ${image.alt} from order` : `Add ${image.alt} to order`
+              selected ? `Remove ${label} from order` : `Add ${label} to order`
             }
           >
             {selected && selectionNumber ? selectionNumber : selected ? "✓" : "+"}
           </button>
         ) : null}
       </div>
-      {image.caption ? (
-        <figcaption className="masonry-gallery__caption">{image.caption}</figcaption>
-      ) : null}
+      <figcaption className="client-gallery-grid__caption" title={label}>
+        {label}
+      </figcaption>
     </figure>
   );
 }

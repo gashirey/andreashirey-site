@@ -74,18 +74,26 @@ export async function POST(request: Request, context: RouteContext) {
   const supabase = createServiceClient();
   const { data: assets, error: assetsError } = await supabase
     .from("media_assets")
-    .select("id")
+    .select("id, filename")
     .eq("shoot_id", gallery.shoot_id);
 
   if (assetsError) {
     return NextResponse.json({ error: assetsError.message }, { status: 400 });
   }
 
-  const galleryAssetIds = (assets ?? []).map((row) => row.id as string);
+  const assetRows = (assets ?? []) as { id: string; filename: string }[];
+  const galleryAssetIds = assetRows.map((row) => row.id);
+  const filenameById = new Map(
+    assetRows.map((row) => [row.id, row.filename] as const),
+  );
   const validated = validateClientGalleryOrder(body, galleryAssetIds);
   if (!validated.ok) {
     return NextResponse.json({ error: validated.error }, { status: 400 });
   }
+
+  const filenames = validated.data.assetIds.map(
+    (id) => filenameById.get(id) ?? id,
+  );
 
   const { data, error } = await supabase
     .from("client_gallery_orders")
@@ -96,21 +104,23 @@ export async function POST(request: Request, context: RouteContext) {
       photo_count: validated.data.assetIds.length,
       price_cents: validated.data.priceCents,
       asset_ids: validated.data.assetIds,
+      filenames,
       client_name: validated.data.clientName,
       client_email: validated.data.clientEmail,
       notes: validated.data.notes ?? null,
       status: "pending_payment",
     })
     .select(
-      "id, gallery_id, package_id, package_label, photo_count, price_cents, asset_ids, client_name, client_email, notes, status, created_at, updated_at",
+      "id, gallery_id, package_id, package_label, photo_count, price_cents, asset_ids, filenames, client_name, client_email, notes, status, created_at, updated_at",
     )
     .single();
 
   if (error || !data) {
     return NextResponse.json(
       {
-        error: error?.message.includes("client_gallery_orders")
-          ? "Orders are not set up yet. Run migrations 017 and 018 in Supabase."
+        error: error?.message.includes("client_gallery_orders") ||
+          error?.message.includes("filenames")
+          ? "Orders are not set up yet. Run migrations 017–019 in Supabase."
           : error?.message ?? "Could not create order.",
       },
       { status: 400 },

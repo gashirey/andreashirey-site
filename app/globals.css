@@ -294,6 +294,83 @@
     }
   }
 
+  /* Client delivery grid — smaller tiles, fixed crop, filename captions */
+  .client-gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem 0.625rem;
+  }
+
+  @media (min-width: 640px) {
+    .client-gallery-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.875rem 0.75rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .client-gallery-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .client-gallery-grid {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+  }
+
+  .client-gallery-grid__item {
+    margin: 0;
+    opacity: 0;
+    transform: translateY(var(--gallery-reveal-y, 16px));
+  }
+
+  .client-gallery-grid__item.is-revealed {
+    opacity: 1;
+    transform: translateY(0);
+    transition:
+      opacity var(--gallery-reveal-duration, 0.9s) ease,
+      transform var(--gallery-reveal-duration, 0.9s)
+        var(--gallery-reveal-easing, cubic-bezier(0.22, 1, 0.36, 1));
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+
+  .client-gallery-grid__frame {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    background-color: var(--site-border, var(--color-parchment));
+  }
+
+  .client-gallery-grid__image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .client-gallery-grid__caption {
+    margin-top: 0.375rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 0.6875rem;
+    line-height: 1.35;
+    color: var(--site-muted, var(--color-stone));
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .client-gallery-grid__item {
+      opacity: 1;
+      transform: none;
+    }
+
+    .client-gallery-grid__item.is-revealed {
+      transition: none;
+    }
+  }
+
   .inquiry-form select.input {
     appearance: none;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%236f6c66' stroke-width='1.25' stroke-linecap='round'/%3E%3C/svg%3E");

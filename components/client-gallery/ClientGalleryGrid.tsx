@@ -25,7 +25,7 @@ export function ClientGalleryGrid({
 
   return (
     <div
-      className="masonry-gallery columns-1 md:columns-2"
+      className="client-gallery-grid"
       style={galleryRevealCssVars()}
       role="list"
     >
@@ -34,8 +34,8 @@ export function ClientGalleryGrid({
           key={image.id}
           image={image}
           index={index}
-          priority={index < 2}
-          sizes="(max-width: 768px) 100vw, 50vw"
+          priority={index < 6}
+          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
           selected={orderIndex.has(image.id)}
           selectionEnabled={selectionEnabled}
           selectionNumber={orderIndex.get(image.id) ?? null}
