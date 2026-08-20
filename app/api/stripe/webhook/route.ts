@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
 import type Stripe from "stripe";
+import { markClientGalleryOrderPaid } from "@/lib/client-gallery/mark-order-paid";
 import { getStripe } from "@/lib/stripe/client";
-import { createServiceClient } from "@/lib/supabase/server";
-import { isSupabaseConfigured } from "@/lib/supabase/config";
 
 export async function POST(request: Request) {
   const secret = process.env.STRIPE_WEBHOOK_SECRET?.trim();
@@ -36,43 +35,18 @@ export async function POST(request: Request) {
   }
 
   const session = event.data.object as Stripe.Checkout.Session;
-  if (session.payment_status !== "paid" && event.type === "checkout.session.completed") {
+  if (
+    session.payment_status !== "paid" &&
+    event.type === "checkout.session.completed"
+  ) {
     if (session.payment_status !== "no_payment_required") {
       return NextResponse.json({ received: true });
     }
   }
 
-  const orderId =
-    (typeof session.metadata?.order_id === "string"
-      ? session.metadata.order_id
-      : null) ||
-    (typeof session.client_reference_id === "string"
-      ? session.client_reference_id
-      : null);
-
-  if (!orderId || !isSupabaseConfigured()) {
-    return NextResponse.json({ received: true });
-  }
-
-  const paymentIntentId =
-    typeof session.payment_intent === "string"
-      ? session.payment_intent
-      : session.payment_intent?.id ?? null;
-
-  const supabase = createServiceClient();
-  const { error } = await supabase
-    .from("client_gallery_orders")
-    .update({
-      status: "paid",
-      stripe_checkout_session_id: session.id,
-      stripe_payment_intent_id: paymentIntentId,
-      updated_at: new Date().toISOString(),
-    })
-    .eq("id", orderId);
-
-  if (error) {
-    console.error("[stripe webhook] update order", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  const result = await markClientGalleryOrderPaid(session);
+  if (!result.ok && result.error) {
+    return NextResponse.json({ error: result.error }, { status: 500 });
   }
 
   return NextResponse.json({ received: true });

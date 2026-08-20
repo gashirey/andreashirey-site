@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { site } from "@/lib/content";
+import { markClientGalleryOrderPaid } from "@/lib/client-gallery/mark-order-paid";
 import { getStripe, getStripeSecretKey } from "@/lib/stripe/client";
 
 type PageProps = {
@@ -20,6 +21,9 @@ export default async function OrderThanksPage({ params, searchParams }: PageProp
       paid =
         session.payment_status === "paid" ||
         session.payment_status === "no_payment_required";
+      if (paid) {
+        await markClientGalleryOrderPaid(session);
+      }
     } catch {
       paid = false;
     }
