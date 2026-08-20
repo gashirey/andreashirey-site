@@ -6,9 +6,9 @@ import {
   createGalleryUnlockToken,
   verifyGalleryPassword,
 } from "@/lib/client-gallery/auth";
-import { findPublishedGalleriesByName } from "@/lib/client-gallery/queries";
+import { findPublishedGalleriesWithPassword } from "@/lib/client-gallery/queries";
 
-const GENERIC_ERROR = "Gallery name or password is incorrect.";
+const GENERIC_ERROR = "Password is incorrect.";
 
 export async function POST(request: Request) {
   let body: unknown;
@@ -19,26 +19,25 @@ export async function POST(request: Request) {
   }
 
   const record = body as Record<string, unknown>;
-  const name = typeof record.name === "string" ? record.name : "";
   const password = typeof record.password === "string" ? record.password : "";
 
-  if (!name.trim() || !password.trim()) {
+  if (!password.trim()) {
     return NextResponse.json(
-      { error: "Enter your gallery name and password." },
+      { error: "Enter your password." },
       { status: 400 },
     );
   }
 
-  const galleries = await findPublishedGalleriesByName(name);
-  const match = galleries.find(
-    (gallery) =>
-      Boolean(gallery.password_hash) &&
-      verifyGalleryPassword(gallery.id, password, gallery.password_hash),
+  const galleries = await findPublishedGalleriesWithPassword();
+  const matches = galleries.filter((gallery) =>
+    verifyGalleryPassword(gallery.id, password, gallery.password_hash),
   );
 
-  if (!match) {
+  if (matches.length !== 1) {
     return NextResponse.json({ error: GENERIC_ERROR }, { status: 401 });
   }
+
+  const match = matches[0]!;
 
   const signature = await createGalleryUnlockToken(match.share_token);
   if (!signature) {

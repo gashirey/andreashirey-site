@@ -144,7 +144,7 @@ export function ClientGalleryShare({
     <section className="border border-parchment bg-white p-5">
       <h2 className="font-serif text-lg text-bark">Client viewing</h2>
       <p className="mt-1 text-sm text-stone">
-        Clients sign in from the homepage with this gallery name and password.
+        Clients sign in from the homepage with the gallery password.
         They can then choose a digital package and select photos.
       </p>
 

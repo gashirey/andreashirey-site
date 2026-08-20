@@ -4,7 +4,6 @@ import { useState } from "react";
 import { site } from "@/lib/content";
 
 export function ClientGalleryLogin() {
-  const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -17,7 +16,7 @@ export function ClientGalleryLogin() {
     const res = await fetch("/api/view/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, password }),
+      body: JSON.stringify({ password }),
     });
     const data = (await res.json()) as { error?: string; share_path?: string };
     setLoading(false);
@@ -37,23 +36,11 @@ export function ClientGalleryLogin() {
       </p>
       <h1 className="type-page-title mt-4 text-bark">Client login</h1>
       <p className="type-page-body mt-3 text-stone leading-relaxed">
-        Enter the gallery name and password Andrea sent you.
+        Enter the password Andrea sent you.
       </p>
 
       <form onSubmit={onSubmit} className="card mt-8 p-6">
         <label className="block text-sm text-bark">
-          Gallery name
-          <input
-            type="text"
-            value={name}
-            onChange={(event) => setName(event.target.value)}
-            className="input mt-2 w-full"
-            autoComplete="username"
-            required
-          />
-        </label>
-
-        <label className="mt-4 block text-sm text-bark">
           Password
           <input
             type="password"
@@ -73,7 +60,7 @@ export function ClientGalleryLogin() {
 
         <button
           type="submit"
-          disabled={loading || !name.trim() || !password.trim()}
+          disabled={loading || !password.trim()}
           className="btn mt-6 w-full border-bark bg-bark text-cream disabled:opacity-50"
         >
           {loading ? "Checking…" : "View gallery"}
